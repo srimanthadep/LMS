@@ -20,6 +20,9 @@ import {
   LifeBuoy,
   PlaySquare,
   GraduationCap,
+  CheckCircle2,
+  Settings,
+  MessageSquare,
 } from "lucide-react";
 
 export interface NavItem {
@@ -72,19 +75,24 @@ export const ROLE_NAV_ITEMS: Record<UserRole, { sidebar: NavItem[]; mobileBottom
   teacher: {
     sidebar: [
       { name: "Faculty Hub", href: "/teacher/dashboard", icon: LayoutDashboard },
-      { name: "Schedule", href: "/teacher/schedule", icon: Calendar },
+      { name: "Course Management", href: "/teacher/courses", icon: BookOpen },
       { name: "Live Studio", href: "/teacher/classroom/class-agentic-101", icon: Video, badge: "LIVE" },
+      { name: "Student Management", href: "/teacher/students", icon: GraduationCap },
+      { name: "Attendance Desk", href: "/teacher/attendance", icon: CheckCircle2 },
+      { name: "Assignments & Tests", href: "/teacher/assignments", icon: FileCheck2, badge: "8" },
+      { name: "Doubts & Discussions", href: "/teacher/doubts", icon: HelpCircle, badge: "3" },
       { name: "AI Recordings", href: "/teacher/recordings", icon: PlaySquare },
-      { name: "Doubts Desk", href: "/teacher/doubts", icon: HelpCircle, badge: "3" },
-      { name: "Assessments", href: "/teacher/tests", icon: FileCheck2 },
-      { name: "Batch Analytics", href: "/teacher/analytics", icon: BarChart3 },
-      { name: "Resource Library", href: "/teacher/resources", icon: BookOpen },
+      { name: "Performance Analytics", href: "/teacher/analytics", icon: BarChart3 },
+      { name: "Calendar & Timetable", href: "/teacher/schedule", icon: Calendar },
+      { name: "Communication Hub", href: "/teacher/communication", icon: Bell },
+      { name: "Results & Feedback", href: "/teacher/results", icon: Award },
+      { name: "Profile & Settings", href: "/teacher/settings", icon: Settings },
     ],
     mobileBottom: [
       { name: "Hub", href: "/teacher/dashboard", icon: LayoutDashboard },
-      { name: "Schedule", href: "/teacher/schedule", icon: Calendar },
+      { name: "Courses", href: "/teacher/courses", icon: BookOpen },
       { name: "Live Studio", href: "/teacher/classroom/class-agentic-101", icon: Video },
-      { name: "Recordings", href: "/teacher/recordings", icon: PlaySquare },
+      { name: "Students", href: "/teacher/students", icon: GraduationCap },
       { name: "Doubts", href: "/teacher/doubts", icon: HelpCircle },
     ],
   },

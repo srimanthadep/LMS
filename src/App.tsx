@@ -36,13 +36,21 @@ import { AnnouncementsPage } from "@/pages/admin/AnnouncementsPage";
 
 // Teacher
 import { TeacherDashboard } from "@/pages/teacher/TeacherDashboard";
+import { TeacherCoursesPage } from "@/pages/teacher/TeacherCoursesPage";
+import { TeacherCourseDetailPage } from "@/pages/teacher/TeacherCourseDetailPage";
 import { TeacherClassroomPage } from "@/pages/teacher/TeacherClassroomPage";
 import { RecordingReviewPage } from "@/pages/teacher/RecordingReviewPage";
 import { DoubtsQueuePage } from "@/pages/teacher/DoubtsQueuePage";
+import { TeacherStudentsPage } from "@/pages/teacher/TeacherStudentsPage";
+import { TeacherAttendancePage } from "@/pages/teacher/TeacherAttendancePage";
+import { TeacherAssignmentsPage } from "@/pages/teacher/TeacherAssignmentsPage";
 import { TestCreationPage } from "@/pages/teacher/TestCreationPage";
 import { BatchAnalyticsPage } from "@/pages/teacher/BatchAnalyticsPage";
 import { ResourcesUploadPage } from "@/pages/teacher/ResourcesUploadPage";
 import { TeacherSchedulePage } from "@/pages/teacher/TeacherSchedulePage";
+import { TeacherCommunicationPage } from "@/pages/teacher/TeacherCommunicationPage";
+import { TeacherResultsPage } from "@/pages/teacher/TeacherResultsPage";
+import { TeacherSettingsPage } from "@/pages/teacher/TeacherSettingsPage";
 
 // Student
 import { StudentDashboard } from "@/pages/student/StudentDashboard";
@@ -299,10 +307,74 @@ export function App() {
               }
             />
             <Route
+              path="/teacher/courses"
+              element={
+                <ProtectedRoute allowedRoles={["teacher"]}>
+                  <TeacherCoursesPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/teacher/courses/:courseId"
+              element={
+                <ProtectedRoute allowedRoles={["teacher"]}>
+                  <TeacherCourseDetailPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/teacher/classroom/:classId"
               element={
                 <ProtectedRoute allowedRoles={["teacher"]}>
                   <TeacherClassroomPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/teacher/students"
+              element={
+                <ProtectedRoute allowedRoles={["teacher"]}>
+                  <TeacherStudentsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/teacher/attendance"
+              element={
+                <ProtectedRoute allowedRoles={["teacher"]}>
+                  <TeacherAttendancePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/teacher/assignments"
+              element={
+                <ProtectedRoute allowedRoles={["teacher"]}>
+                  <TeacherAssignmentsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/teacher/tests"
+              element={
+                <ProtectedRoute allowedRoles={["teacher"]}>
+                  <TeacherAssignmentsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/teacher/tests/create"
+              element={
+                <ProtectedRoute allowedRoles={["teacher"]}>
+                  <TestCreationPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/teacher/recordings"
+              element={
+                <ProtectedRoute allowedRoles={["teacher"]}>
+                  <RecordingReviewPage />
                 </ProtectedRoute>
               }
             />
@@ -319,14 +391,6 @@ export function App() {
               element={
                 <ProtectedRoute allowedRoles={["teacher"]}>
                   <DoubtsQueuePage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/teacher/tests/create"
-              element={
-                <ProtectedRoute allowedRoles={["teacher"]}>
-                  <TestCreationPage />
                 </ProtectedRoute>
               }
             />
@@ -351,6 +415,30 @@ export function App() {
               element={
                 <ProtectedRoute allowedRoles={["teacher"]}>
                   <TeacherSchedulePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/teacher/communication"
+              element={
+                <ProtectedRoute allowedRoles={["teacher"]}>
+                  <TeacherCommunicationPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/teacher/results"
+              element={
+                <ProtectedRoute allowedRoles={["teacher"]}>
+                  <TeacherResultsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/teacher/settings"
+              element={
+                <ProtectedRoute allowedRoles={["teacher"]}>
+                  <TeacherSettingsPage />
                 </ProtectedRoute>
               }
             />
