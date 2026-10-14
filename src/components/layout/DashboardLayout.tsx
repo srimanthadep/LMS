@@ -96,27 +96,22 @@ export const DashboardLayout = ({ children, headerAction }: DashboardLayoutProps
     switch (role) {
       case "student":
         return (
-          <div className="p-3.5 rounded-2xl bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border border-primary/20 space-y-1.5">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-primary flex items-center gap-1">
-                <Sparkles className="h-3 w-3" /> Live Classroom
+          <div className="p-4 rounded-2xl promo-card-pattern text-white relative overflow-hidden shadow-lg shadow-emerald-950/20" data-purpose="promo-card">
+            <div className="flex items-center justify-between mb-2.5">
+              <span className="inline-flex items-center justify-center text-amber-400">
+                <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                  <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"></path>
+                </svg>
               </span>
-              <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
             </div>
-            <p className="text-xs font-bold text-foreground leading-snug">
-              Multi-Agent Consensus
-            </p>
-            <p className="text-[11px] text-muted-foreground">
-              Today @ 06:30 PM IST (72 attending)
-            </p>
-            <Button
-              size="sm"
-              variant="default"
-              onClick={() => navigate("/student/classroom/class-agentic-101")}
-              className="w-full mt-2 h-7 text-xs rounded-lg gap-1 font-semibold"
+            <h4 className="text-sm font-semibold leading-snug mb-1 text-white">Upgrade Your<br/>Learning Experience</h4>
+            <p className="text-[12px] text-emerald-200/80 mb-3.5 leading-relaxed">Get access to premium tools and resources.</p>
+            <button
+              onClick={() => navigate("/student/courses")}
+              className="inline-flex items-center justify-center w-full py-2 px-3 text-xs font-semibold rounded-lg bg-[#d9f2e4] text-[#0d3f28] hover:bg-white transition-all shadow-sm"
             >
-              Join Stream <ChevronRight className="h-3 w-3" />
-            </Button>
+              Explore Now  →
+            </button>
           </div>
         );
       case "teacher":

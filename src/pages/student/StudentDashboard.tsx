@@ -1,290 +1,594 @@
 import React, { useState } from "react";
-
-import { StatCard } from "@/components/ui/StatCard";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { useNavigate } from "react-router-dom";
+import { DeviceCheckModal } from "@/components/shared/DeviceCheckModal";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   BookOpen,
-  Video,
-  PlaySquare,
+  Calendar,
   HelpCircle,
+  FileCheck2,
   Award,
-  ArrowRight,
-  Clock,
-  Sparkles,
-  CheckCircle2,
-  Play,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { mockDataService } from "@/services/mockDataService";
-import { DeviceCheckModal } from "@/components/shared/DeviceCheckModal";
 
 export const StudentDashboard: React.FC = () => {
   const navigate = useNavigate();
   const [deviceModalOpen, setDeviceModalOpen] = useState(false);
-  const liveClass = mockDataService.getLiveClasses().find((c) => c.status === "live");
-  const recordings = mockDataService.getRecordings();
-  const doubts = mockDataService.getDoubts();
 
   return (
-    <div className="space-y-6">
-      {/* Welcome Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+    <div className="space-y-6 max-w-[1500px] mx-auto">
+      {/* Welcome Banner & Top CTAs */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4" data-purpose="welcome-section">
         <div>
-          <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-foreground flex items-center gap-2">
-            Welcome back, Arjun! 👋
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
+            Welcome back, Arjun! <span className="text-2xl">👋</span>
           </h1>
-          <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-            Enrolled in <strong>Cohort 7 (Live + Replay)</strong> • Apex AI Systems Program
+          <p className="text-xs md:text-sm text-slate-500 dark:text-slate-400 mt-1">
+            Enrolled in <span className="font-semibold text-slate-700 dark:text-slate-300">Cohort 7 (Live + Replay)</span> • Apex AI Systems Program
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
-          {liveClass && (
-            <Button
-              size="sm"
-              onClick={() => setDeviceModalOpen(true)}
-              className="h-9 text-xs font-bold gap-1.5 shadow-sm bg-rose-600 hover:bg-rose-700 text-white animate-pulse"
+        {/* Action CTAs */}
+        <div className="flex items-center gap-3">
+          {/* Join Live Class Button */}
+          <button
+            onClick={() => setDeviceModalOpen(true)}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#0e3b26] text-white hover:bg-[#0a2e1d] font-medium text-xs md:text-sm shadow-xs transition-colors cursor-pointer"
+            type="button"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <rect height="12" rx="2" width="14" x="2" y="6"></rect>
+              <path d="M16 10l6-4v12l-6-4"></path>
+            </svg>
+            Join Live Class
+          </button>
+
+          {/* Resume Last Lecture Button */}
+          <button
+            onClick={() => navigate("/student/replays/rep-rag-8")}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white dark:bg-card border border-slate-200 dark:border-border text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-muted/50 hover:border-slate-300 font-medium text-xs md:text-sm shadow-2xs transition-colors cursor-pointer"
+            type="button"
+          >
+            <svg className="w-4 h-4 text-slate-700 dark:text-slate-300" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+            Resume Last Lecture
+          </button>
+
+          {/* More Options Button */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                className="p-2.5 rounded-xl bg-white dark:bg-card border border-slate-200 dark:border-border text-slate-500 hover:bg-slate-50 dark:hover:bg-muted/50 hover:text-slate-700 dark:hover:text-slate-300 shadow-2xs cursor-pointer transition-colors"
+                type="button"
+                aria-label="More options"
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <circle cx="5" cy="12" r="2"></circle>
+                  <circle cx="12" cy="12" r="2"></circle>
+                  <circle cx="19" cy="12" r="2"></circle>
+                </svg>
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem onClick={() => navigate("/student/schedule")}>
+                <Calendar className="mr-2 h-4 w-4" /> Live Schedule
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate("/student/courses")}>
+                <BookOpen className="mr-2 h-4 w-4" /> Course Catalog
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate("/student/doubts")}>
+                <HelpCircle className="mr-2 h-4 w-4" /> My Doubts Desk
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate("/student/assessments")}>
+                <FileCheck2 className="mr-2 h-4 w-4" /> Assessments
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate("/student/certificates")}>
+                <Award className="mr-2 h-4 w-4" /> Certificates
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
+
+      {/* BEGIN: 4 Metrics Summary Cards Grid */}
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" data-purpose="metrics-summary">
+        {/* Metric Card 1: Live Attendance Rate (Dark Green Hero Card) */}
+        <div className="p-5 rounded-2xl hero-card-pattern text-white relative shadow-sm flex flex-col justify-between min-h-[170px]">
+          <div className="flex items-start justify-between">
+            <div className="flex items-center gap-2.5">
+              <span className="w-8 h-8 rounded-lg bg-emerald-800/60 border border-emerald-600/30 flex items-center justify-center text-emerald-300">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" strokeLinecap="round" strokeLinejoin="round"></path>
+                </svg>
+              </span>
+              <span className="text-xs font-semibold text-emerald-100">Live Attendance Rate</span>
+            </div>
+            {/* Arrow Link Icon */}
+            <button
+              onClick={() => navigate("/student/schedule")}
+              className="w-7 h-7 rounded-full bg-emerald-800/40 hover:bg-emerald-700/50 flex items-center justify-center text-emerald-300 transition-colors cursor-pointer"
+              title="View live schedule"
             >
-              <Video className="h-3.5 w-3.5" /> Join Live Class
-            </Button>
-          )}
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => navigate("/student/replays/rep-rag-8")}
-              className="text-xs h-9 font-semibold gap-1"
-            >
-              <Play className="h-3.5 w-3.5" /> Resume Last Lecture
-            </Button>
-            <Button
-              size="sm"
-              onClick={() => navigate("/student/courses")}
-              className="text-xs h-9 font-bold gap-1 shadow-sm"
-            >
-              <BookOpen className="h-3.5 w-3.5" /> My Courses
-            </Button>
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                <path d="M7 17L17 7M17 7H7M17 7V17" strokeLinecap="round" strokeLinejoin="round"></path>
+              </svg>
+            </button>
+          </div>
+          <div className="my-1 flex items-baseline gap-2">
+            <span className="text-3xl font-bold tracking-tight text-white">88%</span>
+            <span className="inline-flex items-center text-emerald-400 text-xs font-semibold">
+              <svg className="w-3.5 h-3.5 mr-0.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" strokeLinecap="round" strokeLinejoin="round"></path>
+              </svg>
+            </span>
+          </div>
+          <div className="flex items-center justify-between text-[11px] pt-1 border-t border-emerald-800/50">
+            <span className="text-emerald-300/90 font-medium">Eligible for certificate</span>
+            <span className="text-emerald-200/70">14 of 16 lectures attended</span>
           </div>
         </div>
 
-        {/* 4 Stat Cards */}
-        <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4 items-stretch">
-          <StatCard
-            index={0}
-            title="Live Attendance Rate"
-            value="88%"
-            subtitle="14 of 16 lectures attended"
-            icon={Video}
-            trend={{ value: "Eligible for certificate", isPositive: true }}
-            highlight
-          />
-          <StatCard
-            index={1}
-            title="Replay Watch Hours"
-            value="42.5 hrs"
-            subtitle="Lecture transcripts studied"
-            icon={PlaySquare}
-            trend={{ value: "+5.2 hrs this week", isPositive: true }}
-          />
-          <StatCard
-            index={2}
-            title="My Doubts Cleared"
-            value="4 Doubts"
-            subtitle="Grounded AI & Faculty"
-            icon={HelpCircle}
-            trend={{ value: "100% resolved", isPositive: true }}
-          />
-          <StatCard
-            index={3}
-            title="Milestone GPA"
-            value="95 / 100"
-            subtitle="Evaluated by faculty rubrics"
-            icon={Award}
-            trend={{ value: "Distinction Track", isPositive: true }}
-          />
+        {/* Metric Card 2: Replay Watch Hours */}
+        <div className="p-5 rounded-2xl bg-white dark:bg-card border border-slate-200/80 dark:border-border/80 shadow-2xs flex flex-col justify-between min-h-[170px]">
+          <div className="flex items-start justify-between">
+            <div className="flex items-center gap-2.5">
+              <span className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+              </span>
+              <span className="text-xs font-semibold text-slate-700 dark:text-slate-200">Replay Watch Hours</span>
+            </div>
+            <button
+              onClick={() => navigate("/student/replays")}
+              className="w-7 h-7 rounded-full bg-slate-50 dark:bg-muted/40 hover:bg-slate-100 dark:hover:bg-muted/70 flex items-center justify-center text-slate-400 cursor-pointer transition-colors"
+              title="Open Replay Library"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                <path d="M7 17L17 7M17 7H7M17 7V17" strokeLinecap="round" strokeLinejoin="round"></path>
+              </svg>
+            </button>
+          </div>
+          <div className="my-1 flex items-end justify-between">
+            <div className="flex items-baseline gap-2">
+              <span className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">42.5</span>
+              <span className="text-sm font-semibold text-slate-500 dark:text-slate-400">hrs</span>
+            </div>
+            {/* Mini decorative bar chart */}
+            <div className="flex items-end gap-1 h-6 pb-0.5">
+              <div className="w-1.5 h-2.5 bg-emerald-100 dark:bg-emerald-900/60 rounded-xs"></div>
+              <div className="w-1.5 h-4 bg-emerald-200 dark:bg-emerald-800/60 rounded-xs"></div>
+              <div className="w-1.5 h-3.5 bg-emerald-300 dark:bg-emerald-700/60 rounded-xs"></div>
+              <div className="w-1.5 h-5 bg-emerald-400 dark:bg-emerald-600/60 rounded-xs"></div>
+              <div className="w-1.5 h-6 bg-emerald-600 dark:bg-emerald-500 rounded-xs"></div>
+            </div>
+          </div>
+          <div className="flex items-center justify-between text-[11px] pt-1 text-slate-500 dark:text-slate-400">
+            <span className="text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-0.5">
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" strokeLinecap="round" strokeLinejoin="round"></path>
+              </svg>
+              +5.2 hrs this week
+            </span>
+            <span className="text-slate-400">Lecture transcripts studied</span>
+          </div>
         </div>
 
-        {/* Prominent Live Class Countdown / Join Banner */}
-        {liveClass && (
-          <Card className="border-border/80 shadow-md rounded-2xl overflow-hidden bg-gradient-to-r from-primary/10 via-card to-card border-primary/30 p-5">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping" />
-                  <Badge variant="default" className="text-[10px] font-bold bg-rose-600 text-white">LIVE NOW</Badge>
-                  <span className="text-xs text-muted-foreground font-mono">72 Classmates Online</span>
-                </div>
-                <h3 className="text-base sm:text-lg font-bold text-foreground">
-                  {liveClass.title}
-                </h3>
-                <p className="text-xs text-muted-foreground">
-                  Instructor: <strong>{liveClass.instructorName}</strong> • {liveClass.batchName}
-                </p>
-              </div>
-
-              <Button
-                size="sm"
-                onClick={() => setDeviceModalOpen(true)}
-                className="h-10 px-6 text-xs font-bold gap-2 bg-primary text-primary-foreground shrink-0 shadow-md"
-              >
-                <Video className="h-4 w-4" /> Pre-Join Check & Enter <ArrowRight className="h-3 w-3" />
-              </Button>
+        {/* Metric Card 3: My Doubts Cleared */}
+        <div className="p-5 rounded-2xl bg-white dark:bg-card border border-slate-200/80 dark:border-border/80 shadow-2xs flex flex-col justify-between min-h-[170px]">
+          <div className="flex items-start justify-between">
+            <div className="flex items-center gap-2.5">
+              <span className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"></path>
+                  <line x1="12" x2="12.01" y1="17" y2="17"></line>
+                </svg>
+              </span>
+              <span className="text-xs font-semibold text-slate-700 dark:text-slate-200">My Doubts Cleared</span>
             </div>
-          </Card>
-        )}
+            <button
+              onClick={() => navigate("/student/doubts")}
+              className="w-7 h-7 rounded-full bg-slate-50 dark:bg-muted/40 hover:bg-slate-100 dark:hover:bg-muted/70 flex items-center justify-center text-slate-400 cursor-pointer transition-colors"
+              title="Open Doubts Desk"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                <path d="M7 17L17 7H7M17 7V17" strokeLinecap="round" strokeLinejoin="round"></path>
+              </svg>
+            </button>
+          </div>
+          <div className="my-1 flex items-end justify-between">
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">4</span>
+              <span className="text-base font-bold text-slate-800 dark:text-slate-200">Doubts</span>
+            </div>
+            {/* Soft Chat Bubbles Graphic */}
+            <div className="text-slate-200 dark:text-emerald-950/60">
+              <svg className="w-8 h-8 fill-emerald-100 dark:fill-emerald-950/80 text-emerald-200 dark:text-emerald-800" viewBox="0 0 24 24">
+                <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"></path>
+              </svg>
+            </div>
+          </div>
+          <div className="flex items-center justify-between text-[11px] pt-1 text-slate-500 dark:text-slate-400">
+            <span className="text-emerald-600 dark:text-emerald-400 font-semibold">100% resolved</span>
+            <span className="text-slate-400">Grounded AI & Faculty</span>
+          </div>
+        </div>
 
-        {/* Bento Grid: Enrolled Course Progress & Recent AI Replay */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Enrolled Courses Cards (2 cols) */}
-          <div className="lg:col-span-2 space-y-6">
-            <Card className="border-border/80 shadow-xs rounded-2xl overflow-hidden bg-card">
-              <CardHeader className="p-4 sm:p-5 border-b border-border/70 flex flex-row items-center justify-between">
+        {/* Metric Card 4: Milestone GPA */}
+        <div className="p-5 rounded-2xl bg-white dark:bg-card border border-slate-200/80 dark:border-border/80 shadow-2xs flex flex-col justify-between min-h-[170px]">
+          <div className="flex items-start justify-between">
+            <div className="flex items-center gap-2.5">
+              <span className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" strokeLinecap="round" strokeLinejoin="round"></path>
+                </svg>
+              </span>
+              <span className="text-xs font-semibold text-slate-700 dark:text-slate-200">Milestone GPA</span>
+            </div>
+            <button
+              onClick={() => navigate("/student/assessments")}
+              className="w-7 h-7 rounded-full bg-slate-50 dark:bg-muted/40 hover:bg-slate-100 dark:hover:bg-muted/70 flex items-center justify-center text-slate-400 cursor-pointer transition-colors"
+              title="Open Assessments"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                <path d="M7 17L17 7H7M17 7V17" strokeLinecap="round" strokeLinejoin="round"></path>
+              </svg>
+            </button>
+          </div>
+          <div className="my-1 flex items-end justify-between">
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">95</span>
+              <span className="text-base font-bold text-slate-500 dark:text-slate-400">/ 100</span>
+            </div>
+            {/* Mini vertical bar chart illustration */}
+            <div className="flex items-end gap-1 h-6 pb-0.5">
+              <div className="w-1.5 h-3 bg-emerald-100 dark:bg-emerald-900/60 rounded-xs"></div>
+              <div className="w-1.5 h-4.5 bg-emerald-200 dark:bg-emerald-800/60 rounded-xs"></div>
+              <div className="w-1.5 h-6 bg-emerald-400 dark:bg-emerald-500 rounded-xs"></div>
+            </div>
+          </div>
+          <div className="flex items-center justify-between text-[11px] pt-1 text-slate-500 dark:text-slate-400">
+            <span className="text-emerald-700 dark:text-emerald-400 font-semibold">Distinction Track</span>
+            <span className="text-slate-400">Evaluated by faculty rubrics</span>
+          </div>
+        </div>
+      </section>
+      {/* END: 4 Metrics Summary Cards Grid */}
+
+      {/* BEGIN: Live Session Callout Banner */}
+      <section className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-[#e7f7ee] via-[#ecf9f1] to-[#e4f6eb] dark:from-emerald-950/40 dark:via-emerald-900/25 dark:to-emerald-950/30 border border-[#c3ebcf] dark:border-emerald-800/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 relative overflow-hidden shadow-2xs" data-purpose="live-session-alert">
+        {/* Abstract wave background SVG lines */}
+        <div className="absolute right-36 top-0 bottom-0 pointer-events-none opacity-40 hidden lg:block">
+          <svg className="h-full w-64 text-emerald-300 dark:text-emerald-700" fill="none" viewBox="0 0 200 80">
+            <path d="M0 40 Q50 10, 100 40 T200 40" fill="none" stroke="currentColor" strokeWidth="1.5"></path>
+            <path d="M0 50 Q50 20, 100 50 T200 50" fill="none" stroke="currentColor" strokeWidth="1"></path>
+            <path d="M0 30 Q50 60, 100 30 T200 30" fill="none" stroke="currentColor" strokeWidth="1.5"></path>
+          </svg>
+        </div>
+        <div className="relative z-10 space-y-1.5">
+          {/* Live Status Tags */}
+          <div className="flex items-center gap-2.5">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#0d452b] text-emerald-200">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              LIVE NOW
+            </span>
+            <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">72 Classmates Online</span>
+          </div>
+          {/* Session Title & Instructor */}
+          <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white tracking-tight">
+            Session 4: Multi-Agent Consensus & Hierarchical Supervision
+          </h3>
+          <p className="text-xs text-slate-600 dark:text-slate-300">
+            Instructor: <span className="font-medium text-slate-800 dark:text-slate-100">Prof. Rajesh Verma</span> • Agentic Systems Bootcamp
+          </p>
+        </div>
+        {/* Join Button */}
+        <div className="relative z-10 shrink-0 w-full md:w-auto">
+          <button
+            onClick={() => setDeviceModalOpen(true)}
+            className="w-full md:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#093521] hover:bg-[#062617] text-white text-xs sm:text-sm font-semibold shadow-sm transition-all cursor-pointer"
+            type="button"
+          >
+            <svg className="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <rect height="12" rx="2" width="14" x="2" y="6"></rect>
+              <path d="M16 10l6-4v12l-6-4"></path>
+            </svg>
+            Pre-Join Check & Enter  →
+          </button>
+        </div>
+      </section>
+      {/* END: Live Session Callout Banner */}
+
+      {/* BEGIN: Two-Column Lower Content Area */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start" data-purpose="dashboard-two-columns">
+        {/* Left Column (Programs & Resume): ~60% Width (col-span-7) */}
+        <div className="lg:col-span-7 space-y-6">
+          {/* Enrolled Programs & Progress Card */}
+          <div className="bg-white dark:bg-card rounded-2xl border border-slate-200/80 dark:border-border/80 p-5 shadow-2xs" data-purpose="enrolled-programs-card">
+            <div className="flex items-start justify-between mb-4">
+              <div className="flex items-center gap-2.5">
+                <span className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 flex items-center justify-center">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" strokeLinecap="round" strokeLinejoin="round"></path>
+                  </svg>
+                </span>
                 <div>
-                  <CardTitle className="text-sm sm:text-base font-bold">
-                    Enrolled Programs & Progress
-                  </CardTitle>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    Track your curriculum milestone completion and access entitlements
-                  </p>
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white">Enrolled Programs & Progress</h3>
+                  <p className="text-[11px] text-slate-400">Track your curriculum milestone completion and access entitlements</p>
                 </div>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => navigate("/student/courses")}
-                  className="text-xs h-8 text-primary font-semibold"
-                >
-                  View Details
-                </Button>
-              </CardHeader>
+              </div>
+              <button
+                onClick={() => navigate("/student/courses")}
+                className="text-xs font-semibold text-emerald-800 dark:text-emerald-400 hover:text-emerald-950 dark:hover:text-emerald-300 inline-flex items-center gap-1 cursor-pointer"
+              >
+                View Details  →
+              </button>
+            </div>
 
-              <CardContent className="p-4 sm:p-5 space-y-4">
-                <div className="p-4 rounded-xl border border-border/70 bg-card space-y-3">
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <span className="font-bold text-sm text-foreground">
-                      Full-Stack AI & LLM Systems Engineering
-                    </span>
-                    <Badge variant="accent" className="text-[10px] font-bold">
+            {/* Program Inner Item */}
+            <div className="p-4 rounded-xl border border-slate-100 dark:border-border/60 bg-[#fbfdfc] dark:bg-muted/10 flex flex-col gap-4">
+              <div className="flex items-start gap-4">
+                {/* Course Graphic / Illustration Thumbnail */}
+                <div className="w-16 h-16 rounded-xl bg-[#092b1a] flex items-center justify-center shrink-0 border border-emerald-900/40 relative overflow-hidden shadow-inner">
+                  <div className="absolute inset-0 bg-radial from-emerald-500/20 to-transparent"></div>
+                  {/* Mini stylized terminal/computer vector */}
+                  <svg className="w-9 h-9 text-emerald-400 relative z-10" fill="none" stroke="currentColor" strokeWidth="1.75" viewBox="0 0 24 24">
+                    <rect height="14" rx="2" width="20" x="2" y="3"></rect>
+                    <line x1="8" x2="16" y1="21" y2="21"></line>
+                    <line x1="12" x2="12" y1="17" y2="21"></line>
+                    <path d="M7 8l3 3-3 3M13 14h4"></path>
+                  </svg>
+                </div>
+                {/* Course Description & Progress */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2">
+                    <h4 className="text-sm font-bold text-slate-900 dark:text-white truncate">Full-Stack AI & LLM Systems Engineering</h4>
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60">
                       Live + Replay Tier
-                    </Badge>
+                    </span>
                   </div>
-
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                     Cohort 7 (Weekday Evening) • Lead Faculty: Prof. Rajesh Verma
                   </p>
-
-                  <div className="space-y-1 pt-1">
-                    <div className="flex justify-between text-xs font-semibold">
-                      <span>Course Progress</span>
-                      <span className="text-primary font-bold">68% Completed</span>
+                  {/* Progress Bar */}
+                  <div className="mt-3">
+                    <div className="flex items-center justify-between text-xs mb-1">
+                      <span className="font-medium text-slate-700 dark:text-slate-300 text-[11px]">Course Progress</span>
+                      <span className="font-semibold text-emerald-800 dark:text-emerald-400 text-[11px]">68% Completed</span>
                     </div>
-                    <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
-                      <div className="h-full bg-primary rounded-full" style={{ width: "68%" }} />
+                    <div className="w-full h-2 bg-slate-100 dark:bg-muted rounded-full overflow-hidden">
+                      <div className="bg-gradient-to-r from-emerald-600 to-emerald-500 h-full rounded-full" style={{ width: "68%" }}></div>
                     </div>
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs pt-1 border-t border-border/60">
-                    <span className="text-[11px] text-muted-foreground">
-                      Access valid until: <strong>31 Dec 2026</strong>
-                    </span>
-                    <Button
-                      size="sm"
-                      onClick={() => navigate("/student/courses/course-ai-eng")}
-                      className="h-8 text-xs font-bold gap-1"
-                    >
-                      Open Syllabus <ArrowRight className="h-3 w-3" />
-                    </Button>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-
-            {/* Smart Replay resume card */}
-            <Card className="border-border/80 shadow-xs rounded-2xl p-5 bg-card space-y-3">
-              <div className="flex items-center justify-between">
-                <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <PlaySquare className="h-4 w-4 text-primary" /> Resume Where You Left Off
-                </h4>
-                <Badge variant="outline" className="text-[10px]">
-                  Paused @ 00:24:18
-                </Badge>
               </div>
 
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                Lecture 8: Vector Databases, Chunking Strategies & Embedding Alignment (HNSW Graph Construction chapter)
-              </p>
-
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => navigate("/student/replays/rep-rag-8")}
-                className="text-xs h-9 font-bold gap-1.5 w-full sm:w-auto"
-              >
-                <Play className="h-3.5 w-3.5 text-primary" /> Resume at 00:24:18 with AI Tutor
-              </Button>
-            </Card>
+              {/* Program Bottom Footer Bar */}
+              <div className="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-border/60 text-xs">
+                <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1.5 text-[11px]">
+                  <svg className="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect>
+                    <line x1="16" x2="16" y1="2" y2="6"></line>
+                    <line x1="8" x2="8" y1="2" y2="6"></line>
+                    <line x1="3" x2="21" y1="10" y2="10"></line>
+                  </svg>
+                  Access valid until <span className="font-medium text-slate-700 dark:text-slate-300">31 Dec 2026</span>
+                </span>
+                <button
+                  onClick={() => navigate("/student/courses/course-ai-eng")}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#0e3b26] hover:bg-[#09291a] text-white text-[11px] font-semibold transition-colors cursor-pointer"
+                  type="button"
+                >
+                  Open Syllabus  →
+                </button>
+              </div>
+            </div>
           </div>
 
-          {/* Right Column: Recent Doubts & Quick Actions (1 col) */}
-          <div className="space-y-4">
-            <Card className="border-border/80 shadow-xs rounded-2xl p-5 bg-card space-y-3">
-              <div className="flex items-center justify-between">
-                <h4 className="text-sm font-bold text-foreground flex items-center gap-1.5">
-                  <HelpCircle className="h-4 w-4 text-amber-500" /> Recent Doubts
-                </h4>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => navigate("/student/doubts")}
-                  className="text-xs h-7 p-0 text-primary"
-                >
-                  All Doubts
-                </Button>
+          {/* Resume Where You Left Off Card */}
+          <div className="bg-white dark:bg-card rounded-2xl border border-slate-200/80 dark:border-border/80 p-5 shadow-2xs" data-purpose="resume-lecture-card">
+            <div className="flex items-start justify-between mb-2">
+              <div className="flex items-center gap-2.5">
+                <span className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 flex items-center justify-center">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                  </svg>
+                </span>
+                <div>
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white">Resume Where You Left Off</h3>
+                </div>
               </div>
+              <span className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-500 dark:text-slate-400 bg-slate-100/80 dark:bg-muted/60 px-2.5 py-1 rounded-full">
+                ⏱ Paused at 00:24:18
+              </span>
+            </div>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-4 ml-10">
+              Lecture 8: Vector Databases, Chunking Strategies & Embedding Alignment (HNSW Graph Construction chapter)
+            </p>
 
-              <div className="space-y-2.5">
-                {doubts.slice(0, 2).map((d) => (
-                  <div key={d.id} className="p-3 rounded-xl border border-border/60 bg-muted/20 text-xs space-y-1">
-                    <div className="flex justify-between items-center text-[10px]">
-                      <span className="font-mono text-primary font-bold">▶ {d.timestampFormatted}</span>
-                      <Badge variant="success" className="text-[9px]">Answered ✓</Badge>
-                    </div>
-                    <p className="text-muted-foreground line-clamp-2">"{d.question}"</p>
-                  </div>
-                ))}
-              </div>
-            </Card>
-
-            <Card className="border-border/80 shadow-xs rounded-2xl p-5 bg-card space-y-3">
-              <h4 className="text-sm font-bold text-foreground flex items-center gap-1.5">
-                <Award className="h-4 w-4 text-primary" /> Milestone Result
-              </h4>
-              <div className="p-3.5 rounded-xl bg-primary/5 border border-primary/20 space-y-1">
-                <p className="text-xs font-bold text-foreground">Milestone 2: Hybrid RAG System</p>
-                <p className="text-lg font-extrabold text-primary">95 / 100</p>
-                <p className="text-[11px] text-muted-foreground">Evaluator feedback: "Production-grade separation of dense retrieval."</p>
-              </div>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => navigate("/student/results/test-rag-eval")}
-                className="w-full text-xs h-8 font-semibold"
+            {/* Video Thumbnail & Play Action */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 p-3 bg-slate-50 dark:bg-muted/20 rounded-xl border border-slate-100 dark:border-border/60">
+              {/* Video Preview Thumbnail with Mock Code/Graph and Play Overlay */}
+              <div
+                onClick={() => navigate("/student/replays/rep-rag-8")}
+                className="relative w-full sm:w-40 h-24 bg-slate-900 rounded-lg overflow-hidden shrink-0 flex items-center justify-center group cursor-pointer shadow-inner"
               >
-                View Full Rubric & Feedback
-              </Button>
-            </Card>
+                {/* Mock Code Background Simulation */}
+                <div className="absolute inset-0 p-2 text-[8px] font-mono text-emerald-400/50 leading-tight select-none overflow-hidden opacity-70">
+                  import faiss<br />
+                  index = faiss.IndexHNSWFlat(d, 32)<br />
+                  index.hnsw.efSearch = 64<br />
+                  index.add(xb)<br />
+                  D, I = index.search(xq, k)
+                </div>
+                {/* Play Circle Overlay */}
+                <div className="relative z-10 w-9 h-9 rounded-full bg-slate-800/80 group-hover:bg-emerald-600 text-white flex items-center justify-center shadow-lg transition-transform group-hover:scale-110">
+                  <svg className="w-4 h-4 fill-current ml-0.5" viewBox="0 0 24 24">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                  </svg>
+                </div>
+              </div>
+
+              {/* Resume Button Description */}
+              <div className="flex-1 flex flex-col justify-center">
+                <button
+                  onClick={() => navigate("/student/replays/rep-rag-8")}
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white dark:bg-card hover:bg-slate-50 dark:hover:bg-muted/50 border border-slate-200 dark:border-border text-slate-800 dark:text-slate-200 text-xs font-semibold shadow-2xs transition-all w-full sm:w-auto self-start cursor-pointer"
+                  type="button"
+                >
+                  <svg className="w-3.5 h-3.5 text-slate-700 dark:text-slate-300 fill-current" viewBox="0 0 24 24">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                  </svg>
+                  <span>Resume at 00:24:18 <span className="text-emerald-700 dark:text-emerald-400 font-medium">with AI Tutor</span></span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Pre-Join Hardware Check Modal */}
-        {liveClass && (
-          <DeviceCheckModal
-            open={deviceModalOpen}
-            onOpenChange={setDeviceModalOpen}
-            targetClassId={liveClass.id}
-            classTitle={liveClass.title}
-          />
-        )}
+        {/* Right Column (Doubts & Milestone GPA): ~40% Width (col-span-5) */}
+        <div className="lg:col-span-5 space-y-6">
+          {/* Recent Doubts Card */}
+          <div className="bg-white dark:bg-card rounded-2xl border border-slate-200/80 dark:border-border/80 p-5 shadow-2xs" data-purpose="recent-doubts-card">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <span className="w-7 h-7 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 flex items-center justify-center">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" x2="12.01" y1="17" y2="17"></line>
+                  </svg>
+                </span>
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white">Recent Doubts</h3>
+              </div>
+              <button
+                onClick={() => navigate("/student/doubts")}
+                className="text-xs font-semibold text-emerald-800 dark:text-emerald-400 hover:text-emerald-950 dark:hover:text-emerald-300 inline-flex items-center gap-1 cursor-pointer"
+              >
+                All Doubts  →
+              </button>
+            </div>
+
+            {/* Doubts List */}
+            <div className="space-y-3">
+              {/* Doubt Item 1 */}
+              <div
+                onClick={() => navigate("/student/doubts")}
+                className="p-3 rounded-xl border border-slate-100 dark:border-border/60 hover:border-slate-200 dark:hover:border-border bg-slate-50/60 dark:bg-muted/10 transition-colors cursor-pointer group"
+              >
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <span className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-600 dark:text-slate-300 bg-white dark:bg-card border border-slate-200 dark:border-border px-2 py-0.5 rounded-md">
+                    <svg className="w-2.5 h-2.5 fill-current text-slate-600 dark:text-slate-300" viewBox="0 0 24 24">
+                      <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                    00:24:18
+                  </span>
+                  <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 px-2 py-0.5 rounded-full border border-emerald-100 dark:border-emerald-800/50">
+                    Answered ✓
+                  </span>
+                </div>
+                <div className="flex items-start justify-between gap-2">
+                  <p className="text-xs text-slate-700 dark:text-slate-300 font-normal leading-relaxed">
+                    “How does the efSearch parameter in HNSW affect latency versus recall during high concurrency?”
+                  </p>
+                  <svg className="w-4 h-4 text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200 shrink-0 mt-0.5 transition-colors" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round"></path>
+                  </svg>
+                </div>
+              </div>
+
+              {/* Doubt Item 2 */}
+              <div
+                onClick={() => navigate("/student/doubts")}
+                className="p-3 rounded-xl border border-slate-100 dark:border-border/60 hover:border-slate-200 dark:hover:border-border bg-slate-50/60 dark:bg-muted/10 transition-colors cursor-pointer group"
+              >
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <span className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-600 dark:text-slate-300 bg-white dark:bg-card border border-slate-200 dark:border-border px-2 py-0.5 rounded-md">
+                    <svg className="w-2.5 h-2.5 fill-current text-slate-600 dark:text-slate-300" viewBox="0 0 24 24">
+                      <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                    00:20:00
+                  </span>
+                  <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 px-2 py-0.5 rounded-full border border-emerald-100 dark:border-emerald-800/50">
+                    Answered ✓
+                  </span>
+                </div>
+                <div className="flex items-start justify-between gap-2">
+                  <p className="text-xs text-slate-700 dark:text-slate-300 font-normal leading-relaxed">
+                    “Can an interrupt in LangGraph persist across server restarts if the client disconnects?”
+                  </p>
+                  <svg className="w-4 h-4 text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200 shrink-0 mt-0.5 transition-colors" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round"></path>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Milestone Result Card */}
+          <div className="bg-white dark:bg-card rounded-2xl border border-slate-200/80 dark:border-border/80 p-5 shadow-2xs" data-purpose="milestone-result-card">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="w-7 h-7 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 flex items-center justify-center">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138z" strokeLinecap="round" strokeLinejoin="round"></path>
+                </svg>
+              </span>
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white">Milestone Result</h3>
+            </div>
+
+            {/* Inner Soft Green Evaluation Box */}
+            <div className="p-4 rounded-xl bg-[#f2f8f5] dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-800/40 mb-3 flex flex-col justify-between">
+              <div>
+                <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 mb-1.5">Milestone 2: Hybrid RAG System</p>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-baseline gap-1.5">
+                    <span className="text-2xl font-bold text-slate-900 dark:text-white">95</span>
+                    <span className="text-sm font-bold text-slate-500 dark:text-slate-400">/ 100</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-7 h-7 rounded-lg bg-white dark:bg-card border border-emerald-200/80 dark:border-emerald-800/60 flex items-center justify-center text-emerald-800 dark:text-emerald-400">
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" strokeLinecap="round" strokeLinejoin="round"></path>
+                      </svg>
+                    </span>
+                    <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round"></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-2.5">
+                Evaluator feedback: <span className="italic text-slate-700 dark:text-slate-300">“Production grade separation of dense retrieval.”</span>
+              </p>
+            </div>
+
+            {/* Full-width View Rubric Button */}
+            <button
+              onClick={() => navigate("/student/results/test-rag-eval")}
+              className="w-full py-2.5 px-3 rounded-xl border border-slate-200 dark:border-border text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-muted/50 transition-colors text-center cursor-pointer"
+              type="button"
+            >
+              View Full Rubric & Feedback
+            </button>
+          </div>
+        </div>
       </div>
+      {/* END: Two-Column Lower Content Area */}
+
+      {/* Pre-Join Hardware Check Modal */}
+      <DeviceCheckModal
+        open={deviceModalOpen}
+        onOpenChange={setDeviceModalOpen}
+        targetClassId="class-agentic-101"
+        classTitle="Session 4: Multi-Agent Consensus & Hierarchical Supervision"
+      />
+    </div>
   );
 };
+export default StudentDashboard;
