@@ -119,9 +119,9 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen h-full flex flex-col bg-[#121212] text-[#ededed] font-sans selection:bg-[#3ecf8e] selection:text-black antialiased">
+    <div className="min-h-screen h-full flex flex-col bg-[#fafafa] text-slate-900 font-sans selection:bg-[#3ecf8e] selection:text-black antialiased">
       {/* BEGIN: MainHeader */}
-      <header className="w-full h-16 flex items-center justify-between px-6 lg:px-8 z-10 border-b border-[#1f1f1f]/80 shrink-0">
+      <header className="w-full h-16 flex items-center justify-between px-6 lg:px-8 z-10 bg-white border-b border-[#eaecf0] shrink-0">
         {/* Logo Left */}
         <Link
           to="/"
@@ -140,16 +140,16 @@ export const LoginPage: React.FC = () => {
               </linearGradient>
             </defs>
           </svg>
-          <span className="text-white font-semibold text-lg tracking-tight">Apex LMS</span>
+          <span className="text-slate-900 font-semibold text-lg tracking-tight">Apex LMS</span>
         </Link>
 
         {/* Documentation Button Right */}
         <Link
           to="/curriculum"
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-300 bg-[#171717] hover:bg-[#202020] border border-[#2e2e2e] rounded-md transition-colors shadow-sm"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 rounded-md transition-colors shadow-2xs"
         >
           <svg
-            className="w-3.5 h-3.5 text-gray-400"
+            className="w-3.5 h-3.5 text-slate-500"
             fill="none"
             stroke="currentColor"
             strokeLinecap="round"
@@ -169,24 +169,24 @@ export const LoginPage: React.FC = () => {
       <main className="flex-1 flex w-full">
         {/* BEGIN: LeftFormColumn */}
         <section
-          className="w-full lg:w-[48%] flex flex-col justify-center items-center px-6 lg:px-16 py-4 lg:py-6"
+          className="w-full lg:w-[48%] flex flex-col justify-center items-center px-6 lg:px-16 py-4 lg:py-6 bg-white"
           data-purpose="auth-container"
         >
           <div className="w-full max-w-[370px] space-y-4">
             {/* Header Text */}
             <div className="space-y-1">
-              <h1 className="text-[26px] sm:text-[28px] font-bold text-white tracking-tight">Welcome back</h1>
-              <p className="text-xs sm:text-sm text-[#888888]">Sign in to your account</p>
+              <h1 className="text-[26px] sm:text-[28px] font-bold text-slate-900 tracking-tight">Welcome back</h1>
+              <p className="text-xs sm:text-sm text-slate-500">Sign in to your account</p>
             </div>
 
-            {/* Quick Demo Persona Switcher (Matching Supabase Dark Surface) */}
-            <div className="p-2.5 bg-[#171717] border border-[#2e2e2e] rounded-md space-y-1.5">
-              <div className="flex items-center justify-between text-xs text-[#888888]">
-                <span className="flex items-center gap-1.5 font-medium text-zinc-300 text-[11px]">
-                  <Zap className="w-3 h-3 text-[#3ECF8E]" />
+            {/* Quick Demo Persona Switcher (Clean Off-White Surface) */}
+            <div className="p-2.5 bg-[#f8fafc] border border-slate-200 rounded-md space-y-1.5 shadow-2xs">
+              <div className="flex items-center justify-between text-xs text-slate-500">
+                <span className="flex items-center gap-1.5 font-medium text-slate-700 text-[11px]">
+                  <Zap className="w-3 h-3 text-emerald-600" />
                   Quick Demo Accounts
                 </span>
-                <span className="text-[10px] text-[#3ECF8E] font-mono">1-Click Select</span>
+                <span className="text-[10px] text-emerald-700 font-mono font-medium">1-Click Select</span>
               </div>
               <div className="grid grid-cols-3 gap-1">
                 {DEMO_ACCOUNTS.map((acc) => {
@@ -199,8 +199,8 @@ export const LoginPage: React.FC = () => {
                       className={cn(
                         "px-2 py-1.5 text-xs font-medium rounded transition text-center cursor-pointer border truncate",
                         isSelected
-                          ? "bg-[#202020] text-[#3ECF8E] border-[#3ECF8E]/60 shadow-xs"
-                          : "bg-[#121212] text-zinc-400 border-[#262626] hover:text-white hover:border-[#383838]"
+                          ? "bg-white text-emerald-700 border-emerald-500 shadow-xs ring-1 ring-emerald-500/30 font-semibold"
+                          : "bg-white text-slate-600 border-slate-200 hover:text-slate-900 hover:border-slate-300"
                       )}
                       title={`${acc.name} (${acc.roleLabel})`}
                     >
@@ -216,7 +216,7 @@ export const LoginPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => handleDirectLogin(selectedAccount)}
-                className="w-full flex items-center justify-center gap-2.5 py-2.5 px-4 text-sm font-medium text-white bg-[#171717] hover:bg-[#202020] border border-[#2e2e2e] rounded-md transition cursor-pointer"
+                className="w-full flex items-center justify-center gap-2.5 py-2.5 px-4 text-sm font-medium text-slate-800 bg-white hover:bg-slate-50 border border-slate-200 rounded-md transition shadow-2xs cursor-pointer"
               >
                 {/* Multi-color Google G Logo */}
                 <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
@@ -243,16 +243,16 @@ export const LoginPage: React.FC = () => {
 
             {/* Divider with 'or' */}
             <div className="relative flex py-1 items-center">
-              <div className="flex-grow border-t border-[#262626]" />
-              <span className="flex-shrink mx-3 text-xs text-[#707070]">or</span>
-              <div className="flex-grow border-t border-[#262626]" />
+              <div className="flex-grow border-t border-slate-200" />
+              <span className="flex-shrink mx-3 text-xs text-slate-400">or</span>
+              <div className="flex-grow border-t border-slate-200" />
             </div>
 
             {/* Input Form */}
             <form onSubmit={handleFormSubmit} className="space-y-3.5">
               {/* Email Field */}
               <div className="space-y-1.5">
-                <label className="block text-xs font-medium text-zinc-300" htmlFor="email">
+                <label className="block text-xs font-medium text-slate-700" htmlFor="email">
                   Email
                 </label>
                 <input
@@ -263,17 +263,17 @@ export const LoginPage: React.FC = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   autoComplete="email"
                   placeholder="you@example.com"
-                  className="w-full px-3 py-2 text-sm bg-[#171717] border border-[#2e2e2e] rounded-md text-white placeholder-[#52525b] focus:outline-none focus:border-[#3ECF8E] focus:ring-1 focus:ring-[#3ECF8E] transition"
+                  className="w-full px-3 py-2 text-sm bg-white border border-slate-200 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition shadow-2xs"
                 />
               </div>
 
               {/* Password Field */}
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <label className="block text-xs font-medium text-zinc-300" htmlFor="password">
+                  <label className="block text-xs font-medium text-slate-700" htmlFor="password">
                     Password
                   </label>
-                  <Link to="/reset-password" className="text-xs text-[#808080] hover:text-zinc-300 transition">
+                  <Link to="/reset-password" className="text-xs text-slate-500 hover:text-slate-800 transition">
                     Forgot password?
                   </Link>
                 </div>
@@ -284,13 +284,13 @@ export const LoginPage: React.FC = () => {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-3 py-2 pr-10 text-sm bg-[#171717] border border-[#2e2e2e] rounded-md text-white focus:outline-none focus:border-[#3ECF8E] focus:ring-1 focus:ring-[#3ECF8E] transition font-mono"
+                    className="w-full px-3 py-2 pr-10 text-sm bg-white border border-slate-200 rounded-md text-slate-900 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition font-mono shadow-2xs"
                   />
                   {/* Show/Hide Password Eye */}
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#707070] hover:text-zinc-400 cursor-pointer"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer"
                   >
                     {showPassword ? (
                       <EyeOff className="h-4 w-4" />
@@ -305,14 +305,14 @@ export const LoginPage: React.FC = () => {
               <div className="relative pt-1">
                 {/* Badge positioned top right of the button */}
                 <div className="absolute -top-1.5 right-0 z-10">
-                  <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold tracking-wide bg-[#202020] text-[#3ECF8E] border border-[#2e2e2e]">
+                  <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold tracking-wide bg-emerald-50 text-emerald-700 border border-emerald-200">
                     {selectedAccount.roleLabel.toUpperCase()}
                   </span>
                 </div>
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full py-2.5 px-4 bg-[#1e6144] hover:bg-[#257552] border border-[#2b885f] text-white text-sm font-medium rounded-md shadow-sm transition focus:outline-none focus:ring-2 focus:ring-[#3ECF8E] focus:ring-offset-2 focus:ring-offset-[#121212] cursor-pointer disabled:opacity-50"
+                  className="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 border border-emerald-600 text-white text-sm font-medium rounded-md shadow-xs transition focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-white cursor-pointer disabled:opacity-50"
                 >
                   {isLoading ? `Signing in to ${selectedAccount.roleLabel}...` : "Sign in"}
                 </button>
@@ -321,12 +321,12 @@ export const LoginPage: React.FC = () => {
 
             {/* Don't have an account */}
             <div className="text-center pt-0.5">
-              <p className="text-xs text-[#808080]">
+              <p className="text-xs text-slate-500">
                 Don't have an account?{" "}
                 <button
                   type="button"
                   onClick={() => handleDirectLogin(selectedAccount)}
-                  className="text-white hover:underline underline-offset-2 cursor-pointer bg-transparent border-0 p-0"
+                  className="text-slate-900 font-medium hover:underline underline-offset-2 cursor-pointer bg-transparent border-0 p-0"
                 >
                   Sign up
                 </button>
@@ -335,13 +335,13 @@ export const LoginPage: React.FC = () => {
 
             {/* Terms and Privacy Policy Disclaimer */}
             <div className="pt-2 text-center">
-              <p className="text-[11px] leading-relaxed text-[#5c5c5c] max-w-[340px] mx-auto">
+              <p className="text-[11px] leading-relaxed text-slate-400 max-w-[340px] mx-auto">
                 By continuing, you agree to Apex LMS's{" "}
-                <a className="underline text-[#737373] hover:text-[#9e9e9e]" href="#">
+                <a className="underline text-slate-600 hover:text-slate-800" href="#">
                   Terms of Service
                 </a>{" "}
                 and{" "}
-                <a className="underline text-[#737373] hover:text-[#9e9e9e]" href="#">
+                <a className="underline text-slate-600 hover:text-slate-800" href="#">
                   Privacy Policy
                 </a>
                 , and to receive periodic emails with updates.
@@ -351,33 +351,33 @@ export const LoginPage: React.FC = () => {
         </section>
         {/* END: LeftFormColumn */}
 
-        {/* BEGIN: RightTestimonialColumn */}
+        {/* BEGIN: RightTestimonialColumn (Off-White & White Surface) */}
         <section
-          className="hidden lg:flex w-[52%] border-l border-[#1f1f1f] bg-[#0c0c0c] relative flex-col justify-center px-16 xl:px-24"
+          className="hidden lg:flex w-[52%] border-l border-[#eaecf0] bg-[#f8fafc] relative flex-col justify-center px-16 xl:px-24"
           data-purpose="testimonial-panel"
         >
           <div className="max-w-xl space-y-6">
             {/* Large Quote Icon */}
-            <div aria-hidden="true" className="text-[#2b2b2b]">
+            <div aria-hidden="true" className="text-slate-300">
               <svg className="w-12 h-12 fill-current opacity-80" viewBox="0 0 24 24">
                 <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
               </svg>
             </div>
 
             {/* Quote Paragraph tailored to LMS */}
-            <blockquote className="text-[26px] leading-[1.35] text-zinc-100 font-normal tracking-tight">
+            <blockquote className="text-[26px] leading-[1.35] text-slate-800 font-normal tracking-tight">
               “Apex LMS completely transformed how we teach live AI engineering. The WebRTC studio coupled with instant semantic vector search across lecture transcripts lets our students resolve questions with pinpoint video timestamps in seconds.”
             </blockquote>
 
             {/* Author Meta */}
             <div className="flex items-center gap-3 pt-2">
               {/* Circular User Avatar */}
-              <div className="w-10 h-10 rounded-full bg-[#171717] border border-[#2c2c2c] flex items-center justify-center text-[#3ECF8E] font-semibold text-sm">
+              <div className="w-10 h-10 rounded-full bg-emerald-100 border border-emerald-200 flex items-center justify-center text-emerald-800 font-semibold text-sm shadow-2xs">
                 RV
               </div>
               <div>
-                <span className="block text-sm font-medium text-zinc-300">Prof. Rajesh Verma</span>
-                <span className="block text-xs text-[#707070]">Lead AI Systems Faculty · Cohort 7</span>
+                <span className="block text-sm font-semibold text-slate-900">Prof. Rajesh Verma</span>
+                <span className="block text-xs text-slate-500">Lead AI Systems Faculty · Cohort 7</span>
               </div>
             </div>
           </div>
