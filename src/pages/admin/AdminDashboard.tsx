@@ -1,5 +1,5 @@
 import React from "react";
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
+
 import { StatCard } from "@/components/ui/StatCard";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -28,30 +28,26 @@ export const AdminDashboard: React.FC = () => {
   const pendingGrading = mockDataService.getSubmissions().filter((s) => s.status === "pending");
 
   return (
-    <DashboardLayout
-      headerAction={
-        <Button
-          size="sm"
-          onClick={() => navigate("/admin/batches")}
-          className="h-8 text-xs font-bold gap-1 shadow-sm"
-        >
-          <Plus className="h-3.5 w-3.5" /> New Batch
-        </Button>
-      }
-    >
-      <div className="space-y-6">
-        {/* Welcome Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <div>
-            <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-foreground flex items-center gap-2">
-              Academic Operations Hub
-            </h1>
-            <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-              Live batch orchestration, schedule management, fee collections, and student entitlements.
-            </p>
-          </div>
+    <div className="space-y-6">
+      {/* Welcome Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+          <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-foreground flex items-center gap-2">
+            Academic Operations Hub
+          </h1>
+          <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+            Live batch orchestration, schedule management, fee collections, and student entitlements.
+          </p>
+        </div>
 
-          <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2">
+          <Button
+            size="sm"
+            onClick={() => navigate("/admin/batches")}
+            className="text-xs h-9 font-bold gap-1 shadow-sm"
+          >
+            <Plus className="h-3.5 w-3.5" /> New Batch
+          </Button>
             <Button
               size="sm"
               variant="outline"
@@ -303,6 +299,5 @@ export const AdminDashboard: React.FC = () => {
           </div>
         </div>
       </div>
-    </DashboardLayout>
   );
 };

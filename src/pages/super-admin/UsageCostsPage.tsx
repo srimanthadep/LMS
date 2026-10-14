@@ -1,5 +1,4 @@
 import React from "react";
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { StatCard } from "@/components/ui/StatCard";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,8 +8,7 @@ import { RupeeIcon } from "@/components/icons/RupeeIcon";
 
 export const UsageCostsPage: React.FC = () => {
   return (
-    <DashboardLayout>
-      <div className="space-y-6">
+    <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
             <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-foreground flex items-center gap-2">
@@ -166,6 +164,5 @@ export const UsageCostsPage: React.FC = () => {
           </div>
         </div>
       </div>
-    </DashboardLayout>
   );
 };

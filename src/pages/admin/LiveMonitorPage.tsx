@@ -1,5 +1,4 @@
 import React from "react";
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -12,8 +11,7 @@ export const LiveMonitorPage: React.FC = () => {
   const liveClasses = mockDataService.getLiveClasses().filter((c) => c.status === "live");
 
   return (
-    <DashboardLayout>
-      <div className="space-y-6">
+    <div className="space-y-6">
         <div className="flex items-center gap-3">
           <Button
             size="sm"
@@ -108,6 +106,5 @@ export const LiveMonitorPage: React.FC = () => {
           </div>
         ))}
       </div>
-    </DashboardLayout>
   );
 };

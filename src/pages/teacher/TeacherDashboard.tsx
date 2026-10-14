@@ -1,5 +1,5 @@
 import React from "react";
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
+
 import { StatCard } from "@/components/ui/StatCard";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -24,31 +24,27 @@ export const TeacherDashboard: React.FC = () => {
   const doubts = mockDataService.getDoubts().filter((d) => d.status === "open");
 
   return (
-    <DashboardLayout
-      headerAction={
-        <Button
-          size="sm"
-          onClick={() => navigate("/teacher/classroom/class-agentic-101")}
-          className="h-8 text-xs font-bold gap-1.5 shadow-sm bg-rose-600 hover:bg-rose-700 text-white"
-        >
-          <span className="w-2 h-2 rounded-full bg-white animate-ping" />
-          Enter Live Studio
-        </Button>
-      }
-    >
-      <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <div>
-            <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-foreground flex items-center gap-2">
-              Faculty Studio Hub
-              <Badge variant="accent" className="text-[10px] font-bold">Prof. Rajesh Verma</Badge>
-            </h1>
-            <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-              Live broadcast controls, student doubt clearance desk, AI lecture reviews, and cohort engagement metrics.
-            </p>
-          </div>
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+          <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-foreground flex items-center gap-2">
+            Faculty Studio Hub
+            <Badge variant="accent" className="text-[10px] font-bold">Prof. Rajesh Verma</Badge>
+          </h1>
+          <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+            Live broadcast controls, student doubt clearance desk, AI lecture reviews, and cohort engagement metrics.
+          </p>
+        </div>
 
-          <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2">
+          <Button
+            size="sm"
+            onClick={() => navigate("/teacher/classroom/class-agentic-101")}
+            className="h-9 text-xs font-bold gap-1.5 shadow-sm bg-rose-600 hover:bg-rose-700 text-white"
+          >
+            <span className="w-2 h-2 rounded-full bg-white animate-ping" />
+            Enter Live Studio
+          </Button>
             <Button
               size="sm"
               variant="outline"
@@ -225,6 +221,5 @@ export const TeacherDashboard: React.FC = () => {
           </div>
         </div>
       </div>
-    </DashboardLayout>
   );
 };

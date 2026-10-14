@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -43,8 +42,7 @@ export const BatchDetailPage: React.FC = () => {
   ];
 
   return (
-    <DashboardLayout>
-      <div className="space-y-6">
+    <div className="space-y-6">
         <div className="flex items-center gap-3">
           <Button
             size="sm"
@@ -182,6 +180,5 @@ export const BatchDetailPage: React.FC = () => {
           </div>
         </div>
       </div>
-    </DashboardLayout>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
+
 import { StatCard } from "@/components/ui/StatCard";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -28,32 +28,28 @@ export const StudentDashboard: React.FC = () => {
   const doubts = mockDataService.getDoubts();
 
   return (
-    <DashboardLayout
-      headerAction={
-        liveClass && (
-          <Button
-            size="sm"
-            onClick={() => setDeviceModalOpen(true)}
-            className="h-8 text-xs font-bold gap-1.5 shadow-sm bg-rose-600 hover:bg-rose-700 text-white animate-pulse"
-          >
-            <Video className="h-3.5 w-3.5" /> Join Live Class
-          </Button>
-        )
-      }
-    >
-      <div className="space-y-6">
-        {/* Welcome Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <div>
-            <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-foreground flex items-center gap-2">
-              Welcome back, Arjun! 👋
-            </h1>
-            <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-              Enrolled in <strong>Cohort 7 (Live + Replay)</strong> • Apex AI Systems Program
-            </p>
-          </div>
+    <div className="space-y-6">
+      {/* Welcome Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+          <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-foreground flex items-center gap-2">
+            Welcome back, Arjun! 👋
+          </h1>
+          <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+            Enrolled in <strong>Cohort 7 (Live + Replay)</strong> • Apex AI Systems Program
+          </p>
+        </div>
 
-          <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2">
+          {liveClass && (
+            <Button
+              size="sm"
+              onClick={() => setDeviceModalOpen(true)}
+              className="h-9 text-xs font-bold gap-1.5 shadow-sm bg-rose-600 hover:bg-rose-700 text-white animate-pulse"
+            >
+              <Video className="h-3.5 w-3.5" /> Join Live Class
+            </Button>
+          )}
             <Button
               size="sm"
               variant="outline"
@@ -290,6 +286,5 @@ export const StudentDashboard: React.FC = () => {
           />
         )}
       </div>
-    </DashboardLayout>
   );
 };

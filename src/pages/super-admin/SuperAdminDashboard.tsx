@@ -1,5 +1,5 @@
 import React from "react";
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
+
 import { StatCard } from "@/components/ui/StatCard";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -27,34 +27,30 @@ export const SuperAdminDashboard: React.FC = () => {
   const liveClasses = mockDataService.getLiveClasses().filter((c) => c.status === "live");
 
   return (
-    <DashboardLayout
-      headerAction={
-        <Button
-          size="sm"
-          variant="outline"
-          onClick={() => navigate("/super-admin/usage-costs")}
-          className="h-8 text-xs gap-1 font-semibold"
-        >
-          <Activity className="h-3.5 w-3.5 text-primary" /> Cost Alerts (Normal)
-        </Button>
-      }
-    >
-      <div className="space-y-6">
-        {/* Welcome Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <div>
-            <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-foreground flex items-center gap-2">
-              Super Admin Platform Health
-              <Badge variant="success" className="text-[10px] uppercase font-bold">
-                100% Operational
-              </Badge>
-            </h1>
-            <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-              Enterprise governance, LLM token quotas, tenant security, and real-time infrastructure.
-            </p>
-          </div>
+    <div className="space-y-6">
+      {/* Welcome Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+          <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-foreground flex items-center gap-2">
+            Super Admin Platform Health
+            <Badge variant="success" className="text-[10px] uppercase font-bold">
+              100% Operational
+            </Badge>
+          </h1>
+          <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+            Enterprise governance, LLM token quotas, tenant security, and real-time infrastructure.
+          </p>
+        </div>
 
-          <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2">
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => navigate("/super-admin/usage-costs")}
+            className="text-xs h-9 gap-1 font-semibold"
+          >
+            <Activity className="h-3.5 w-3.5 text-primary" /> Cost Alerts (Normal)
+          </Button>
             <Button
               size="sm"
               variant="outline"
@@ -287,6 +283,5 @@ export const SuperAdminDashboard: React.FC = () => {
           </div>
         </div>
       </div>
-    </DashboardLayout>
   );
 };
