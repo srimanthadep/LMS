@@ -7,11 +7,16 @@ interface StatCardProps {
   title: string;
   value: string | number;
   subtitle?: string;
+  change?: string;
   icon: React.ElementType;
-  trend?: {
-    value: string;
-    isPositive?: boolean;
-  };
+  trend?:
+    | {
+        value: string;
+        isPositive?: boolean;
+      }
+    | "up"
+    | "down"
+    | "neutral";
   highlight?: boolean;
   index?: number;
   className?: string;
@@ -21,6 +26,7 @@ export const StatCard: React.FC<StatCardProps> = ({
   title,
   value,
   subtitle,
+  change,
   icon: Icon,
   trend,
   highlight = false,
@@ -36,30 +42,32 @@ export const StatCard: React.FC<StatCardProps> = ({
     >
       <Card
         className={cn(
-          "overflow-hidden relative shadow-xs border-border/80 h-full flex flex-col justify-between group hover:border-primary/40 hover:shadow-md transition-all duration-200",
+          "overflow-hidden relative shadow-xs border-border/80 h-full flex flex-col justify-between group hover:border-primary/40 hover:shadow-md transition-all duration-200 bg-card/80 backdrop-blur-xs",
           highlight && "bg-gradient-to-br from-primary/10 via-card to-card border-primary/30",
           className
         )}
       >
-        <div>
-          <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs sm:text-sm font-medium leading-tight pr-2 min-h-[2.25rem] sm:min-h-[2.5rem] flex items-center text-muted-foreground group-hover:text-foreground transition-colors">
+        <div className="p-5 flex flex-col justify-between h-full space-y-3">
+          <div className="flex items-start justify-between gap-3">
+            <span className="text-xs font-semibold text-muted-foreground group-hover:text-foreground transition-colors leading-tight">
               {title}
-            </CardTitle>
-            <div className="p-2 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex-shrink-0 text-white shadow-xs group-hover:scale-105 transition-transform">
+            </span>
+            <div className="p-2 rounded-xl bg-primary/10 text-primary flex-shrink-0 group-hover:bg-primary group-hover:text-primary-foreground group-hover:scale-105 transition-all">
               <Icon className="h-4 w-4" />
             </div>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <div className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
+          </div>
+
+          <div>
+            <div className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground font-mono">
               {value}
             </div>
-            {subtitle && (
-              <p className="text-[11px] sm:text-xs text-muted-foreground mt-1 flex items-center gap-1.5">
-                {trend && (
+
+            {(trend || subtitle || change) && (
+              <div className="text-[11px] sm:text-xs text-muted-foreground mt-2 flex items-center gap-1.5 flex-wrap">
+                {trend && typeof trend === "object" && (
                   <span
                     className={cn(
-                      "font-semibold",
+                      "font-bold",
                       trend.isPositive
                         ? "text-emerald-600 dark:text-emerald-400"
                         : "text-rose-600 dark:text-rose-400"
@@ -68,10 +76,15 @@ export const StatCard: React.FC<StatCardProps> = ({
                     {trend.value}
                   </span>
                 )}
-                <span>{subtitle}</span>
-              </p>
+                {change && (
+                  <span className="font-bold text-emerald-600 dark:text-emerald-400">
+                    {change}
+                  </span>
+                )}
+                {subtitle && <span>{subtitle}</span>}
+              </div>
             )}
-          </CardContent>
+          </div>
         </div>
       </Card>
     </motion.div>

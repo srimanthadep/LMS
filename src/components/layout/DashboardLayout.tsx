@@ -10,6 +10,11 @@ import {
   GraduationCap,
   ChevronRight,
   User,
+  Shield,
+  Activity,
+  CheckCircle2,
+  Clock,
+  LifeBuoy,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -86,11 +91,140 @@ export const DashboardLayout = ({ children, headerAction }: DashboardLayoutProps
   const navItems = navConfig.sidebar;
   const mobileBottomNavItems = navConfig.mobileBottom;
 
+  // Role-adaptive contextual widget
+  const renderSidebarWidget = () => {
+    switch (role) {
+      case "student":
+        return (
+          <div className="p-3.5 rounded-2xl bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border border-primary/20 space-y-1.5">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-primary flex items-center gap-1">
+                <Sparkles className="h-3 w-3" /> Live Classroom
+              </span>
+              <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+            </div>
+            <p className="text-xs font-bold text-foreground leading-snug">
+              Multi-Agent Consensus
+            </p>
+            <p className="text-[11px] text-muted-foreground">
+              Today @ 06:30 PM IST (72 attending)
+            </p>
+            <Button
+              size="sm"
+              variant="default"
+              onClick={() => navigate("/student/classroom/class-agentic-101")}
+              className="w-full mt-2 h-7 text-xs rounded-lg gap-1 font-semibold"
+            >
+              Join Stream <ChevronRight className="h-3 w-3" />
+            </Button>
+          </div>
+        );
+      case "teacher":
+        return (
+          <div className="p-3.5 rounded-2xl bg-gradient-to-br from-rose-500/10 via-rose-500/5 to-transparent border border-rose-500/20 space-y-1.5">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400 flex items-center gap-1">
+                <Activity className="h-3 w-3" /> Next Broadcast
+              </span>
+              <span className="inline-block w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
+            </div>
+            <p className="text-xs font-bold text-foreground leading-snug">
+              Session 4: Multi-Agent Consensus
+            </p>
+            <p className="text-[11px] text-muted-foreground">
+              Live in 45 mins • 78 RSVPs
+            </p>
+            <Button
+              size="sm"
+              onClick={() => navigate("/teacher/classroom/class-agentic-101")}
+              className="w-full mt-2 h-7 text-xs rounded-lg gap-1 font-semibold bg-rose-600 hover:bg-rose-700 text-white"
+            >
+              Enter Live Studio <ChevronRight className="h-3 w-3" />
+            </Button>
+          </div>
+        );
+      case "super-admin":
+        return (
+          <div className="p-3.5 rounded-2xl bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent border border-emerald-500/20 space-y-1.5">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                <CheckCircle2 className="h-3 w-3" /> Platform Status
+              </span>
+              <span className="w-2 h-2 rounded-full bg-emerald-500" />
+            </div>
+            <p className="text-xs font-bold text-foreground leading-snug">
+              100% Operational
+            </p>
+            <p className="text-[11px] text-muted-foreground">
+              42.8M Tokens • 0 Latency Spikes
+            </p>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => navigate("/super-admin/usage")}
+              className="w-full mt-2 h-7 text-xs rounded-lg gap-1 font-semibold border-emerald-500/30 text-emerald-700 dark:text-emerald-300"
+            >
+              Cost Analytics <ChevronRight className="h-3 w-3" />
+            </Button>
+          </div>
+        );
+      case "evaluator":
+        return (
+          <div className="p-3.5 rounded-2xl bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-transparent border border-amber-500/20 space-y-1.5">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                <Clock className="h-3 w-3" /> Grading SLA Active
+              </span>
+              <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+            </div>
+            <p className="text-xs font-bold text-foreground leading-snug">
+              1 Pending Submission
+            </p>
+            <p className="text-[11px] text-muted-foreground">
+              Turnaround limit: 14h left
+            </p>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => navigate("/evaluator/submissions")}
+              className="w-full mt-2 h-7 text-xs rounded-lg gap-1 font-semibold border-amber-500/30 text-amber-700 dark:text-amber-300"
+            >
+              Open Queue <ChevronRight className="h-3 w-3" />
+            </Button>
+          </div>
+        );
+      case "support":
+        return (
+          <div className="p-3.5 rounded-2xl bg-gradient-to-br from-violet-500/10 via-violet-500/5 to-transparent border border-violet-500/20 space-y-1.5">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-violet-600 dark:text-violet-400 flex items-center gap-1">
+                <LifeBuoy className="h-3 w-3" /> Mentor Inbox
+              </span>
+              <span className="w-2 h-2 rounded-full bg-violet-500" />
+            </div>
+            <p className="text-xs font-bold text-foreground leading-snug">
+              2 Open Inquiries
+            </p>
+            <p className="text-[11px] text-muted-foreground">
+              Avg SLA: 14 mins response
+            </p>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => navigate("/support/inbox")}
+              className="w-full mt-2 h-7 text-xs rounded-lg gap-1 font-semibold border-violet-500/30 text-violet-700 dark:text-violet-300"
+            >
+              Open Tickets <ChevronRight className="h-3 w-3" />
+            </Button>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col font-sans">
-      {/* Dev Role Switcher Bar */}
-      <DevRoleSwitcher />
-
       {/* 1. Mobile Top Header */}
       <header className="lg:hidden sticky top-0 z-30 bg-card/90 backdrop-blur-md border-b border-border/80 px-4 py-2.5 shadow-xs">
         <div className="flex items-center justify-between max-w-7xl mx-auto">
@@ -154,6 +288,10 @@ export const DashboardLayout = ({ children, headerAction }: DashboardLayoutProps
                   </div>
                 </div>
 
+                <div className="p-3 border-b border-border/60">
+                  <DevRoleSwitcher className="w-full" />
+                </div>
+
                 <div className="flex-1 overflow-y-auto px-3 py-4 space-y-1.5 sleek-scrollbar">
                   <p className="text-[11px] font-bold text-muted-foreground px-3 uppercase tracking-wider mb-2">
                     {role.replace("-", " ")} Navigation
@@ -210,20 +348,22 @@ export const DashboardLayout = ({ children, headerAction }: DashboardLayoutProps
         {/* Desktop Fixed Sidebar */}
         <aside className="hidden lg:flex lg:flex-col lg:w-72 lg:fixed lg:inset-y-0 border-r border-border/80 bg-card/70 backdrop-blur-xl z-20 shadow-xs">
           {/* Brand header */}
-          <div className="flex items-center justify-between px-4 py-3.5 border-b border-border/70 bg-gradient-to-b from-card to-card/50">
+          <div className="flex items-center justify-between px-5 py-4 border-b border-border/70 bg-gradient-to-b from-card to-card/50">
             <div
-              className="flex items-center space-x-2.5 cursor-pointer group min-w-0 flex-1 mr-1"
+              className="flex items-center space-x-3 cursor-pointer group min-w-0 flex-1"
               onClick={() => navigate(`/${role}/dashboard`)}
             >
               <div className="relative shrink-0">
-                <div className="h-9 w-9 rounded-xl bg-primary text-primary-foreground flex items-center justify-center font-bold text-sm ring-2 ring-primary/25 shadow-sm group-hover:scale-105 transition-all">
-                  <Sparkles className="h-4 w-4" />
+                <div className="h-10 w-10 rounded-xl bg-primary text-primary-foreground flex items-center justify-center font-bold text-base ring-2 ring-primary/25 shadow-sm group-hover:scale-105 transition-all">
+                  <Sparkles className="h-5 w-5" />
                 </div>
-                <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-card" />
+                <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 ring-2 ring-card" />
               </div>
               <div className="min-w-0 flex-1">
-                <span className="font-bold text-sm tracking-tight block leading-tight truncate">Apex AI LMS</span>
-                <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider block truncate capitalize">
+                <span className="font-extrabold text-base tracking-tight block leading-tight truncate text-foreground">
+                  Apex AI LMS
+                </span>
+                <span className="text-[11px] text-muted-foreground font-semibold uppercase tracking-wider block truncate capitalize">
                   {role.replace("-", " ")} Portal
                 </span>
               </div>
@@ -248,13 +388,13 @@ export const DashboardLayout = ({ children, headerAction }: DashboardLayoutProps
                         type="button"
                         onClick={() => navigate(item.href)}
                         className={cn(
-                          "relative w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all duration-150 group text-left outline-none",
+                          "relative w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all duration-150 group text-left outline-none",
                           isActive
                             ? "text-primary font-bold shadow-xs bg-primary/10 border border-primary/20"
                             : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                         )}
                       >
-                        <div className="flex items-center space-x-2.5 min-w-0">
+                        <div className="flex items-center space-x-3 min-w-0">
                           <Icon className={cn("h-4 w-4 shrink-0 transition-colors", isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground")} />
                           <span className="truncate">{item.name}</span>
                         </div>
@@ -278,37 +418,16 @@ export const DashboardLayout = ({ children, headerAction }: DashboardLayoutProps
                 </nav>
               </div>
 
-              {/* Contextual Sidebar Card for LMS */}
-              <div className="p-3 rounded-2xl bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border border-primary/20">
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-primary flex items-center gap-1">
-                    <Sparkles className="h-3 w-3" /> Live Classroom
-                  </span>
-                  <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-                </div>
-                <p className="text-xs font-bold text-foreground leading-snug">
-                  Multi-Agent Consensus
-                </p>
-                <p className="text-[11px] text-muted-foreground mt-0.5">
-                  Today @ 06:30 PM IST (72 attending)
-                </p>
-                <Button
-                  size="sm"
-                  variant="default"
-                  onClick={() => navigate("/student/classroom/class-agentic-101")}
-                  className="w-full mt-2.5 h-7 text-xs rounded-lg gap-1 font-semibold"
-                >
-                  Join Stream <ChevronRight className="h-3 w-3" />
-                </Button>
-              </div>
+              {/* Dynamic Role-Adaptive Contextual Card */}
+              {renderSidebarWidget()}
             </div>
 
             {/* Bottom Actions */}
-            <div className="pt-3 border-t border-border/70 space-y-1.5">
+            <div className="pt-3 border-t border-border/70 space-y-2">
               {/* User profile capsule */}
-              <div className="flex items-center gap-2.5 p-2 rounded-xl bg-muted/30 border border-border/50">
-                <div className="h-7 w-7 rounded-lg bg-primary/20 text-primary flex items-center justify-center font-bold text-xs shrink-0">
-                  <User className="h-3.5 w-3.5" />
+              <div className="flex items-center gap-2.5 p-2.5 rounded-xl bg-muted/40 border border-border/50">
+                <div className="h-8 w-8 rounded-lg bg-primary/20 text-primary flex items-center justify-center font-bold text-xs shrink-0 ring-1 ring-primary/30">
+                  <User className="h-4 w-4" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-xs font-bold truncate text-foreground">{user.name}</p>
@@ -316,28 +435,31 @@ export const DashboardLayout = ({ children, headerAction }: DashboardLayoutProps
                 </div>
               </div>
 
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-full justify-start h-8 px-3 text-xs text-muted-foreground hover:text-foreground gap-2 rounded-xl"
-                onClick={() => setShortcutsOpen(true)}
-              >
-                <Keyboard className="h-3.5 w-3.5 text-muted-foreground" />
-                <span>Shortcuts</span>
-                <kbd className="ml-auto text-[10px] font-mono border border-border/70 rounded px-1.5 py-0.2 bg-muted/60">?</kbd>
-              </Button>
+              <div className="flex items-center gap-1.5">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="flex-1 justify-start h-8 px-2.5 text-xs text-muted-foreground hover:text-foreground gap-2 rounded-xl"
+                  onClick={() => setShortcutsOpen(true)}
+                >
+                  <Keyboard className="h-3.5 w-3.5 text-muted-foreground" />
+                  <span>Shortcuts</span>
+                  <kbd className="ml-auto text-[10px] font-mono border border-border/70 rounded px-1.5 py-0.2 bg-muted/60">?</kbd>
+                </Button>
 
-              <Button
-                variant="ghost"
-                className="w-full justify-start h-8 rounded-xl text-xs font-medium text-destructive hover:text-destructive hover:bg-destructive/10"
-                onClick={() => {
-                  logout();
-                  navigate("/auth/login");
-                }}
-              >
-                <LogOut className="mr-2 h-3.5 w-3.5" />
-                Sign Out
-              </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 rounded-xl text-destructive hover:text-destructive hover:bg-destructive/10 shrink-0"
+                  title="Sign Out"
+                  onClick={() => {
+                    logout();
+                    navigate("/auth/login");
+                  }}
+                >
+                  <LogOut className="h-3.5 w-3.5" />
+                </Button>
+              </div>
             </div>
           </div>
         </aside>
@@ -345,19 +467,26 @@ export const DashboardLayout = ({ children, headerAction }: DashboardLayoutProps
         {/* 3. Main Content Canvas */}
         <div className="lg:pl-72 flex-1 flex flex-col min-w-0">
           {/* Desktop Top Utility Bar */}
-          <div className="hidden lg:flex items-center justify-between px-8 py-3 border-b border-border/60 bg-card/40 backdrop-blur-md">
+          <div className="hidden lg:flex items-center justify-between px-6 py-3 border-b border-border/60 bg-card/60 backdrop-blur-md sticky top-0 z-30">
+            {/* Search Input */}
             <button
               onClick={() => setSearchOpen(true)}
-              className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl border border-border/70 bg-muted/30 hover:bg-muted/60 text-muted-foreground text-xs w-72 transition-colors text-left"
+              className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl border border-border/70 bg-muted/30 hover:bg-muted/60 text-muted-foreground text-xs w-60 xl:w-72 transition-colors text-left"
             >
-              <Search className="h-3.5 w-3.5" />
-              <span>Search courses, classes, actions...</span>
-              <kbd className="ml-auto text-[10px] font-mono border border-border/70 rounded px-1.5 py-0.5 bg-background shadow-2xs">
+              <Search className="h-3.5 w-3.5 shrink-0" />
+              <span className="truncate">Search courses, classes, actions...</span>
+              <kbd className="ml-auto text-[10px] font-mono border border-border/70 rounded px-1.5 py-0.5 bg-background shadow-2xs shrink-0">
                 ⌘K
               </kbd>
             </button>
 
-            <div className="flex items-center gap-2">
+            {/* Compact Dev Role Switcher */}
+            <div className="mx-4 flex-1 max-w-2xl flex justify-center">
+              <DevRoleSwitcher />
+            </div>
+
+            {/* Actions & Theme Controls */}
+            <div className="flex items-center gap-2 shrink-0">
               {headerAction}
               <ThemeToggle />
               <ThemeAccentPicker />
@@ -365,6 +494,7 @@ export const DashboardLayout = ({ children, headerAction }: DashboardLayoutProps
             </div>
           </div>
 
+          {/* Main Route Content */}
           <main className="flex-1 p-4 sm:p-6 lg:p-8 pb-28 sm:pb-32 lg:pb-10 max-w-7xl w-full mx-auto">
             {children}
           </main>

@@ -1,7 +1,7 @@
 import React from "react";
 import { useAuth } from "@/context/AuthContext";
 import { UserRole } from "@/types/auth";
-import { Shield, Eye, X, ArrowRightLeft } from "lucide-react";
+import { Shield, Eye, X, Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
@@ -14,7 +14,7 @@ const ROLE_OPTIONS: { role: UserRole; label: string; defaultPath: string }[] = [
   { role: "support", label: "Support", defaultPath: "/support/dashboard" },
 ];
 
-export const DevRoleSwitcher: React.FC = () => {
+export const DevRoleSwitcher: React.FC<{ className?: string }> = ({ className }) => {
   const { user, role, impersonatingFrom, switchRole, stopImpersonation } = useAuth();
   const navigate = useNavigate();
 
@@ -23,66 +23,47 @@ export const DevRoleSwitcher: React.FC = () => {
     navigate(defaultPath);
   };
 
-  return (
-    <div className="w-full bg-muted/40 border-b border-border/70 text-xs px-3 sm:px-4 py-1.5 flex flex-wrap items-center justify-between gap-2 z-30 select-none">
-      {/* Impersonation Warning Banner */}
-      {impersonatingFrom ? (
-        <div className="flex-1 flex items-center justify-between bg-amber-500/15 border border-amber-500/40 text-amber-700 dark:text-amber-300 px-3 py-1 rounded-xl">
-          <div className="flex items-center gap-2">
-            <Eye className="h-3.5 w-3.5 animate-pulse text-amber-600" />
-            <span className="font-semibold">
-              Impersonation Mode: Viewing platform as <strong>{user.name}</strong> ({user.role})
-            </span>
-          </div>
-          <button
-            onClick={stopImpersonation}
-            className="flex items-center gap-1 text-[11px] font-bold bg-amber-500/20 hover:bg-amber-500/30 px-2 py-0.5 rounded-lg transition-colors"
-          >
-            <X className="h-3 w-3" />
-            Exit Impersonation
-          </button>
-        </div>
-      ) : (
-        <>
-          <div className="flex items-center gap-2">
-            <span className="flex items-center gap-1 font-bold text-muted-foreground uppercase tracking-wider text-[10px]">
-              <Shield className="h-3 w-3 text-primary" />
-              Active Role:
-            </span>
-            <span className="font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-md border border-primary/20 capitalize">
-              {role.replace("-", " ")}
-            </span>
-            <span className="text-muted-foreground hidden md:inline text-[11px]">
-              ({user.name})
-            </span>
-          </div>
+  if (impersonatingFrom) {
+    return (
+      <div className={cn("flex items-center gap-2 bg-amber-500/15 border border-amber-500/40 text-amber-700 dark:text-amber-300 px-3 py-1 rounded-xl text-xs", className)}>
+        <Eye className="h-3.5 w-3.5 animate-pulse text-amber-600 shrink-0" />
+        <span className="font-semibold truncate max-w-[200px] sm:max-w-none">
+          Viewing as <strong>{user.name}</strong> ({user.role})
+        </span>
+        <button
+          onClick={stopImpersonation}
+          className="ml-auto flex items-center gap-1 text-[11px] font-bold bg-amber-500/20 hover:bg-amber-500/30 px-2 py-0.5 rounded-lg transition-colors shrink-0"
+        >
+          <X className="h-3 w-3" />
+          Exit
+        </button>
+      </div>
+    );
+  }
 
-          <div className="flex items-center gap-1.5 overflow-x-auto max-w-full py-0.5 sleek-scrollbar">
-            <span className="text-[10px] text-muted-foreground uppercase font-semibold hidden sm:inline mr-1">
-              <ArrowRightLeft className="h-2.5 w-2.5 inline mr-0.5" />
-              Switch:
-            </span>
-            {ROLE_OPTIONS.map((opt) => {
-              const isActive = role === opt.role;
-              return (
-                <button
-                  key={opt.role}
-                  type="button"
-                  onClick={() => handleRoleChange(opt.role, opt.defaultPath)}
-                  className={cn(
-                    "px-2 py-0.5 rounded-lg text-[11px] font-medium transition-all",
-                    isActive
-                      ? "bg-primary text-primary-foreground font-bold shadow-xs scale-105"
-                      : "bg-card border border-border/60 text-muted-foreground hover:text-foreground hover:bg-muted"
-                  )}
-                >
-                  {opt.label}
-                </button>
-              );
-            })}
-          </div>
-        </>
-      )}
+  return (
+    <div className={cn("flex items-center gap-1 p-1 rounded-xl border border-border/70 bg-muted/40 text-xs overflow-x-auto sleek-scrollbar", className)}>
+      <span className="text-[10px] font-bold text-muted-foreground uppercase px-2 hidden xl:flex items-center gap-1 shrink-0">
+        <Shield className="h-3 w-3 text-primary" /> Role
+      </span>
+      {ROLE_OPTIONS.map((opt) => {
+        const isActive = role === opt.role;
+        return (
+          <button
+            key={opt.role}
+            type="button"
+            onClick={() => handleRoleChange(opt.role, opt.defaultPath)}
+            className={cn(
+              "px-2.5 py-1 rounded-lg text-xs font-semibold transition-all shrink-0 select-none",
+              isActive
+                ? "bg-primary text-primary-foreground shadow-xs scale-100"
+                : "text-muted-foreground hover:text-foreground hover:bg-card/70"
+            )}
+          >
+            {opt.label}
+          </button>
+        );
+      })}
     </div>
   );
 };
