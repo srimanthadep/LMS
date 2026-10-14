@@ -78,6 +78,7 @@ export const SuperAdminDashboard: React.FC = () => {
             subtitle="Across 6 concurrent batches"
             icon={Users}
             trend={{ value: "+14% this month", isPositive: true }}
+            highlight
           />
           <StatCard
             index={1}
@@ -86,7 +87,6 @@ export const SuperAdminDashboard: React.FC = () => {
             subtitle="GPT-4o & Claude 3.5 Sonnet"
             icon={Cpu}
             trend={{ value: "₹48,200 spend", isPositive: true }}
-            highlight
           />
           <StatCard
             index={2}

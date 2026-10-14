@@ -75,6 +75,7 @@ export const AdminDashboard: React.FC = () => {
             subtitle="Across 4 flagship AI courses"
             icon={Layers}
             trend={{ value: "+2 starting next week", isPositive: true }}
+            highlight
           />
           <StatCard
             index={1}
@@ -83,7 +84,6 @@ export const AdminDashboard: React.FC = () => {
             subtitle="1 currently broadcasting"
             icon={Video}
             trend={{ value: "All faculty confirmed", isPositive: true }}
-            highlight
           />
           <StatCard
             index={2}

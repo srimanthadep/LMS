@@ -228,15 +228,16 @@ export const DashboardLayout = ({ children, headerAction }: DashboardLayoutProps
             className="flex items-center space-x-2.5 cursor-pointer group"
             onClick={() => navigate(`/${role}/dashboard`)}
           >
-            <div className="relative flex items-center justify-center">
-              <div className="h-8 w-8 rounded-xl bg-primary text-primary-foreground flex items-center justify-center font-bold text-xs ring-2 ring-primary/20 shadow-xs">
-                <Sparkles className="h-4 w-4" />
-              </div>
-              <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-card" />
+            <div className="w-8 h-8 rounded-lg bg-[#0e3b26] flex items-center justify-center text-emerald-400 shadow-sm shadow-emerald-950/20">
+              <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="m21.12 6.4-8.8-4.9a2.3 2.3 0 0 0-2.24 0l-8.8 4.9A2.3 2.3 0 0 0 .16 8.4v9.2a2.3 2.3 0 0 0 1.12 2l8.8 4.9a2.3 2.3 0 0 0 2.24 0l8.8-4.9a2.3 2.3 0 0 0 1.12-2V8.4a2.3 2.3 0 0 0-1.12-2z"></path>
+                <path d="M12 22V12"></path>
+                <path d="m21 7-9 5-9-5"></path>
+              </svg>
             </div>
             <div>
-              <span className="font-bold text-sm tracking-tight block leading-tight">Apex AI LMS</span>
-              <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider block capitalize">
+              <span className="font-bold text-sm tracking-tight block leading-tight">Apex LMS</span>
+              <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold uppercase tracking-wider block capitalize">
                 {role.replace("-", " ")} Portal
               </span>
             </div>
@@ -342,35 +343,32 @@ export const DashboardLayout = ({ children, headerAction }: DashboardLayoutProps
       <div className="flex-1 flex">
         {/* Desktop Fixed Sidebar */}
         <aside className="hidden lg:flex lg:flex-col lg:w-72 lg:fixed lg:inset-y-0 border-r border-border/80 bg-card/70 backdrop-blur-xl z-20 shadow-xs">
-          {/* Brand header */}
-          <div className="flex items-center justify-between px-5 py-4 border-b border-border/70 bg-gradient-to-b from-card to-card/50">
+          {/* Brand Logo Header */}
+          <div className="flex items-center gap-3 px-5 py-5 border-b border-slate-200/80 dark:border-border/80">
             <div
-              className="flex items-center space-x-3 cursor-pointer group min-w-0 flex-1"
+              className="flex items-center gap-3 cursor-pointer group min-w-0 flex-1"
               onClick={() => navigate(`/${role}/dashboard`)}
             >
-              <div className="relative shrink-0">
-                <div className="h-10 w-10 rounded-xl bg-primary text-primary-foreground flex items-center justify-center font-bold text-base ring-2 ring-primary/25 shadow-sm group-hover:scale-105 transition-all">
-                  <Sparkles className="h-5 w-5" />
-                </div>
-                <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 ring-2 ring-card" />
+              <div className="w-8 h-8 rounded-lg bg-[#0e3b26] flex items-center justify-center text-emerald-400 shadow-sm shadow-emerald-950/20 group-hover:scale-105 transition-all shrink-0">
+                <svg className="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="m21.12 6.4-8.8-4.9a2.3 2.3 0 0 0-2.24 0l-8.8 4.9A2.3 2.3 0 0 0 .16 8.4v9.2a2.3 2.3 0 0 0 1.12 2l8.8 4.9a2.3 2.3 0 0 0 2.24 0l8.8-4.9a2.3 2.3 0 0 0 1.12-2V8.4a2.3 2.3 0 0 0-1.12-2z"></path>
+                  <path d="M12 22V12"></path>
+                  <path d="m21 7-9 5-9-5"></path>
+                </svg>
               </div>
               <div className="min-w-0 flex-1">
-                <span className="font-extrabold text-base tracking-tight block leading-tight truncate text-foreground">
-                  Apex AI LMS
-                </span>
-                <span className="text-[11px] text-muted-foreground font-semibold uppercase tracking-wider block truncate capitalize">
-                  {role.replace("-", " ")} Portal
-                </span>
+                <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white block leading-tight truncate">Apex LMS</span>
+                <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold uppercase tracking-wider block truncate capitalize">{role.replace("-", " ")} Workspace</span>
               </div>
             </div>
           </div>
 
           {/* Navigation Items */}
-          <div className="flex-1 flex flex-col justify-between py-4 px-3.5 overflow-y-auto sleek-scrollbar">
-            <div className="space-y-4">
+          <div className="flex-1 flex flex-col justify-between py-5 px-4 overflow-y-auto sleek-scrollbar">
+            <div className="space-y-5">
               <div>
-                <p className="text-[10px] font-bold text-muted-foreground/80 px-3 uppercase tracking-wider mb-2">
-                  Main Navigation
+                <p className="px-3 text-[11px] font-semibold text-slate-400 tracking-wider uppercase mb-2">
+                  Menu
                 </p>
                 <nav className="space-y-1">
                   {navItems.map((item) => {
@@ -383,30 +381,22 @@ export const DashboardLayout = ({ children, headerAction }: DashboardLayoutProps
                         type="button"
                         onClick={() => navigate(item.href)}
                         className={cn(
-                          "relative w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all duration-150 group text-left outline-none",
+                          "group relative flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm transition-all text-left outline-none w-full",
                           isActive
-                            ? "text-primary font-bold shadow-xs bg-primary/10 border border-primary/20"
-                            : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                            ? "bg-[#eaf5ef] dark:bg-emerald-950/40 text-[#0d4f32] dark:text-emerald-300 font-semibold"
+                            : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-muted/40"
                         )}
                       >
-                        <div className="flex items-center space-x-3 min-w-0">
-                          <Icon className={cn("h-4 w-4 shrink-0 transition-colors", isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground")} />
-                          <span className="truncate">{item.name}</span>
-                        </div>
-                        <div className="flex items-center gap-1.5 shrink-0">
-                          {item.badge && (
-                            <span className="text-[9px] font-bold px-1.5 py-0.2 rounded-full bg-primary text-primary-foreground">
-                              {item.badge}
-                            </span>
-                          )}
-                          {isActive && (
-                            <motion.div
-                              layoutId="sidebar-active-indicator"
-                              className="w-1.5 h-4 rounded-full bg-primary"
-                              transition={{ type: "spring", stiffness: 350, damping: 30 }}
-                            />
-                          )}
-                        </div>
+                        {isActive && (
+                          <span className="absolute -left-4 top-1.5 bottom-1.5 w-1.5 bg-[#0e482f] dark:bg-emerald-400 rounded-r-md"></span>
+                        )}
+                        <Icon className={cn("w-[18px] h-[18px] shrink-0 transition-colors", isActive ? "text-[#0d4f32] dark:text-emerald-300" : "text-slate-400 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-300")} />
+                        <span className="flex-1 truncate">{item.name}</span>
+                        {item.badge && (
+                          <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-[#0e3b26] text-white">
+                            {item.badge}
+                          </span>
+                        )}
                       </button>
                     );
                   })}
@@ -418,15 +408,15 @@ export const DashboardLayout = ({ children, headerAction }: DashboardLayoutProps
             </div>
 
             {/* Bottom Actions */}
-            <div className="pt-3 border-t border-border/70 space-y-2">
+            <div className="pt-3 border-t border-slate-200/80 dark:border-border/70 space-y-2">
               {/* User profile capsule */}
-              <div className="flex items-center gap-2.5 p-2.5 rounded-xl bg-muted/40 border border-border/50">
-                <div className="h-8 w-8 rounded-lg bg-primary/20 text-primary flex items-center justify-center font-bold text-xs shrink-0 ring-1 ring-primary/30">
-                  <User className="h-4 w-4" />
+              <div className="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 dark:bg-muted/40 border border-slate-200/80 dark:border-border/50">
+                <div className="h-8 w-8 rounded-lg bg-[#0e3b26] text-white flex items-center justify-center font-bold text-xs shrink-0 ring-1 ring-emerald-500/30">
+                  {user.name.charAt(0)}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs font-bold truncate text-foreground">{user.name}</p>
-                  <p className="text-[10px] text-muted-foreground truncate">{user.email}</p>
+                  <p className="text-xs font-bold truncate text-slate-900 dark:text-white">{user.name}</p>
+                  <p className="text-[10px] text-slate-400 truncate">{user.email}</p>
                 </div>
               </div>
 
@@ -434,18 +424,18 @@ export const DashboardLayout = ({ children, headerAction }: DashboardLayoutProps
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="flex-1 justify-start h-8 px-2.5 text-xs text-muted-foreground hover:text-foreground gap-2 rounded-xl"
+                  className="flex-1 justify-start h-8 px-2.5 text-xs text-slate-500 hover:text-slate-900 dark:hover:text-white gap-2 rounded-xl"
                   onClick={() => setShortcutsOpen(true)}
                 >
-                  <Keyboard className="h-3.5 w-3.5 text-muted-foreground" />
+                  <Keyboard className="h-3.5 w-3.5 text-slate-400" />
                   <span>Shortcuts</span>
-                  <kbd className="ml-auto text-[10px] font-mono border border-border/70 rounded px-1.5 py-0.2 bg-muted/60">?</kbd>
+                  <kbd className="ml-auto text-[10px] font-mono border border-slate-200 dark:border-border rounded px-1.5 py-0.2 bg-white dark:bg-card">?</kbd>
                 </Button>
 
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 rounded-xl text-destructive hover:text-destructive hover:bg-destructive/10 shrink-0"
+                  className="h-8 w-8 rounded-xl text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/30 shrink-0"
                   title="Sign Out"
                   onClick={() => {
                     logout();
@@ -462,32 +452,50 @@ export const DashboardLayout = ({ children, headerAction }: DashboardLayoutProps
         {/* 3. Main Content Canvas */}
         <div className="lg:pl-72 flex-1 flex flex-col min-w-0">
           {/* Desktop Top Utility Bar */}
-          <div className="hidden lg:flex items-center justify-between px-6 py-3 border-b border-border/60 bg-card/60 backdrop-blur-md sticky top-0 z-30">
+          <header className="hidden lg:flex h-20 items-center justify-between px-8 border-b border-slate-200/80 dark:border-border/80 bg-white/90 dark:bg-card/90 backdrop-blur-md sticky top-0 z-30" data-purpose="top-navigation-bar">
             {/* Search Input */}
-            <button
-              onClick={() => setSearchOpen(true)}
-              className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl border border-border/70 bg-muted/30 hover:bg-muted/60 text-muted-foreground text-xs w-60 xl:w-72 transition-colors text-left"
-            >
-              <Search className="h-3.5 w-3.5 shrink-0" />
-              <span className="truncate">Search courses, classes, actions...</span>
-              <kbd className="ml-auto text-[10px] font-mono border border-border/70 rounded px-1.5 py-0.5 bg-background shadow-2xs shrink-0">
-                ⌘K
-              </kbd>
-            </button>
+            <div className="relative w-full max-w-xs xl:max-w-md">
+              <button
+                onClick={() => setSearchOpen(true)}
+                className="w-full pl-10 pr-16 py-2.5 bg-slate-50 dark:bg-muted/30 border border-slate-200 dark:border-border rounded-xl text-xs md:text-sm text-slate-800 dark:text-slate-200 placeholder-slate-400 flex items-center justify-between hover:border-emerald-500/50 transition-all text-left"
+              >
+                <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35" strokeLinecap="round" strokeLinejoin="round"></path>
+                  </svg>
+                </span>
+                <span className="text-slate-400 text-xs truncate">Search lectures, subjects, doubts...</span>
+                <span className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                  <kbd className="px-2 py-0.5 text-[10px] font-semibold text-slate-400 bg-white dark:bg-card border border-slate-200 dark:border-border rounded shadow-2xs">Ctrl K</kbd>
+                </span>
+              </button>
+            </div>
 
             {/* Compact Dev Role Switcher */}
-            <div className="mx-4 flex-1 max-w-2xl flex justify-center">
+            <div className="mx-4 flex-1 max-w-xl flex justify-center">
               <DevRoleSwitcher />
             </div>
 
             {/* Actions & Theme Controls */}
-            <div className="flex items-center gap-2 shrink-0">
+            <div className="flex items-center gap-3 shrink-0">
               {headerAction}
               <ThemeToggle />
               <ThemeAccentPicker />
               <NotificationCenter />
+
+              {/* User Profile Pill */}
+              <div className="flex items-center gap-3 pl-3 border-l border-slate-200 dark:border-border/80">
+                <div className="w-10 h-10 rounded-full bg-[#0a3822] text-white flex items-center justify-center font-bold text-sm ring-2 ring-emerald-500/20 shadow-xs">
+                  {user.name.charAt(0)}
+                </div>
+                <div className="text-left hidden sm:block">
+                  <p className="text-sm font-semibold text-slate-900 dark:text-white leading-tight">{user.name}</p>
+                  <p className="text-[11px] text-slate-400 capitalize">{role === "student" ? "Cohort 7 Student" : `${role.replace("-", " ")} Role`}</p>
+                </div>
+              </div>
             </div>
-          </div>
+          </header>
 
           {/* Main Route Content */}
           <main className="flex-1 p-4 sm:p-6 lg:p-8 pb-28 sm:pb-32 lg:pb-10 max-w-7xl w-full mx-auto">

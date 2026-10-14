@@ -59,6 +59,7 @@ export const SupportDashboard: React.FC = () => {
           value={openCount}
           icon={LifeBuoy}
           trend={{ value: "3 urgent SLA", isPositive: false }}
+          highlight
         />
         <StatCard
           title="Pending Approval"

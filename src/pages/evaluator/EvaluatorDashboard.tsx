@@ -69,6 +69,7 @@ export const EvaluatorDashboard: React.FC = () => {
           value={pendingCount}
           icon={Clock}
           trend={{ value: "SLA 14h left", isPositive: true }}
+          highlight
         />
         <StatCard
           title="Graded This Week"

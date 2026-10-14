@@ -9,12 +9,12 @@ export interface ThemeAccent {
 
 export const THEME_ACCENTS: ThemeAccent[] = [
   {
-    id: "ocean",
-    name: "Ocean Blue",
-    primaryHsl: "220 80% 35%",
-    ringHsl: "220 80% 35%",
-    colorHex: "#1145a3",
-    gradient: "linear-gradient(135deg, hsl(220 80% 35%), hsl(240 60% 50%))",
+    id: "apex-forest",
+    name: "Apex Forest",
+    primaryHsl: "153 62% 14%",
+    ringHsl: "142 76% 36%",
+    colorHex: "#0e3b26",
+    gradient: "linear-gradient(145deg, #0f3d27 0%, #082819 100%)",
   },
   {
     id: "emerald",
@@ -77,8 +77,14 @@ class ThemeService {
 
   applyAccent(accent?: ThemeAccent): void {
     const active = accent || this.getActiveAccent();
-    document.documentElement.style.setProperty("--primary", active.primaryHsl);
-    document.documentElement.style.setProperty("--ring", active.ringHsl);
+    const isDark = this.isDarkMode();
+    if (isDark && active.id === "apex-forest") {
+      document.documentElement.style.setProperty("--primary", "142 71% 45%");
+      document.documentElement.style.setProperty("--ring", "142 71% 45%");
+    } else {
+      document.documentElement.style.setProperty("--primary", active.primaryHsl);
+      document.documentElement.style.setProperty("--ring", active.ringHsl);
+    }
     document.documentElement.style.setProperty("--gradient-primary", active.gradient);
   }
 
