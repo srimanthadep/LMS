@@ -140,6 +140,16 @@ export interface TestSubmission {
   totalScore: number;
   maxScore: number;
   reEvaluationReason?: string;
+  priority?: "urgent" | "normal" | "low";
+  deadline?: string;
+  isOverdue?: boolean;
+  slaTimeRemaining?: string;
+  returnedForResubmission?: boolean;
+  resubmissionNote?: string;
+  releasedToStudent?: boolean;
+  files?: Array<{ name: string; language: string; content: string }>;
+  annotatedAttachmentUrl?: string;
+  gradeHistory?: Array<{ date: string; evaluator: string; totalScore: number; changeReason: string }>;
 }
 
 export interface SupportTicket {

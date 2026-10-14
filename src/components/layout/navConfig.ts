@@ -118,16 +118,20 @@ export const ROLE_NAV_ITEMS: Record<UserRole, { sidebar: NavItem[]; mobileBottom
   evaluator: {
     sidebar: [
       { name: "Grading Hub", href: "/evaluator/dashboard", icon: LayoutDashboard },
-      { name: "Submissions Queue", href: "/evaluator/queue", icon: FileCheck2, badge: "8" },
-      { name: "Active Evaluation", href: "/evaluator/grade/sub-1", icon: FileText },
-      { name: "Re-evaluations", href: "/evaluator/re-evaluations", icon: HelpCircle },
+      { name: "My Assessments", href: "/evaluator/evaluations", icon: BookOpen },
+      { name: "Submissions Queue", href: "/evaluator/queue", icon: FileCheck2, badge: "5" },
+      { name: "Active Evaluation", href: "/evaluator/grading/sub-1", icon: FileText, badge: "Active" },
+      { name: "Reassessments", href: "/evaluator/reassessments", icon: HelpCircle, badge: "1" },
+      { name: "Results & Grades", href: "/evaluator/results", icon: Award },
+      { name: "Evaluation Analytics", href: "/evaluator/analytics", icon: BarChart3 },
+      { name: "Profile & Settings", href: "/evaluator/settings", icon: Settings },
     ],
     mobileBottom: [
       { name: "Hub", href: "/evaluator/dashboard", icon: LayoutDashboard },
+      { name: "Assessments", href: "/evaluator/evaluations", icon: BookOpen },
       { name: "Queue", href: "/evaluator/queue", icon: FileCheck2 },
-      { name: "Grade", href: "/evaluator/grade/sub-1", icon: FileText },
-      { name: "Re-eval", href: "/evaluator/re-evaluations", icon: HelpCircle },
-      { name: "Shortcuts", href: "#shortcuts", icon: ShieldCheck },
+      { name: "Grade", href: "/evaluator/grading/sub-1", icon: FileText },
+      { name: "Reassess", href: "/evaluator/reassessments", icon: HelpCircle },
     ],
   },
   support: {

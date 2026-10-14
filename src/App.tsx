@@ -67,9 +67,13 @@ import { StudentPaymentsPage } from "@/pages/student/StudentPaymentsPage";
 
 // Evaluator
 import { EvaluatorDashboard } from "@/pages/evaluator/EvaluatorDashboard";
+import { EvaluatorMyEvaluationsPage } from "@/pages/evaluator/EvaluatorMyEvaluationsPage";
 import { SubmissionsQueuePage } from "@/pages/evaluator/SubmissionsQueuePage";
 import { GradingSuitePage } from "@/pages/evaluator/GradingSuitePage";
 import { ReEvaluationsPage } from "@/pages/evaluator/ReEvaluationsPage";
+import { EvaluatorResultsPage } from "@/pages/evaluator/EvaluatorResultsPage";
+import { EvaluatorAnalyticsPage } from "@/pages/evaluator/EvaluatorAnalyticsPage";
+import { EvaluatorSettingsPage } from "@/pages/evaluator/EvaluatorSettingsPage";
 
 // Support
 import { SupportDashboard } from "@/pages/support/SupportDashboard";
@@ -543,6 +547,22 @@ export function App() {
               }
             />
             <Route
+              path="/evaluator/evaluations"
+              element={
+                <ProtectedRoute allowedRoles={["evaluator"]}>
+                  <EvaluatorMyEvaluationsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/evaluator/queue"
+              element={
+                <ProtectedRoute allowedRoles={["evaluator"]}>
+                  <SubmissionsQueuePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/evaluator/submissions"
               element={
                 <ProtectedRoute allowedRoles={["evaluator"]}>
@@ -559,10 +579,58 @@ export function App() {
               }
             />
             <Route
+              path="/evaluator/grade/:submissionId"
+              element={
+                <ProtectedRoute allowedRoles={["evaluator"]}>
+                  <GradingSuitePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/evaluator/review/:submissionId"
+              element={
+                <ProtectedRoute allowedRoles={["evaluator"]}>
+                  <GradingSuitePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/evaluator/reassessments"
+              element={
+                <ProtectedRoute allowedRoles={["evaluator"]}>
+                  <ReEvaluationsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/evaluator/re-evaluations"
               element={
                 <ProtectedRoute allowedRoles={["evaluator"]}>
                   <ReEvaluationsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/evaluator/results"
+              element={
+                <ProtectedRoute allowedRoles={["evaluator"]}>
+                  <EvaluatorResultsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/evaluator/analytics"
+              element={
+                <ProtectedRoute allowedRoles={["evaluator"]}>
+                  <EvaluatorAnalyticsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/evaluator/settings"
+              element={
+                <ProtectedRoute allowedRoles={["evaluator"]}>
+                  <EvaluatorSettingsPage />
                 </ProtectedRoute>
               }
             />

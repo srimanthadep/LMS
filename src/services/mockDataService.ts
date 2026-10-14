@@ -397,11 +397,16 @@ export const MOCK_SUBMISSIONS: TestSubmission[] = [
     courseTitle: "Full-Stack AI & LLM Systems Engineering",
     batchName: "Cohort 7 (Live + Replay)",
     studentId: "usr-student-1",
-    studentName: "Candidate #4810 (Blind Graded)",
+    studentName: "Arjun Mehta (Candidate #4810)",
     submittedAt: "12 Oct 2026, 04:30 PM",
-    status: "graded",
+    status: "re_evaluation_requested",
+    priority: "urgent",
+    deadline: "14 Oct 2026, 11:59 PM",
+    slaTimeRemaining: "4 hours left",
+    isOverdue: false,
     objectiveScore: 40,
     objectiveMaxScore: 40,
+    reEvaluationReason: "Candidate contested the 2-point deduction in Error Handling. LangChain's Cohere wrapper includes built-in exponential backoff, making application-level retry redundant.",
     codeSubmission: `import os
 from langchain_community.vectorstores import Qdrant
 from langchain_cohere import CohereRerank
@@ -419,11 +424,65 @@ def build_hybrid_pipeline(embeddings, client):
         base_compressor=compressor,
         base_retriever=vector_retriever
     )`,
+    files: [
+      {
+        name: "hybrid_retriever.py",
+        language: "python",
+        content: `import os
+from langchain_community.vectorstores import Qdrant
+from langchain_cohere import CohereRerank
+from langchain.retrievers import ContextualCompressionRetriever
+
+def build_hybrid_pipeline(embeddings, client):
+    """
+    Constructs a two-stage recall and compression pipeline.
+    Stage 1: Fast approximate ANN recall over Qdrant (top 25 candidates).
+    Stage 2: Cross-encoder reranking via Cohere Rerank v3.
+    """
+    vector_retriever = Qdrant(
+        client=client,
+        collection_name="enterprise_docs",
+        embeddings=embeddings
+    ).as_retriever(search_kwargs={"k": 25})
+    
+    compressor = CohereRerank(model="rerank-english-v3.0", top_n=5)
+    return ContextualCompressionRetriever(
+        base_compressor=compressor,
+        base_retriever=vector_retriever
+    )`
+      },
+      {
+        name: "rerank_config.yaml",
+        language: "yaml",
+        content: `rag_pipeline:
+  embedding_model: text-embedding-3-small
+  vector_db:
+    provider: qdrant
+    distance_metric: cosine
+    ef_search: 128
+  reranker:
+    model: rerank-english-v3.0
+    initial_k: 25
+    top_n: 5
+    score_threshold: 0.65`
+      },
+      {
+        name: "README.md",
+        language: "markdown",
+        content: `# Hybrid RAG Implementation
+This project evaluates the reduction in *Lost-in-the-Middle* degradation when pairing high-recall vector search with deep cross-encoder re-ranking.
+Benchmarks show an 18.4% improvement in MRR@5 over pure cosine similarity.`
+      }
+    ],
     descriptiveAnswers: [
       {
         question: "Explain your rationale for choosing top_n=5 after reranking 25 initial candidates.",
         answer: "Initial vector search casts a wide net with high recall (k=25). The cross-encoder then reranks by full contextual similarity. Limiting context to top 5 eliminates noisy background passages and prevents lost-in-the-middle degradation.",
       },
+      {
+        question: "How does your pipeline handle transient network timeouts from the Cohere API?",
+        answer: "The Cohere client internally utilizes urllib3 connection pools with 3 automatic retry attempts on HTTP 429 and 503 status codes with exponential jitter.",
+      }
     ],
     rubricScores: [
       { id: "r1", criteria: "Vector Pipeline Architecture", maxScore: 20, score: 19, rationale: "Excellent clean implementation using Qdrant client." },
@@ -432,10 +491,15 @@ def build_hybrid_pipeline(embeddings, client):
       { id: "r4", criteria: "Code Quality & Error Handling", maxScore: 10, score: 8, rationale: "Missing try/except block around Cohere API network timeouts." },
     ],
     aiSuggestedScore: 94,
-    aiRationale: "High degree of alignment with reference solution. Passes 100% of synthetic test cases. Minor deduction for absence of exponential backoff retry wrapper on remote API call.",
+    aiRationale: "High degree of alignment with reference solution. Passes 100% of synthetic test cases. Minor deduction for absence of application-level retry decorator.",
     evaluatorFeedback: "Outstanding submission! Your separation of dense retrieval from the compression layer is production-grade. To improve further, wrap remote Cohere API calls in a tenacity retry decorator to handle transient rate limits.",
     totalScore: 95,
     maxScore: 100,
+    releasedToStudent: false,
+    gradeHistory: [
+      { date: "12 Oct 2026, 06:15 PM", evaluator: "Kavita Rao", totalScore: 95, changeReason: "Initial evaluation submitted." },
+      { date: "13 Oct 2026, 11:20 AM", evaluator: "Kavita Rao", totalScore: 95, changeReason: "Reassessment request received from candidate." }
+    ]
   },
   {
     id: "sub-2",
@@ -444,9 +508,13 @@ def build_hybrid_pipeline(embeddings, client):
     courseTitle: "Autonomous Multi-Agent Architectures",
     batchName: "Agentic Systems Bootcamp",
     studentId: "usr-student-4",
-    studentName: "Candidate #8219 (Blind Graded)",
+    studentName: "Pooja Sharma (Candidate #8219)",
     submittedAt: "13 Oct 2026, 09:15 PM",
     status: "pending",
+    priority: "urgent",
+    deadline: "14 Oct 2026, 06:00 PM",
+    slaTimeRemaining: "1h 30m remaining",
+    isOverdue: false,
     objectiveScore: 35,
     objectiveMaxScore: 40,
     codeSubmission: `# Supervisor Agent Node
@@ -454,17 +522,288 @@ from langgraph.graph import StateGraph, END
 
 def supervisor_node(state):
     # Routing decision based on latest message
+    messages = state["messages"]
+    last_action = state.get("last_action")
+    if "FINAL ANSWER" in messages[-1].content:
+        return {"next": END}
     return {"next": "researcher"}`,
-    rubricScores: [
-      { id: "r1", criteria: "Graph Topology & Node Design", maxScore: 25, score: 20, rationale: "Needs validation on terminal nodes" },
-      { id: "r2", criteria: "Human Interrupt Implementation", maxScore: 25, score: 18, rationale: "Interrupt occurs before tool call" },
+    files: [
+      {
+        name: "agent_graph.py",
+        language: "python",
+        content: `from langgraph.graph import StateGraph, END
+from typing import TypedDict, Annotated, List
+
+class AgentState(TypedDict):
+    messages: List[str]
+    current_actor: str
+    approved_by_human: bool
+
+def supervisor_node(state: AgentState):
+    if state.get("approved_by_human"):
+        return {"next": "tool_executor"}
+    return {"next": "human_reviewer"}`
+      }
     ],
-    aiSuggestedScore: 82,
-    aiRationale: "Functional routing graph, but lacks fallback condition if researcher node returns malformed schema.",
+    descriptiveAnswers: [
+      {
+        question: "Explain the safety bounds preventing infinite supervisor-worker routing loops.",
+        answer: "A global recursion_limit=25 is set in the StateGraph runtime, and the supervisor maintains a step_counter that forces a fallback human escalation node if unanswered after 4 cycles."
+      }
+    ],
+    rubricScores: [
+      { id: "r1", criteria: "Graph Topology & Node Design", maxScore: 25, score: 22, rationale: "Clear conditional branching and state schema." },
+      { id: "r2", criteria: "Human Interrupt Implementation", maxScore: 25, score: 20, rationale: "Proper interrupt_before logic on dangerous tools." },
+      { id: "r3", criteria: "Memory Persistence & Checkpointing", maxScore: 10, score: 8, rationale: "Uses PostgresSaver, needs connection pool tuning." },
+    ],
+    aiSuggestedScore: 85,
+    aiRationale: "Clean state graph compilation. Human interrupt executes correctly before destructive database mutation tools.",
     evaluatorFeedback: "",
     totalScore: 0,
     maxScore: 100,
+    releasedToStudent: false
   },
+  {
+    id: "sub-3",
+    testId: "test-lora-tuning",
+    testTitle: "Lab 4: Fine-Tuning Llama-3-8B with LoRA & Unsloth",
+    courseTitle: "Full-Stack AI & LLM Systems Engineering",
+    batchName: "Cohort 7 (Live + Replay)",
+    studentId: "usr-student-2",
+    studentName: "Vikram Adve (Candidate #3104)",
+    submittedAt: "11 Oct 2026, 11:45 PM",
+    status: "pending",
+    priority: "urgent",
+    deadline: "13 Oct 2026, 11:59 PM",
+    slaTimeRemaining: "Overdue by 16 hours",
+    isOverdue: true,
+    objectiveScore: 38,
+    objectiveMaxScore: 40,
+    codeSubmission: `from unsloth import FastLanguageModel
+import torch
+
+model, tokenizer = FastLanguageModel.from_pretrained(
+    model_name="unsloth/llama-3-8b-bnb-4bit",
+    max_seq_length=2048,
+    load_in_4bit=True
+)
+
+model = FastLanguageModel.get_peft_model(
+    model,
+    r=16,
+    target_modules=["q_proj", "k_proj", "v_proj", "o_proj"],
+    lora_alpha=16,
+    lora_dropout=0
+)`,
+    files: [
+      {
+        name: "train_lora.py",
+        language: "python",
+        content: `from unsloth import FastLanguageModel
+from trl import SFTTrainer
+from transformers import TrainingArguments
+
+# Model loading and 4-bit quantization config
+model, tokenizer = FastLanguageModel.from_pretrained(
+    model_name="unsloth/llama-3-8b-bnb-4bit",
+    max_seq_length=2048,
+    load_in_4bit=True
+)`
+      }
+    ],
+    descriptiveAnswers: [
+      {
+        question: "Why was lora_dropout set to 0 when using Unsloth?",
+        answer: "Unsloth achieves maximum kernel fusion and speedups when dropout is disabled, as recommended by their kernel benchmarks."
+      }
+    ],
+    rubricScores: [
+      { id: "r1", criteria: "Hyperparameter Selection", maxScore: 20, score: 18, rationale: "Proper r=16 and alpha=16 scaling factor." },
+      { id: "r2", criteria: "Loss Convergence & Overfitting Check", maxScore: 20, score: 19, rationale: "Validation loss curve demonstrates solid generalization." },
+      { id: "r3", criteria: "Inference Latency Benchmark", maxScore: 20, score: 17, rationale: "Tested on T4 GPU; 42 tokens/sec achieved." },
+    ],
+    aiSuggestedScore: 92,
+    aiRationale: "High training efficiency. WandB loss graph demonstrates monotonic convergence without validation loss explosion.",
+    evaluatorFeedback: "",
+    totalScore: 0,
+    maxScore: 100,
+    releasedToStudent: false
+  },
+  {
+    id: "sub-4",
+    testId: "test-diff-vision",
+    testTitle: "Milestone 3: Stable Diffusion ControlNet Multi-Modal Conditioning",
+    courseTitle: "Diffusion Models & Generative Vision",
+    batchName: "Weekend Generative Vision Cohort",
+    studentId: "usr-student-6",
+    studentName: "Aditi Rao (Candidate #5912)",
+    submittedAt: "13 Oct 2026, 03:20 PM",
+    status: "draft",
+    priority: "normal",
+    deadline: "15 Oct 2026, 11:59 PM",
+    slaTimeRemaining: "1 day 8h remaining",
+    isOverdue: false,
+    objectiveScore: 32,
+    objectiveMaxScore: 40,
+    codeSubmission: `from diffusers import StableDiffusionControlNetPipeline, ControlNetModel
+import torch
+
+controlnet = ControlNetModel.from_pretrained("lllyasviel/control_v11p_sd15_canny")
+pipe = StableDiffusionControlNetPipeline.from_pretrained(
+    "runwayml/stable-diffusion-v1-5",
+    controlnet=controlnet,
+    torch_dtype=torch.float16
+).to("cuda")`,
+    files: [
+      {
+        name: "controlnet_pipeline.py",
+        language: "python",
+        content: `import cv2
+import numpy as np
+from PIL import Image
+
+def preprocess_canny(image_path: str, low_threshold=100, high_threshold=200):
+    image = cv2.imread(image_path)
+    canny = cv2.Canny(image, low_threshold, high_threshold)
+    return Image.fromarray(canny)`
+      }
+    ],
+    descriptiveAnswers: [
+      {
+        question: "Explain the memory tradeoff between zero-convolutions vs full LoRA conditioning on ControlNet.",
+        answer: "Zero convolutions preserve original SD weights by starting with zero weights that gradually learn residual features, avoiding catastrophic forgetting while requiring minimal VRAM."
+      }
+    ],
+    rubricScores: [
+      { id: "r1", criteria: "Edge Conditioning Quality", maxScore: 25, score: 23, rationale: "Clean Canny preprocessing with adaptive thresholds." },
+      { id: "r2", criteria: "Prompt Guidance & Seed Reproducibility", maxScore: 20, score: 18, rationale: "Deterministic seeds logged in output metadata." },
+      { id: "r3", criteria: "Memory Footprint Optimization", maxScore: 15, score: 14, rationale: "Applied xFormers attention and torch.float16." },
+    ],
+    aiSuggestedScore: 87,
+    aiRationale: "Effective multi-modal conditioning. Correct memory optimization utilizing fp16 and attention slicing.",
+    evaluatorFeedback: "Draft in progress: Preprocessing logic is sound. Verifying prompt adherence test cases.",
+    totalScore: 87,
+    maxScore: 100,
+    releasedToStudent: false
+  },
+  {
+    id: "sub-5",
+    testId: "test-mlops-k8s",
+    testTitle: "Capstone 2: Production Triton GPU Inference on K8s",
+    courseTitle: "Production MLOps & Vector Infrastructure",
+    batchName: "Enterprise MLOps Masterclass",
+    studentId: "usr-student-7",
+    studentName: "Karan Johar (Candidate #1920)",
+    submittedAt: "10 Oct 2026, 02:10 PM",
+    status: "graded",
+    priority: "low",
+    deadline: "12 Oct 2026, 11:59 PM",
+    slaTimeRemaining: "Completed on-time",
+    isOverdue: false,
+    objectiveScore: 40,
+    objectiveMaxScore: 40,
+    codeSubmission: `apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: triton-server
+spec:
+  replicas: 3
+  template:
+    spec:
+      containers:
+      - name: triton
+        image: nvcr.io/nvidia/tritonserver:24.01-py3
+        resources:
+          limits:
+            nvidia.com/gpu: 1`,
+    files: [
+      {
+        name: "triton_deployment.yaml",
+        language: "yaml",
+        content: `apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: triton-inference-cluster
+spec:
+  replicas: 3
+  template:
+    spec:
+      containers:
+      - name: triton
+        image: nvcr.io/nvidia/tritonserver:24.01-py3
+        args: ["tritonserver", "--model-repository=/models"]
+        resources:
+          limits:
+            nvidia.com/gpu: 1`
+      }
+    ],
+    descriptiveAnswers: [
+      {
+        question: "How did you configure dynamic batching in config.pbtxt?",
+        answer: "Configured max_queue_delay_microseconds: 50000 and max_batch_size: 32 to maximize GPU saturation during traffic spikes."
+      }
+    ],
+    rubricScores: [
+      { id: "r1", criteria: "Kubernetes Manifest Resilience", maxScore: 25, score: 25, rationale: "Includes readiness/liveness probes and GPU node affinity." },
+      { id: "r2", criteria: "Dynamic Batching Configuration", maxScore: 20, score: 20, rationale: "Optimal queue delay parameters." },
+      { id: "r3", criteria: "Prometheus Metric Export", maxScore: 15, score: 14, rationale: "Custom scrapers hooked into /metrics endpoint." },
+    ],
+    aiSuggestedScore: 99,
+    aiRationale: "Flawless enterprise deployment architecture. Passed all load testing probes at 1200 QPS with p99 latency < 45ms.",
+    evaluatorFeedback: "Exceptional mastery of distributed Triton serving and Kubernetes GPU scheduling. Grade released to learner.",
+    totalScore: 99,
+    maxScore: 100,
+    releasedToStudent: true
+  },
+  {
+    id: "sub-6",
+    testId: "test-rag-eval",
+    testTitle: "Milestone 2: Hybrid RAG System with Cohere Rerank",
+    courseTitle: "Full-Stack AI & LLM Systems Engineering",
+    batchName: "Cohort 7 (Live + Replay)",
+    studentId: "usr-student-3",
+    studentName: "Neha Gupta (Candidate #7731)",
+    submittedAt: "14 Oct 2026, 01:15 AM",
+    status: "pending",
+    priority: "normal",
+    deadline: "16 Oct 2026, 11:59 PM",
+    slaTimeRemaining: "1 day 18h left",
+    isOverdue: false,
+    objectiveScore: 36,
+    objectiveMaxScore: 40,
+    codeSubmission: `def run_retrieval(query, retriever, reranker):
+    docs = retriever.get_relevant_documents(query)
+    reranked = reranker.compress_documents(docs, query)
+    return reranked`,
+    files: [
+      {
+        name: "simple_pipeline.py",
+        language: "python",
+        content: `def run_retrieval(query, retriever, reranker):
+    docs = retriever.get_relevant_documents(query)
+    reranked = reranker.compress_documents(docs, query)
+    return reranked`
+      }
+    ],
+    descriptiveAnswers: [
+      {
+        question: "Explain your rationale for choosing top_n=5 after reranking 25 initial candidates.",
+        answer: "To reduce prompt token cost and improve relevance."
+      }
+    ],
+    rubricScores: [
+      { id: "r1", criteria: "Vector Pipeline Architecture", maxScore: 20, score: 15, rationale: "Basic wrapper implementation, lacks modular configuration." },
+      { id: "r2", criteria: "Reranker Integration & Optimization", maxScore: 20, score: 14, rationale: "Missing metadata score preservation." },
+      { id: "r3", criteria: "Lost-in-the-middle Mitigation Logic", maxScore: 10, score: 7, rationale: "Brief explanation without citation of positional attention bias." },
+      { id: "r4", criteria: "Code Quality & Error Handling", maxScore: 10, score: 7, rationale: "No exception handling or type annotations." },
+    ],
+    aiSuggestedScore: 78,
+    aiRationale: "Working baseline implementation, but lacks production error boundaries, type hints, and parameter configuration.",
+    evaluatorFeedback: "",
+    totalScore: 0,
+    maxScore: 100,
+    releasedToStudent: false
+  }
 ];
 
 export const MOCK_TICKETS: SupportTicket[] = [
@@ -674,6 +1013,56 @@ class MockDataService {
       return true;
     }
     return false;
+  }
+
+  returnSubmissionForResubmission(submissionId: string, note: string): boolean {
+    const sub = MOCK_SUBMISSIONS.find((s) => s.id === submissionId);
+    if (sub) {
+      sub.returnedForResubmission = true;
+      sub.resubmissionNote = note;
+      sub.status = "draft";
+      return true;
+    }
+    return false;
+  }
+
+  resolveReassessment(submissionId: string, newScore: number, explanation: string, action: "upheld" | "adjusted"): boolean {
+    const sub = MOCK_SUBMISSIONS.find((s) => s.id === submissionId);
+    if (sub) {
+      if (action === "adjusted") {
+        sub.totalScore = newScore;
+      }
+      sub.status = "graded";
+      if (!sub.gradeHistory) sub.gradeHistory = [];
+      sub.gradeHistory.push({
+        date: "Just now",
+        evaluator: "Kavita Rao",
+        totalScore: sub.totalScore,
+        changeReason: `Reassessment ${action.toUpperCase()}: ${explanation}`
+      });
+      return true;
+    }
+    return false;
+  }
+
+  releaseGrade(submissionId: string): boolean {
+    const sub = MOCK_SUBMISSIONS.find((s) => s.id === submissionId);
+    if (sub) {
+      sub.releasedToStudent = true;
+      return true;
+    }
+    return false;
+  }
+
+  releaseAllGrades(testId?: string): number {
+    let count = 0;
+    MOCK_SUBMISSIONS.forEach((s) => {
+      if ((!testId || s.testId === testId) && s.status === "graded") {
+        s.releasedToStudent = true;
+        count++;
+      }
+    });
+    return count;
   }
 
   updateTicketStatus(ticketId: string, status: "open" | "pending" | "resolved"): boolean {
