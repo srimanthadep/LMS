@@ -124,8 +124,11 @@ export function App() {
           <Routes>
             {/* Public Auth Routes */}
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/auth/login" element={<LoginPage />} />
             <Route path="/reset-password" element={<ResetPasswordPage />} />
+            <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
             <Route path="/2fa" element={<TwoFactorPage />} />
+            <Route path="/auth/2fa" element={<TwoFactorPage />} />
 
             {/* Root Landing Redirect */}
             <Route path="/" element={<RoleRootRedirect />} />
