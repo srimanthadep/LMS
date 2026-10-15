@@ -364,39 +364,39 @@ export const AdminDashboard: React.FC = () => {
           index={0}
           title="Total Enrollments"
           value="1,482"
-          subtitle="94% live attendance"
+          subtitle="94% live"
           icon={Users}
-          trend={{ value: "+48 this week", isPositive: true }}
+          trend={{ value: "+48 this wk", isPositive: true }}
         />
         <StatCard
           index={1}
           title="Active Batches"
           value={batches.length.toString()}
-          subtitle="Across 4 AI courses"
+          subtitle="4 AI courses"
           icon={Layers}
-          trend={{ value: "2 cohorts starting", isPositive: true }}
+          trend={{ value: "2 starting", isPositive: true }}
         />
         <StatCard
           index={2}
           title="Total Facultys"
           value="18"
-          subtitle="0 timetable conflicts"
+          subtitle="No conflicts"
           icon={GraduationCap}
-          trend={{ value: "All confirmed", isPositive: true }}
+          trend={{ value: "All active", isPositive: true }}
         />
         <StatCard
           index={3}
           title="Total Payments Collected"
           value={`₹${totalCollected.toLocaleString("en-IN")}`}
-          subtitle="94.2% collection rate"
+          subtitle="94% collected"
           icon={CreditCard}
-          trend={{ value: "+12.4% vs last mo", isPositive: true }}
+          trend={{ value: "+12.4%", isPositive: true }}
         />
         <StatCard
           index={4}
           title="Pending Payments"
           value={`₹${totalPendingDue.toLocaleString("en-IN")}`}
-          subtitle={`${pendingStudents.filter((s) => s.pendingAmount > 0).length} students • Click to inspect`}
+          subtitle={`${pendingStudents.filter((s) => s.pendingAmount > 0).length} due`}
           icon={AlertTriangle}
           trend={{ value: showPendingList ? "List Open ▲" : "Click to view ▼", isPositive: false }}
           onClick={() => setShowPendingList((prev) => !prev)}
