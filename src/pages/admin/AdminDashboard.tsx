@@ -27,10 +27,15 @@ import {
   Bell,
   ArrowRight,
   X,
+  Search,
+  Send,
+  Copy,
+  Check,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { mockDataService } from "@/services/mockDataService";
 import { RupeeIcon } from "@/components/icons/RupeeIcon";
+import { cn } from "@/lib/utils";
 import {
   Dialog,
   DialogContent,
@@ -38,6 +43,112 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+
+export interface PendingStudent {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  batchId: string;
+  batchName: string;
+  courseTitle: string;
+  totalFee: number;
+  paidAmount: number;
+  pendingAmount: number;
+  dueDate: string;
+  status: "overdue" | "due_soon" | "partial" | "settled";
+  lastReminderSent?: string;
+}
+
+const INITIAL_PENDING_STUDENTS: PendingStudent[] = [
+  {
+    id: "stu-pen-1",
+    name: "Vikram Singhania",
+    email: "vikram.s@alpha.edu",
+    phone: "+91 98201 44102",
+    batchId: "batch-c7-live",
+    batchName: "Cohort 7 (Live + Replay)",
+    courseTitle: "Full-Stack AI & LLM Systems Engineering",
+    totalFee: 64999,
+    paidAmount: 40000,
+    pendingAmount: 24999,
+    dueDate: "12 Oct 2026",
+    status: "overdue",
+    lastReminderSent: "13 Oct 2026",
+  },
+  {
+    id: "stu-pen-2",
+    name: "Sneha Kapur",
+    email: "sneha.k@cloudworks.io",
+    phone: "+91 97112 55920",
+    batchId: "batch-c8-replay",
+    batchName: "Cohort 8 (Replay Only)",
+    courseTitle: "Full-Stack AI & LLM Systems Engineering",
+    totalFee: 39999,
+    paidAmount: 20000,
+    pendingAmount: 19999,
+    dueDate: "10 Oct 2026",
+    status: "overdue",
+    lastReminderSent: "11 Oct 2026",
+  },
+  {
+    id: "stu-pen-3",
+    name: "Aakash Deshmukh",
+    email: "aakash.d@fintech.co",
+    phone: "+91 98450 12093",
+    batchId: "batch-agents-live",
+    batchName: "Agentic Systems Bootcamp",
+    courseTitle: "Autonomous Multi-Agent Architectures",
+    totalFee: 49999,
+    paidAmount: 25000,
+    pendingAmount: 24999,
+    dueDate: "18 Oct 2026",
+    status: "due_soon",
+  },
+  {
+    id: "stu-pen-4",
+    name: "Karan Malhotra",
+    email: "karan.m@deepai.in",
+    phone: "+91 99203 88121",
+    batchId: "batch-vision-1",
+    batchName: "Computer Vision Alpha",
+    courseTitle: "Diffusion Models & Generative Vision",
+    totalFee: 54999,
+    paidAmount: 35000,
+    pendingAmount: 19999,
+    dueDate: "20 Oct 2026",
+    status: "due_soon",
+  },
+  {
+    id: "stu-pen-5",
+    name: "Meenakshi Sundaram",
+    email: "meenakshi.s@chennai.ai",
+    phone: "+91 94441 33019",
+    batchId: "batch-c7-live",
+    batchName: "Cohort 7 (Live + Replay)",
+    courseTitle: "Full-Stack AI & LLM Systems Engineering",
+    totalFee: 64999,
+    paidAmount: 50000,
+    pendingAmount: 14999,
+    dueDate: "24 Oct 2026",
+    status: "partial",
+  },
+  {
+    id: "stu-pen-6",
+    name: "Rohan Nair",
+    email: "rohan.nair@scaleup.org",
+    phone: "+91 98190 77412",
+    batchId: "batch-agents-live",
+    batchName: "Agentic Systems Bootcamp",
+    courseTitle: "Autonomous Multi-Agent Architectures",
+    totalFee: 49999,
+    paidAmount: 30000,
+    pendingAmount: 19999,
+    dueDate: "09 Oct 2026",
+    status: "overdue",
+    lastReminderSent: "12 Oct 2026",
+  },
+];
 
 export const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -57,6 +168,86 @@ export const AdminDashboard: React.FC = () => {
   const [studentEmail, setStudentEmail] = useState("");
   const [classTitle, setClassTitle] = useState("");
   const [actionSuccess, setActionSuccess] = useState<string | null>(null);
+
+  // Interactive Pending Payments State (In-Dashboard, No Redirect)
+  const [showPendingList, setShowPendingList] = useState(false);
+  const [pendingStudents, setPendingStudents] = useState<PendingStudent[]>(INITIAL_PENDING_STUDENTS);
+  const [pendingSearch, setPendingSearch] = useState("");
+  const [pendingFilter, setPendingFilter] = useState<"all" | "overdue" | "due_soon" | "partial">("all");
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [settleStudent, setSettleStudent] = useState<PendingStudent | null>(null);
+  const [settleAmount, setSettleAmount] = useState<string>("");
+  const [settleMethod, setSettleMethod] = useState<string>("UPI (Google Pay / PhonePe)");
+  const [totalCollected, setTotalCollected] = useState<number>(1845000);
+
+  const totalPendingDue = pendingStudents.reduce((sum, s) => sum + s.pendingAmount, 0);
+  const totalPaidByPendingStudents = pendingStudents.reduce((sum, s) => sum + s.paidAmount, 0);
+
+  const handleSendReminder = (student: PendingStudent) => {
+    setPendingStudents((prev) =>
+      prev.map((s) =>
+        s.id === student.id
+          ? { ...s, lastReminderSent: "Today, just now" }
+          : s
+      )
+    );
+    setActionSuccess(`Payment reminder dispatched to ${student.name} via SMS and Email (${student.email}).`);
+    setTimeout(() => setActionSuccess(null), 4000);
+  };
+
+  const handleCopyPayLink = (student: PendingStudent) => {
+    navigator.clipboard?.writeText?.(`https://pay.lms.ai/invoice/${student.id}`);
+    setCopiedId(student.id);
+    setTimeout(() => setCopiedId(null), 2500);
+  };
+
+  const handleOpenSettle = (student: PendingStudent) => {
+    setSettleStudent(student);
+    setSettleAmount(student.pendingAmount.toString());
+  };
+
+  const handleConfirmSettlement = () => {
+    if (!settleStudent) return;
+    const amount = Number(settleAmount);
+    if (!amount || amount <= 0) return;
+
+    setPendingStudents((prev) =>
+      prev.map((s) => {
+        if (s.id !== settleStudent.id) return s;
+        const newPaid = s.paidAmount + amount;
+        const newPending = Math.max(0, s.pendingAmount - amount);
+        return {
+          ...s,
+          paidAmount: newPaid,
+          pendingAmount: newPending,
+          status: newPending === 0 ? "settled" : s.status,
+        };
+      })
+    );
+    setTotalCollected((prev) => prev + amount);
+    setActionSuccess(
+      `Successfully recorded payment of ₹${amount.toLocaleString("en-IN")} for ${settleStudent.name} via ${settleMethod}.`
+    );
+    setSettleStudent(null);
+    setTimeout(() => setActionSuccess(null), 4000);
+  };
+
+  const handleBulkReminder = () => {
+    const dueCount = pendingStudents.filter((s) => s.pendingAmount > 0).length;
+    setActionSuccess(`Automated payment reminders sent to all ${dueCount} learners with outstanding dues.`);
+    setTimeout(() => setActionSuccess(null), 4000);
+  };
+
+  const filteredPendingStudents = pendingStudents.filter((s) => {
+    const matchesSearch =
+      s.name.toLowerCase().includes(pendingSearch.toLowerCase()) ||
+      s.email.toLowerCase().includes(pendingSearch.toLowerCase()) ||
+      s.batchName.toLowerCase().includes(pendingSearch.toLowerCase()) ||
+      s.courseTitle.toLowerCase().includes(pendingSearch.toLowerCase());
+    const matchesFilter =
+      pendingFilter === "all" ? true : s.status === pendingFilter;
+    return matchesSearch && matchesFilter;
+  });
 
   // Content processing items state
   const [processingJobs, setProcessingJobs] = useState([
@@ -103,54 +294,54 @@ export const AdminDashboard: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Welcome & Quick Action Bar */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-        <div>
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+        <div className="max-w-md xl:max-w-lg">
           <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-foreground flex items-center gap-2">
             Operations Command Center
           </h1>
-          <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+          <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 line-clamp-1">
             Cohort management, class scheduling, content ingestion pipeline, and student learning access.
           </p>
         </div>
 
-        {/* 5 Quick Actions Mandated by DPR */}
-        <div className="flex flex-wrap items-center gap-2">
+        {/* 5 Quick Actions - Aligned on a single cohesive horizontal action strip */}
+        <div className="flex items-center gap-2 shrink-0 flex-nowrap overflow-x-auto py-0.5 scrollbar-none">
           <Button
             size="sm"
             onClick={() => setActiveModal("createCourse")}
-            className="text-xs h-9 font-bold gap-1 shadow-xs"
+            className="h-8.5 px-3 text-xs font-semibold gap-1.5 shadow-xs whitespace-nowrap bg-primary hover:bg-primary/90 text-primary-foreground shrink-0"
           >
-            <BookOpen className="h-3.5 w-3.5" /> + Course
+            <BookOpen className="h-3.5 w-3.5 shrink-0" /> + Course
           </Button>
           <Button
             size="sm"
             onClick={() => setActiveModal("createBatch")}
-            className="text-xs h-9 font-bold gap-1 shadow-xs"
+            className="h-8.5 px-3 text-xs font-semibold gap-1.5 shadow-xs whitespace-nowrap bg-primary hover:bg-primary/90 text-primary-foreground shrink-0"
           >
-            <Layers className="h-3.5 w-3.5" /> + Batch
+            <Layers className="h-3.5 w-3.5 shrink-0" /> + Batch
           </Button>
           <Button
             size="sm"
             onClick={() => setActiveModal("enrollStudent")}
-            className="text-xs h-9 font-bold gap-1 shadow-xs"
+            className="h-8.5 px-3 text-xs font-semibold gap-1.5 shadow-xs whitespace-nowrap bg-primary hover:bg-primary/90 text-primary-foreground shrink-0"
           >
-            <Users className="h-3.5 w-3.5" /> + Enroll Student
+            <Users className="h-3.5 w-3.5 shrink-0" /> + Enroll Student
           </Button>
           <Button
             size="sm"
             variant="outline"
             onClick={() => setActiveModal("scheduleClass")}
-            className="text-xs h-9 font-semibold gap-1"
+            className="h-8.5 px-3 text-xs font-semibold gap-1.5 whitespace-nowrap border-border/80 hover:bg-muted/60 shrink-0"
           >
-            <Calendar className="h-3.5 w-3.5" /> Schedule Class
+            <Calendar className="h-3.5 w-3.5 shrink-0" /> Schedule Class
           </Button>
           <Button
             size="sm"
             variant="outline"
             onClick={() => setActiveModal("uploadContent")}
-            className="text-xs h-9 font-semibold gap-1"
+            className="h-8.5 px-3 text-xs font-semibold gap-1.5 whitespace-nowrap border-border/80 hover:bg-muted/60 shrink-0"
           >
-            <UploadCloud className="h-3.5 w-3.5" /> Upload Content
+            <UploadCloud className="h-3.5 w-3.5 shrink-0" /> Upload Content
           </Button>
         </div>
       </div>
@@ -167,16 +358,15 @@ export const AdminDashboard: React.FC = () => {
         </div>
       )}
 
-      {/* Bento Row 1: Key Operational Metrics */}
+      {/* Bento Row 1: The Exact 5 Mandated Status Cards */}
       <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-5 items-stretch">
         <StatCard
           index={0}
-          title="Active Students"
+          title="Total Enrollments"
           value="1,482"
           subtitle="94% live attendance"
           icon={Users}
           trend={{ value: "+48 this week", isPositive: true }}
-          highlight
         />
         <StatCard
           index={1}
@@ -188,29 +378,273 @@ export const AdminDashboard: React.FC = () => {
         />
         <StatCard
           index={2}
-          title="Faculty Instructors"
-          value="18 Active"
+          title="Total Facultys"
+          value="18"
           subtitle="0 timetable conflicts"
           icon={GraduationCap}
           trend={{ value: "All confirmed", isPositive: true }}
         />
         <StatCard
           index={3}
-          title="Pending Payments"
-          value="₹1,24,500"
-          subtitle="6 student invoices due"
+          title="Total Payments Collected"
+          value={`₹${totalCollected.toLocaleString("en-IN")}`}
+          subtitle="94.2% collection rate"
           icon={CreditCard}
-          trend={{ value: "Follow-up queued", isPositive: false }}
+          trend={{ value: "+12.4% vs last mo", isPositive: true }}
         />
         <StatCard
           index={4}
-          title="Pending Approvals"
-          value="6 Requests"
-          subtitle="Transfers & extensions"
-          icon={Clock}
-          trend={{ value: "Action required", isPositive: false }}
+          title="Pending Payments"
+          value={`₹${totalPendingDue.toLocaleString("en-IN")}`}
+          subtitle={`${pendingStudents.filter((s) => s.pendingAmount > 0).length} students • Click to inspect`}
+          icon={AlertTriangle}
+          trend={{ value: showPendingList ? "List Open ▲" : "Click to view ▼", isPositive: false }}
+          onClick={() => setShowPendingList((prev) => !prev)}
+          isActive={showPendingList}
+          className="cursor-pointer ring-offset-2 transition-all"
         />
       </div>
+
+      {/* Interactive In-Dashboard Pending Payments List (No Redirection) */}
+      {showPendingList && (
+        <div className="rounded-2xl border-2 border-primary/40 bg-card shadow-sm p-4 sm:p-5 space-y-4 animate-in fade-in slide-in-from-top-3 duration-300">
+          {/* Header with Title, Quick Actions & Close Button */}
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 pb-3 border-b border-border/80">
+            <div>
+              <div className="flex items-center gap-2">
+                <Badge className="bg-primary text-white text-[10px] font-bold uppercase tracking-wider">
+                  Dashboard Inspection Panel
+                </Badge>
+                <span className="text-xs font-semibold text-muted-foreground">
+                  {pendingStudents.filter((s) => s.pendingAmount > 0).length} Learners with Pending Tuition
+                </span>
+              </div>
+              <h3 className="text-base sm:text-lg font-extrabold text-foreground tracking-tight flex items-center gap-2 mt-1">
+                <CreditCard className="h-5 w-5 text-primary" /> Students with Pending Payments
+              </h3>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Inspect outstanding dues, dispatch SMS & Email payment reminders, copy direct invoice links, or record a settlement directly here without leaving the dashboard.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2 self-start md:self-auto">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={handleBulkReminder}
+                className="h-8 text-xs font-semibold gap-1.5 border-primary/30 text-primary hover:bg-primary/10"
+              >
+                <Send className="h-3 w-3" /> Remind All Pending
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => setShowPendingList(false)}
+                className="h-8 px-2 text-xs font-semibold text-muted-foreground hover:text-foreground gap-1 border border-border/70"
+                title="Collapse List"
+              >
+                <X className="h-3.5 w-3.5" /> Close
+              </Button>
+            </div>
+          </div>
+
+          {/* Metric Highlights Strip */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3 rounded-xl bg-muted/30 border border-border/60">
+            <div>
+              <div className="text-[11px] text-muted-foreground font-medium">Total Pending Due</div>
+              <div className="text-base sm:text-lg font-bold text-primary font-mono tabular-nums">
+                ₹{totalPendingDue.toLocaleString("en-IN")}
+              </div>
+            </div>
+            <div>
+              <div className="text-[11px] text-muted-foreground font-medium">Total Collected So Far</div>
+              <div className="text-base sm:text-lg font-bold text-emerald-600 dark:text-emerald-400 font-mono tabular-nums">
+                ₹{totalPaidByPendingStudents.toLocaleString("en-IN")}
+              </div>
+            </div>
+            <div>
+              <div className="text-[11px] text-muted-foreground font-medium">Overdue Invoices</div>
+              <div className="text-base sm:text-lg font-bold text-rose-600 dark:text-rose-400 font-mono tabular-nums">
+                {pendingStudents.filter((s) => s.status === "overdue" && s.pendingAmount > 0).length} Urgent
+              </div>
+            </div>
+            <div>
+              <div className="text-[11px] text-muted-foreground font-medium">Clearance Progress</div>
+              <div className="text-base sm:text-lg font-bold text-foreground font-mono tabular-nums">
+                {Math.round((totalPaidByPendingStudents / (totalPaidByPendingStudents + totalPendingDue)) * 100)}% Paid
+              </div>
+            </div>
+          </div>
+
+          {/* Search & Status Filter Controls */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+            <div className="relative flex-1 max-w-md">
+              <Search className="h-3.5 w-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Search student name, batch, course, or email..."
+                value={pendingSearch}
+                onChange={(e) => setPendingSearch(e.target.value)}
+                className="pl-9 h-8 text-xs bg-background"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-muted-foreground font-medium shrink-0">Filter:</span>
+              <div className="inline-flex rounded-lg border border-border p-0.5 bg-background text-xs">
+                {(["all", "overdue", "due_soon", "partial"] as const).map((filter) => (
+                  <button
+                    key={filter}
+                    onClick={() => setPendingFilter(filter)}
+                    className={cn(
+                      "px-2.5 py-1 rounded-md text-[11px] font-semibold transition-colors capitalize",
+                      pendingFilter === filter
+                        ? "bg-primary text-white shadow-2xs"
+                        : "text-muted-foreground hover:text-foreground"
+                    )}
+                  >
+                    {filter === "all" ? "All" : filter === "due_soon" ? "Due Soon" : filter}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Pending Students Table */}
+          <div className="rounded-xl border border-border/70 overflow-x-auto bg-background">
+            <table className="w-full text-xs text-left">
+              <thead className="bg-muted/50 border-b border-border/70 text-muted-foreground font-semibold">
+                <tr>
+                  <th className="py-2.5 px-4">Student Name</th>
+                  <th className="py-2.5 px-3">Batch & Course</th>
+                  <th className="py-2.5 px-3 text-right">Total Fee</th>
+                  <th className="py-2.5 px-3 text-right">How Much Paid</th>
+                  <th className="py-2.5 px-3 text-right">How Much Pending</th>
+                  <th className="py-2.5 px-3">Due Status</th>
+                  <th className="py-2.5 px-4 text-center">Dashboard Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border/60">
+                {filteredPendingStudents.length === 0 ? (
+                  <tr>
+                    <td colSpan={7} className="py-8 text-center text-muted-foreground">
+                      No student records matching your search or filter.
+                    </td>
+                  </tr>
+                ) : (
+                  filteredPendingStudents.map((s) => {
+                    const pctPaid = Math.round((s.paidAmount / s.totalFee) * 100);
+                    return (
+                      <tr key={s.id} className="hover:bg-muted/20 transition-colors">
+                        <td className="py-3 px-4">
+                          <div className="flex items-center gap-2.5">
+                            <div className="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center font-bold text-primary text-xs shrink-0">
+                              {s.name
+                                .split(" ")
+                                .map((n) => n[0])
+                                .join("")}
+                            </div>
+                            <div>
+                              <div className="font-bold text-foreground text-xs">{s.name}</div>
+                              <div className="text-[11px] text-muted-foreground font-mono">{s.email}</div>
+                              <div className="text-[10px] text-muted-foreground">{s.phone}</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="py-3 px-3">
+                          <div className="font-semibold text-foreground text-xs">{s.batchName}</div>
+                          <div className="text-[11px] text-muted-foreground line-clamp-1">{s.courseTitle}</div>
+                        </td>
+                        <td className="py-3 px-3 text-right font-mono font-medium text-foreground">
+                          ₹{s.totalFee.toLocaleString("en-IN")}
+                        </td>
+                        <td className="py-3 px-3 text-right">
+                          <div className="font-bold font-mono text-emerald-600 dark:text-emerald-400">
+                            ₹{s.paidAmount.toLocaleString("en-IN")}
+                          </div>
+                          <div className="w-24 ml-auto mt-1 bg-muted rounded-full h-1.5 overflow-hidden">
+                            <div
+                              className="bg-emerald-500 h-1.5 rounded-full"
+                              style={{ width: `${pctPaid}%` }}
+                            />
+                          </div>
+                          <div className="text-[10px] text-muted-foreground mt-0.5">{pctPaid}% cleared</div>
+                        </td>
+                        <td className="py-3 px-3 text-right">
+                          <div className="font-extrabold font-mono text-sm text-primary">
+                            ₹{s.pendingAmount.toLocaleString("en-IN")}
+                          </div>
+                          <div className="text-[10px] text-muted-foreground">due by {s.dueDate}</div>
+                        </td>
+                        <td className="py-3 px-3">
+                          <div className="flex flex-col gap-1">
+                            {s.pendingAmount === 0 ? (
+                              <Badge variant="outline" className="text-[10px] border-emerald-500/40 text-emerald-600 bg-emerald-50 dark:bg-emerald-950/20 font-bold w-fit">
+                                Fully Cleared
+                              </Badge>
+                            ) : s.status === "overdue" ? (
+                              <Badge variant="destructive" className="text-[10px] font-bold w-fit">
+                                Overdue
+                              </Badge>
+                            ) : s.status === "due_soon" ? (
+                              <Badge variant="warning" className="text-[10px] font-bold w-fit">
+                                Due Soon
+                              </Badge>
+                            ) : (
+                              <Badge variant="outline" className="text-[10px] font-bold text-primary border-primary/30 w-fit">
+                                Partial
+                              </Badge>
+                            )}
+                            {s.lastReminderSent && (
+                              <span className="text-[9px] text-muted-foreground">
+                                Reminded: {s.lastReminderSent}
+                              </span>
+                            )}
+                          </div>
+                        </td>
+                        <td className="py-3 px-4">
+                          <div className="flex items-center justify-center gap-1.5">
+                            <Button
+                              size="sm"
+                              onClick={() => handleOpenSettle(s)}
+                              disabled={s.pendingAmount === 0}
+                              className="h-7 px-2.5 text-[11px] font-bold gap-1 shadow-2xs bg-primary hover:bg-primary/90 text-primary-foreground"
+                              title="Record payment settlement in dashboard"
+                            >
+                              <CreditCard className="h-3 w-3" /> Record Payment
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleSendReminder(s)}
+                              disabled={s.pendingAmount === 0}
+                              className="h-7 px-2 text-[11px] font-semibold gap-1 text-muted-foreground hover:text-foreground"
+                              title="Send payment reminder SMS & Email"
+                            >
+                              <Send className="h-3 w-3" /> Remind
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => handleCopyPayLink(s)}
+                              className="h-7 w-7 p-0 text-muted-foreground hover:text-foreground"
+                              title="Copy payment link"
+                            >
+                              {copiedId === s.id ? (
+                                <Check className="h-3.5 w-3.5 text-emerald-500" />
+                              ) : (
+                                <Copy className="h-3.5 w-3.5" />
+                              )}
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
 
       {/* Bento Grid Layout: Upcoming Schedule (Featured Tile) + Content Pipeline & Operations */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -718,6 +1152,81 @@ export const AdminDashboard: React.FC = () => {
               </Button>
             </div>
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Quick In-Dashboard Tuition Settlement Dialog */}
+      <Dialog open={!!settleStudent} onOpenChange={(open) => !open && setSettleStudent(null)}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-base font-bold">
+              <CreditCard className="h-5 w-5 text-primary" /> Record Tuition Settlement
+            </DialogTitle>
+            <DialogDescription className="text-xs">
+              Record fee collection for {settleStudent?.name} ({settleStudent?.batchName}). Updates dashboard metrics immediately without reload.
+            </DialogDescription>
+          </DialogHeader>
+          {settleStudent && (
+            <div className="space-y-3.5 text-xs pt-1">
+              <div className="p-3 rounded-xl bg-muted/40 border border-border/70 space-y-1.5">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Course:</span>
+                  <span className="font-semibold text-foreground text-right line-clamp-1">{settleStudent.courseTitle}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Total Course Fee:</span>
+                  <span className="font-bold text-foreground font-mono">₹{settleStudent.totalFee.toLocaleString("en-IN")}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Already Paid:</span>
+                  <span className="font-bold text-emerald-600 dark:text-emerald-400 font-mono">₹{settleStudent.paidAmount.toLocaleString("en-IN")}</span>
+                </div>
+                <div className="flex justify-between border-t border-border/60 pt-1">
+                  <span className="font-semibold text-foreground">Current Balance Due:</span>
+                  <span className="font-extrabold text-primary font-mono text-sm">₹{settleStudent.pendingAmount.toLocaleString("en-IN")}</span>
+                </div>
+              </div>
+
+              <div>
+                <label className="font-semibold text-foreground">Collection Amount (₹)</label>
+                <Input
+                  type="number"
+                  value={settleAmount}
+                  onChange={(e) => setSettleAmount(e.target.value)}
+                  max={settleStudent.pendingAmount}
+                  className="mt-1 h-9 text-xs font-mono font-bold"
+                />
+              </div>
+
+              <div>
+                <label className="font-semibold text-foreground">Payment Mode / Settlement Channel</label>
+                <select
+                  value={settleMethod}
+                  onChange={(e) => setSettleMethod(e.target.value)}
+                  className="mt-1 w-full h-9 rounded-md border border-input bg-background px-3 text-xs"
+                >
+                  <option value="UPI (Google Pay / PhonePe)">UPI (Google Pay / PhonePe)</option>
+                  <option value="Direct Bank NEFT / IMPS">Direct Bank NEFT / IMPS</option>
+                  <option value="Credit / Debit Card (POS)">Credit / Debit Card (POS)</option>
+                  <option value="Cash / Cheque Deposit">Cash / Cheque Deposit</option>
+                  <option value="Scholarship / Fee Waiver">Scholarship / Fee Waiver Adjustment</option>
+                </select>
+              </div>
+
+              <div className="pt-2 flex justify-end gap-2">
+                <Button size="sm" variant="outline" onClick={() => setSettleStudent(null)} className="h-8 text-xs">
+                  Cancel
+                </Button>
+                <Button
+                  size="sm"
+                  onClick={handleConfirmSettlement}
+                  className="h-8 text-xs font-bold bg-primary hover:bg-primary/90 text-primary-foreground"
+                >
+                  Confirm Settlement
+                </Button>
+              </div>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </div>

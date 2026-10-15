@@ -2,7 +2,6 @@ import React from "react";
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
 import { NotificationProvider } from "@/context/NotificationContext";
-import { UserProvider } from "@/context/UserContext";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { UserRole } from "@/types/auth";
 
@@ -141,8 +140,7 @@ export function App() {
   return (
     <AuthProvider>
       <NotificationProvider>
-        <UserProvider>
-          <BrowserRouter>
+        <BrowserRouter>
           <Routes>
             {/* Public Auth Routes */}
             <Route path="/login" element={<LoginPage />} />
@@ -259,14 +257,6 @@ export function App() {
               element={
                 <ProtectedRoute allowedRoles={["admin"]}>
                   <AdminDashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/users"
-              element={
-                <ProtectedRoute allowedRoles={["admin", "super-admin"]}>
-                  <UserAdminPage />
                 </ProtectedRoute>
               }
             />
@@ -802,7 +792,6 @@ export function App() {
             />
           </Routes>
         </BrowserRouter>
-        </UserProvider>
       </NotificationProvider>
     </AuthProvider>
   );

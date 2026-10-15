@@ -15,7 +15,6 @@ import {
   CheckCircle2,
   Clock,
   LifeBuoy,
-  Eye,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -44,7 +43,7 @@ interface DashboardLayoutProps {
 export const DashboardLayout = ({ children, headerAction }: DashboardLayoutProps) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, role, logout, impersonatingFrom, stopImpersonation } = useAuth();
+  const { user, role, logout } = useAuth();
   const [searchOpen, setSearchOpen] = useState(false);
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
 
@@ -198,29 +197,6 @@ export const DashboardLayout = ({ children, headerAction }: DashboardLayoutProps
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col font-sans">
-      {/* Global Impersonation Delegation Banner */}
-      {impersonatingFrom && (
-        <div className="bg-amber-500 text-amber-950 px-4 py-2 text-xs font-semibold flex items-center justify-between sticky top-0 z-50 shadow-md border-b border-amber-600/40">
-          <div className="flex items-center gap-2">
-            <Eye className="w-4 h-4 animate-pulse text-amber-950 shrink-0" />
-            <span className="truncate">
-              You are currently impersonating <strong>{user.name}</strong> ({user.role}). You have full delegated operational access.
-            </span>
-          </div>
-          <div className="flex items-center gap-2 shrink-0">
-            <button
-              onClick={() => {
-                stopImpersonation();
-                navigate("/super-admin/users");
-              }}
-              className="px-3 py-1 bg-amber-950 text-white hover:bg-black rounded-lg text-xs font-bold transition cursor-pointer shadow-xs"
-            >
-              Exit Impersonation
-            </button>
-          </div>
-        </div>
-      )}
-
       {/* 1. Mobile Top Header */}
       <header className="lg:hidden sticky top-0 z-30 bg-card/90 backdrop-blur-md border-b border-border/80 px-4 py-2.5 shadow-xs">
         <div className="flex items-center justify-between max-w-7xl mx-auto">
