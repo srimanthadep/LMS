@@ -139,30 +139,7 @@ export const DashboardLayout = ({ children, headerAction }: DashboardLayoutProps
           </div>
         );
       case "super-admin":
-        return (
-          <div className="p-3.5 rounded-2xl bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent border border-emerald-500/20 space-y-1.5">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                <CheckCircle2 className="h-3 w-3" /> Platform Status
-              </span>
-              <span className="w-2 h-2 rounded-full bg-emerald-500" />
-            </div>
-            <p className="text-xs font-bold text-foreground leading-snug">
-              100% Operational
-            </p>
-            <p className="text-[11px] text-muted-foreground">
-              42.8M Tokens • 0 Latency Spikes
-            </p>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => navigate("/super-admin/usage")}
-              className="w-full mt-2 h-7 text-xs rounded-lg gap-1 font-semibold border-emerald-500/30 text-emerald-700 dark:text-emerald-300"
-            >
-              Cost Analytics <ChevronRight className="h-3 w-3" />
-            </Button>
-          </div>
-        );
+        return null;
       case "evaluator":
         return (
           <div className="p-3.5 rounded-2xl bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-transparent border border-amber-500/20 space-y-1.5">
