@@ -66,7 +66,7 @@ export const StatCard: React.FC<StatCardProps> = ({
             </button>
           </div>
           <div className="my-1 flex items-baseline gap-2">
-            <span className="text-3xl font-bold tracking-tight text-white">{value}</span>
+            <span className="text-2xl sm:text-3xl font-bold tracking-tight tabular-nums text-white">{value}</span>
             <span className="inline-flex items-center text-rose-300 text-xs font-semibold">
               <svg className="w-3.5 h-3.5 mr-0.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                 <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" strokeLinecap="round" strokeLinejoin="round"></path>
@@ -115,7 +115,7 @@ export const StatCard: React.FC<StatCardProps> = ({
         </div>
         <div className="my-1 flex items-end justify-between">
           <div className="flex items-baseline gap-1.5">
-            <span className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white font-mono">
+            <span className="text-2xl sm:text-3xl font-bold tracking-tight tabular-nums text-slate-900 dark:text-white">
               {value}
             </span>
           </div>
