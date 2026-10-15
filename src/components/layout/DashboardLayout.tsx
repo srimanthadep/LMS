@@ -96,7 +96,7 @@ export const DashboardLayout = ({ children, headerAction }: DashboardLayoutProps
     switch (role) {
       case "student":
         return (
-          <div className="p-4 rounded-2xl promo-card-pattern text-white relative overflow-hidden shadow-lg shadow-emerald-950/20" data-purpose="promo-card">
+          <div className="p-4 rounded-2xl promo-card-pattern text-white relative overflow-hidden shadow-lg shadow-blue-950/20" data-purpose="promo-card">
             <div className="flex items-center justify-between mb-2.5">
               <span className="inline-flex items-center justify-center text-amber-400">
                 <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
@@ -105,10 +105,10 @@ export const DashboardLayout = ({ children, headerAction }: DashboardLayoutProps
               </span>
             </div>
             <h4 className="text-sm font-semibold leading-snug mb-1 text-white">Upgrade Your<br/>Learning Experience</h4>
-            <p className="text-[12px] text-emerald-200/80 mb-3.5 leading-relaxed">Get access to premium tools and resources.</p>
+            <p className="text-[12px] text-rose-200/80 mb-3.5 leading-relaxed">Get access to premium tools and resources.</p>
             <button
               onClick={() => navigate("/student/courses")}
-              className="inline-flex items-center justify-center w-full py-2 px-3 text-xs font-semibold rounded-lg bg-[#d9f2e4] text-[#0d3f28] hover:bg-white transition-all shadow-sm"
+              className="inline-flex items-center justify-center w-full py-2 px-3 text-xs font-semibold rounded-lg bg-[#fff1f2] text-[#e11d48] hover:bg-white transition-all shadow-sm"
             >
               Explore Now  →
             </button>
@@ -228,8 +228,8 @@ export const DashboardLayout = ({ children, headerAction }: DashboardLayoutProps
             className="flex items-center space-x-2.5 cursor-pointer group"
             onClick={() => navigate(`/${role}/dashboard`)}
           >
-            <div className="w-8 h-8 rounded-lg bg-[#0e3b26] flex items-center justify-center text-emerald-400 shadow-sm shadow-emerald-950/20">
-              <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24">
+            <div className="w-8 h-8 rounded-lg bg-[#e11d48] flex items-center justify-center text-white shadow-sm shadow-rose-950/20">
+              <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24">
                 <path d="m21.12 6.4-8.8-4.9a2.3 2.3 0 0 0-2.24 0l-8.8 4.9A2.3 2.3 0 0 0 .16 8.4v9.2a2.3 2.3 0 0 0 1.12 2l8.8 4.9a2.3 2.3 0 0 0 2.24 0l8.8-4.9a2.3 2.3 0 0 0 1.12-2V8.4a2.3 2.3 0 0 0-1.12-2z"></path>
                 <path d="M12 22V12"></path>
                 <path d="m21 7-9 5-9-5"></path>
@@ -237,7 +237,7 @@ export const DashboardLayout = ({ children, headerAction }: DashboardLayoutProps
             </div>
             <div>
               <span className="font-bold text-sm tracking-tight block leading-tight">Apex LMS</span>
-              <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold uppercase tracking-wider block capitalize">
+              <span className="text-[10px] text-[#e11d48] dark:text-rose-400 font-semibold uppercase tracking-wider block capitalize">
                 {role.replace("-", " ")} Portal
               </span>
             </div>
@@ -349,8 +349,8 @@ export const DashboardLayout = ({ children, headerAction }: DashboardLayoutProps
               className="flex items-center gap-3 cursor-pointer group min-w-0 flex-1"
               onClick={() => navigate(`/${role}/dashboard`)}
             >
-              <div className="w-8 h-8 rounded-lg bg-[#0e3b26] flex items-center justify-center text-emerald-400 shadow-sm shadow-emerald-950/20 group-hover:scale-105 transition-all shrink-0">
-                <svg className="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24">
+              <div className="w-8 h-8 rounded-lg bg-[#e11d48] flex items-center justify-center text-white shadow-sm shadow-rose-950/20 group-hover:scale-105 transition-all shrink-0">
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24">
                   <path d="m21.12 6.4-8.8-4.9a2.3 2.3 0 0 0-2.24 0l-8.8 4.9A2.3 2.3 0 0 0 .16 8.4v9.2a2.3 2.3 0 0 0 1.12 2l8.8 4.9a2.3 2.3 0 0 0 2.24 0l8.8-4.9a2.3 2.3 0 0 0 1.12-2V8.4a2.3 2.3 0 0 0-1.12-2z"></path>
                   <path d="M12 22V12"></path>
                   <path d="m21 7-9 5-9-5"></path>
@@ -358,7 +358,7 @@ export const DashboardLayout = ({ children, headerAction }: DashboardLayoutProps
               </div>
               <div className="min-w-0 flex-1">
                 <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white block leading-tight truncate">Apex LMS</span>
-                <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold uppercase tracking-wider block truncate capitalize">{role.replace("-", " ")} Workspace</span>
+                <span className="text-[10px] text-[#e11d48] dark:text-rose-400 font-semibold uppercase tracking-wider block truncate capitalize">{role.replace("-", " ")} Workspace</span>
               </div>
             </div>
           </div>
@@ -383,17 +383,17 @@ export const DashboardLayout = ({ children, headerAction }: DashboardLayoutProps
                         className={cn(
                           "group relative flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm transition-all text-left outline-none w-full",
                           isActive
-                            ? "bg-[#eaf5ef] dark:bg-emerald-950/40 text-[#0d4f32] dark:text-emerald-300 font-semibold"
+                            ? "bg-[#fff1f2] dark:bg-[#e11d48]/25 text-[#e11d48] dark:text-rose-300 font-semibold"
                             : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-muted/40"
                         )}
                       >
                         {isActive && (
-                          <span className="absolute -left-4 top-1.5 bottom-1.5 w-1.5 bg-[#0e482f] dark:bg-emerald-400 rounded-r-md"></span>
+                          <span className="absolute -left-4 top-1.5 bottom-1.5 w-1.5 bg-[#e11d48] dark:bg-rose-400 rounded-r-md"></span>
                         )}
-                        <Icon className={cn("w-[18px] h-[18px] shrink-0 transition-colors", isActive ? "text-[#0d4f32] dark:text-emerald-300" : "text-slate-400 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-300")} />
+                        <Icon className={cn("w-[18px] h-[18px] shrink-0 transition-colors", isActive ? "text-[#e11d48] dark:text-rose-300" : "text-slate-400 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-300")} />
                         <span className="flex-1 truncate">{item.name}</span>
                         {item.badge && (
-                          <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-[#0e3b26] text-white">
+                          <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-[#e11d48] text-white">
                             {item.badge}
                           </span>
                         )}
@@ -411,7 +411,7 @@ export const DashboardLayout = ({ children, headerAction }: DashboardLayoutProps
             <div className="pt-3 border-t border-slate-200/80 dark:border-border/70 space-y-2">
               {/* User profile capsule */}
               <div className="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 dark:bg-muted/40 border border-slate-200/80 dark:border-border/50">
-                <div className="h-8 w-8 rounded-lg bg-[#0e3b26] text-white flex items-center justify-center font-bold text-xs shrink-0 ring-1 ring-emerald-500/30">
+                <div className="h-8 w-8 rounded-lg bg-[#e11d48] text-white flex items-center justify-center font-bold text-xs shrink-0 ring-1 ring-[#e11d48]/30">
                   {user.name.charAt(0)}
                 </div>
                 <div className="min-w-0 flex-1">
@@ -457,7 +457,7 @@ export const DashboardLayout = ({ children, headerAction }: DashboardLayoutProps
             <div className="relative w-full max-w-xs xl:max-w-md">
               <button
                 onClick={() => setSearchOpen(true)}
-                className="w-full pl-10 pr-16 py-2.5 bg-slate-50 dark:bg-muted/30 border border-slate-200 dark:border-border rounded-xl text-xs md:text-sm text-slate-800 dark:text-slate-200 placeholder-slate-400 flex items-center justify-between hover:border-emerald-500/50 transition-all text-left"
+                className="w-full pl-10 pr-16 py-2.5 bg-slate-50 dark:bg-muted/30 border border-slate-200 dark:border-border rounded-xl text-xs md:text-sm text-slate-800 dark:text-slate-200 placeholder-slate-400 flex items-center justify-between hover:border-[#e11d48]/50 transition-all text-left"
               >
                 <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -486,7 +486,7 @@ export const DashboardLayout = ({ children, headerAction }: DashboardLayoutProps
 
               {/* User Profile Pill */}
               <div className="flex items-center gap-3 pl-3 border-l border-slate-200 dark:border-border/80">
-                <div className="w-10 h-10 rounded-full bg-[#0a3822] text-white flex items-center justify-center font-bold text-sm ring-2 ring-emerald-500/20 shadow-xs">
+                <div className="w-10 h-10 rounded-full bg-[#e11d48] text-white flex items-center justify-center font-bold text-sm ring-2 ring-[#e11d48]/25 shadow-xs">
                   {user.name.charAt(0)}
                 </div>
                 <div className="text-left hidden sm:block">

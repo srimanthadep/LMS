@@ -9,20 +9,28 @@ export interface ThemeAccent {
 
 export const THEME_ACCENTS: ThemeAccent[] = [
   {
-    id: "apex-forest",
-    name: "Apex Forest",
-    primaryHsl: "153 62% 14%",
-    ringHsl: "142 76% 36%",
-    colorHex: "#0e3b26",
-    gradient: "linear-gradient(145deg, #0f3d27 0%, #082819 100%)",
+    id: "apex-rose",
+    name: "Crimson Rose",
+    primaryHsl: "347 77% 50%",
+    ringHsl: "347 77% 50%",
+    colorHex: "#e11d48",
+    gradient: "linear-gradient(145deg, #e11d48 0%, #9f1239 100%)",
   },
   {
-    id: "emerald",
-    name: "Emerald Green",
-    primaryHsl: "142 76% 36%",
-    ringHsl: "142 76% 36%",
-    colorHex: "#16a34a",
-    gradient: "linear-gradient(135deg, hsl(142 76% 36%), hsl(160 60% 45%))",
+    id: "apex-royal",
+    name: "Apex Royal Blue",
+    primaryHsl: "220 80% 35%",
+    ringHsl: "220 80% 45%",
+    colorHex: "#1241a1",
+    gradient: "linear-gradient(145deg, #1241a1 0%, #0a2768 100%)",
+  },
+  {
+    id: "cobalt",
+    name: "Vibrant Cobalt",
+    primaryHsl: "220 90% 48%",
+    ringHsl: "220 90% 48%",
+    colorHex: "#1d58d8",
+    gradient: "linear-gradient(135deg, #1d58d8, #3b82f6)",
   },
   {
     id: "violet",
@@ -40,14 +48,6 @@ export const THEME_ACCENTS: ThemeAccent[] = [
     colorHex: "#d97706",
     gradient: "linear-gradient(135deg, hsl(35 92% 45%), hsl(20 80% 50%))",
   },
-  {
-    id: "rose",
-    name: "Crimson Rose",
-    primaryHsl: "345 80% 45%",
-    ringHsl: "345 80% 45%",
-    colorHex: "#e11d48",
-    gradient: "linear-gradient(135deg, hsl(345 80% 45%), hsl(0 75% 55%))",
-  },
 ];
 
 const ACCENT_STORAGE_KEY = "app_theme_accent";
@@ -58,7 +58,11 @@ class ThemeService {
     try {
       const saved = localStorage.getItem(ACCENT_STORAGE_KEY);
       if (saved) {
-        const found = THEME_ACCENTS.find((a) => a.id === saved);
+        if (saved === "apex-royal" || saved === "apex-forest") {
+          localStorage.removeItem(ACCENT_STORAGE_KEY);
+          return THEME_ACCENTS[0];
+        }
+        const found = THEME_ACCENTS.find((a) => a.id === saved || (saved === "rose" && a.id === "apex-rose"));
         if (found) return found;
       }
     } catch {
@@ -78,9 +82,12 @@ class ThemeService {
   applyAccent(accent?: ThemeAccent): void {
     const active = accent || this.getActiveAccent();
     const isDark = this.isDarkMode();
-    if (isDark && active.id === "apex-forest") {
-      document.documentElement.style.setProperty("--primary", "142 71% 45%");
-      document.documentElement.style.setProperty("--ring", "142 71% 45%");
+    if (isDark && (active.id === "apex-rose" || active.id === "rose")) {
+      document.documentElement.style.setProperty("--primary", "347 85% 62%");
+      document.documentElement.style.setProperty("--ring", "347 85% 62%");
+    } else if (isDark && active.id === "apex-royal") {
+      document.documentElement.style.setProperty("--primary", "220 85% 55%");
+      document.documentElement.style.setProperty("--ring", "220 85% 55%");
     } else {
       document.documentElement.style.setProperty("--primary", active.primaryHsl);
       document.documentElement.style.setProperty("--ring", active.ringHsl);

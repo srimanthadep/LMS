@@ -37,7 +37,7 @@ export const StudentDashboard: React.FC = () => {
           {/* Join Live Class Button */}
           <button
             onClick={() => setDeviceModalOpen(true)}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#0e3b26] text-white hover:bg-[#0a2e1d] font-medium text-xs md:text-sm shadow-xs transition-colors cursor-pointer"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#e11d48] text-white hover:bg-[#be123c] font-medium text-xs md:text-sm shadow-xs transition-colors cursor-pointer"
             type="button"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -262,10 +262,10 @@ export const StudentDashboard: React.FC = () => {
       {/* END: 4 Metrics Summary Cards Grid */}
 
       {/* BEGIN: Live Session Callout Banner */}
-      <section className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-[#e7f7ee] via-[#ecf9f1] to-[#e4f6eb] dark:from-emerald-950/40 dark:via-emerald-900/25 dark:to-emerald-950/30 border border-[#c3ebcf] dark:border-emerald-800/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 relative overflow-hidden shadow-2xs" data-purpose="live-session-alert">
+      <section className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-[#fff1f2] via-[#ffe4e6] to-[#fff1f2] dark:from-rose-950/40 dark:via-rose-900/25 dark:to-rose-950/30 border border-[#fecdd3] dark:border-rose-800/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 relative overflow-hidden shadow-2xs" data-purpose="live-session-alert">
         {/* Abstract wave background SVG lines */}
         <div className="absolute right-36 top-0 bottom-0 pointer-events-none opacity-40 hidden lg:block">
-          <svg className="h-full w-64 text-emerald-300 dark:text-emerald-700" fill="none" viewBox="0 0 200 80">
+          <svg className="h-full w-64 text-rose-300 dark:text-rose-700" fill="none" viewBox="0 0 200 80">
             <path d="M0 40 Q50 10, 100 40 T200 40" fill="none" stroke="currentColor" strokeWidth="1.5"></path>
             <path d="M0 50 Q50 20, 100 50 T200 50" fill="none" stroke="currentColor" strokeWidth="1"></path>
             <path d="M0 30 Q50 60, 100 30 T200 30" fill="none" stroke="currentColor" strokeWidth="1.5"></path>
@@ -274,8 +274,8 @@ export const StudentDashboard: React.FC = () => {
         <div className="relative z-10 space-y-1.5">
           {/* Live Status Tags */}
           <div className="flex items-center gap-2.5">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#0d452b] text-emerald-200">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#9f1239] text-rose-100">
+              <span className="w-2 h-2 rounded-full bg-rose-400 animate-pulse"></span>
               LIVE NOW
             </span>
             <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">72 Classmates Online</span>
@@ -292,10 +292,10 @@ export const StudentDashboard: React.FC = () => {
         <div className="relative z-10 shrink-0 w-full md:w-auto">
           <button
             onClick={() => setDeviceModalOpen(true)}
-            className="w-full md:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#093521] hover:bg-[#062617] text-white text-xs sm:text-sm font-semibold shadow-sm transition-all cursor-pointer"
+            className="w-full md:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#e11d48] hover:bg-[#be123c] text-white text-xs sm:text-sm font-semibold shadow-sm transition-all cursor-pointer"
             type="button"
           >
-            <svg className="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 text-rose-200" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
               <rect height="12" rx="2" width="14" x="2" y="6"></rect>
               <path d="M16 10l6-4v12l-6-4"></path>
             </svg>
@@ -335,10 +335,10 @@ export const StudentDashboard: React.FC = () => {
             <div className="p-4 rounded-xl border border-slate-100 dark:border-border/60 bg-[#fbfdfc] dark:bg-muted/10 flex flex-col gap-4">
               <div className="flex items-start gap-4">
                 {/* Course Graphic / Illustration Thumbnail */}
-                <div className="w-16 h-16 rounded-xl bg-[#092b1a] flex items-center justify-center shrink-0 border border-emerald-900/40 relative overflow-hidden shadow-inner">
-                  <div className="absolute inset-0 bg-radial from-emerald-500/20 to-transparent"></div>
+                <div className="w-16 h-16 rounded-xl bg-[#4c0519] flex items-center justify-center shrink-0 border border-rose-900/40 relative overflow-hidden shadow-inner">
+                  <div className="absolute inset-0 bg-radial from-rose-500/20 to-transparent"></div>
                   {/* Mini stylized terminal/computer vector */}
-                  <svg className="w-9 h-9 text-emerald-400 relative z-10" fill="none" stroke="currentColor" strokeWidth="1.75" viewBox="0 0 24 24">
+                  <svg className="w-9 h-9 text-rose-400 relative z-10" fill="none" stroke="currentColor" strokeWidth="1.75" viewBox="0 0 24 24">
                     <rect height="14" rx="2" width="20" x="2" y="3"></rect>
                     <line x1="8" x2="16" y1="21" y2="21"></line>
                     <line x1="12" x2="12" y1="17" y2="21"></line>
@@ -349,7 +349,7 @@ export const StudentDashboard: React.FC = () => {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2">
                     <h4 className="text-sm font-bold text-slate-900 dark:text-white truncate">Full-Stack AI & LLM Systems Engineering</h4>
-                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-rose-50 dark:bg-rose-950/50 text-rose-800 dark:text-rose-300 border border-rose-200 dark:border-rose-800/60">
                       Live + Replay Tier
                     </span>
                   </div>
@@ -360,10 +360,10 @@ export const StudentDashboard: React.FC = () => {
                   <div className="mt-3">
                     <div className="flex items-center justify-between text-xs mb-1">
                       <span className="font-medium text-slate-700 dark:text-slate-300 text-[11px]">Course Progress</span>
-                      <span className="font-semibold text-emerald-800 dark:text-emerald-400 text-[11px]">68% Completed</span>
+                      <span className="font-semibold text-rose-800 dark:text-rose-400 text-[11px]">68% Completed</span>
                     </div>
                     <div className="w-full h-2 bg-slate-100 dark:bg-muted rounded-full overflow-hidden">
-                      <div className="bg-gradient-to-r from-emerald-600 to-emerald-500 h-full rounded-full" style={{ width: "68%" }}></div>
+                      <div className="bg-gradient-to-r from-[#e11d48] to-[#be123c] h-full rounded-full" style={{ width: "68%" }}></div>
                     </div>
                   </div>
                 </div>
@@ -382,7 +382,7 @@ export const StudentDashboard: React.FC = () => {
                 </span>
                 <button
                   onClick={() => navigate("/student/courses/course-ai-eng")}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#0e3b26] hover:bg-[#09291a] text-white text-[11px] font-semibold transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#e11d48] hover:bg-[#be123c] text-white text-[11px] font-semibold transition-colors cursor-pointer"
                   type="button"
                 >
                   Open Syllabus  →

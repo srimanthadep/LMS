@@ -183,10 +183,10 @@ export const LoginPage: React.FC = () => {
             <div className="p-2.5 bg-[#f8fafc] border border-slate-200 rounded-md space-y-1.5 shadow-2xs">
               <div className="flex items-center justify-between text-xs text-slate-500">
                 <span className="flex items-center gap-1.5 font-medium text-slate-700 text-[11px]">
-                  <Zap className="w-3 h-3 text-emerald-600" />
+                  <Zap className="w-3 h-3 text-[#e11d48]" />
                   Quick Demo Accounts
                 </span>
-                <span className="text-[10px] text-emerald-700 font-mono font-medium">1-Click Select</span>
+                <span className="text-[10px] text-[#e11d48] font-mono font-medium">1-Click Select</span>
               </div>
               <div className="grid grid-cols-3 gap-1">
                 {DEMO_ACCOUNTS.map((acc) => {
@@ -199,7 +199,7 @@ export const LoginPage: React.FC = () => {
                       className={cn(
                         "px-2 py-1.5 text-xs font-medium rounded transition text-center cursor-pointer border truncate",
                         isSelected
-                          ? "bg-white text-emerald-700 border-emerald-500 shadow-xs ring-1 ring-emerald-500/30 font-semibold"
+                          ? "bg-white text-[#e11d48] border-[#e11d48] shadow-xs ring-1 ring-[#e11d48]/30 font-semibold"
                           : "bg-white text-slate-600 border-slate-200 hover:text-slate-900 hover:border-slate-300"
                       )}
                       title={`${acc.name} (${acc.roleLabel})`}
@@ -263,7 +263,7 @@ export const LoginPage: React.FC = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   autoComplete="email"
                   placeholder="you@example.com"
-                  className="w-full px-3 py-2 text-sm bg-white border border-slate-200 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition shadow-2xs"
+                  className="w-full px-3 py-2 text-sm bg-white border border-slate-200 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#e11d48] focus:ring-1 focus:ring-[#e11d48] transition shadow-2xs"
                 />
               </div>
 
@@ -284,7 +284,7 @@ export const LoginPage: React.FC = () => {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-3 py-2 pr-10 text-sm bg-white border border-slate-200 rounded-md text-slate-900 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition font-mono shadow-2xs"
+                    className="w-full px-3 py-2 pr-10 text-sm bg-white border border-slate-200 rounded-md text-slate-900 focus:outline-none focus:border-[#e11d48] focus:ring-1 focus:ring-[#e11d48] transition font-mono shadow-2xs"
                   />
                   {/* Show/Hide Password Eye */}
                   <button
@@ -305,14 +305,14 @@ export const LoginPage: React.FC = () => {
               <div className="relative pt-1">
                 {/* Badge positioned top right of the button */}
                 <div className="absolute -top-1.5 right-0 z-10">
-                  <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold tracking-wide bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold tracking-wide bg-[#e11d48]/10 text-[#e11d48] border border-[#e11d48]/20">
                     {selectedAccount.roleLabel.toUpperCase()}
                   </span>
                 </div>
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 border border-emerald-600 text-white text-sm font-medium rounded-md shadow-xs transition focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-white cursor-pointer disabled:opacity-50"
+                  className="w-full py-2.5 px-4 bg-[#e11d48] hover:bg-[#be123c] border border-[#e11d48] text-white text-sm font-medium rounded-md shadow-xs transition focus:outline-none focus:ring-2 focus:ring-[#e11d48] focus:ring-offset-2 focus:ring-offset-white cursor-pointer disabled:opacity-50"
                 >
                   {isLoading ? `Signing in to ${selectedAccount.roleLabel}...` : "Sign in"}
                 </button>
@@ -372,7 +372,7 @@ export const LoginPage: React.FC = () => {
             {/* Author Meta */}
             <div className="flex items-center gap-3 pt-2">
               {/* Circular User Avatar */}
-              <div className="w-10 h-10 rounded-full bg-emerald-100 border border-emerald-200 flex items-center justify-center text-emerald-800 font-semibold text-sm shadow-2xs">
+              <div className="w-10 h-10 rounded-full bg-[#e11d48]/10 border border-[#e11d48]/20 flex items-center justify-center text-[#e11d48] font-semibold text-sm shadow-2xs">
                 RV
               </div>
               <div>
