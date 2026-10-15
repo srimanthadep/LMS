@@ -59,6 +59,7 @@ export const ROLE_NAV_ITEMS: Record<UserRole, { sidebar: NavItem[]; mobileBottom
   admin: {
     sidebar: [
       { name: "Operations Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
+      { name: "User Directory", href: "/admin/users", icon: Users },
       { name: "Student Directory", href: "/admin/students", icon: GraduationCap },
       { name: "Teacher Management", href: "/admin/teachers", icon: Users },
       { name: "Course Management", href: "/admin/courses", icon: BookOpen },
