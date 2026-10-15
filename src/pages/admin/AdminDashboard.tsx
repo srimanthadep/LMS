@@ -308,40 +308,43 @@ export const AdminDashboard: React.FC = () => {
         <div className="flex items-center gap-2 shrink-0 flex-nowrap overflow-x-auto py-0.5 scrollbar-none">
           <Button
             size="sm"
+            variant="outline"
             onClick={() => setActiveModal("createCourse")}
-            className="h-8.5 px-3 text-xs font-semibold gap-1.5 shadow-xs whitespace-nowrap bg-primary hover:bg-primary/90 text-primary-foreground shrink-0"
+            className="h-8.5 px-3 text-xs font-semibold gap-1.5 whitespace-nowrap border-border/80 bg-background hover:bg-muted/60 hover:border-primary/40 hover:text-primary transition-all shrink-0 shadow-2xs"
           >
-            <BookOpen className="h-3.5 w-3.5 shrink-0" /> + Course
+            <BookOpen className="h-3.5 w-3.5 text-primary shrink-0" /> Course
           </Button>
           <Button
             size="sm"
+            variant="outline"
             onClick={() => setActiveModal("createBatch")}
-            className="h-8.5 px-3 text-xs font-semibold gap-1.5 shadow-xs whitespace-nowrap bg-primary hover:bg-primary/90 text-primary-foreground shrink-0"
+            className="h-8.5 px-3 text-xs font-semibold gap-1.5 whitespace-nowrap border-border/80 bg-background hover:bg-muted/60 hover:border-primary/40 hover:text-primary transition-all shrink-0 shadow-2xs"
           >
-            <Layers className="h-3.5 w-3.5 shrink-0" /> + Batch
+            <Layers className="h-3.5 w-3.5 text-primary shrink-0" /> Batch
           </Button>
           <Button
             size="sm"
+            variant="outline"
             onClick={() => setActiveModal("enrollStudent")}
-            className="h-8.5 px-3 text-xs font-semibold gap-1.5 shadow-xs whitespace-nowrap bg-primary hover:bg-primary/90 text-primary-foreground shrink-0"
+            className="h-8.5 px-3 text-xs font-semibold gap-1.5 whitespace-nowrap border-border/80 bg-background hover:bg-muted/60 hover:border-primary/40 hover:text-primary transition-all shrink-0 shadow-2xs"
           >
-            <Users className="h-3.5 w-3.5 shrink-0" /> + Enroll Student
+            <Users className="h-3.5 w-3.5 text-primary shrink-0" /> Enroll Student
           </Button>
           <Button
             size="sm"
             variant="outline"
             onClick={() => setActiveModal("scheduleClass")}
-            className="h-8.5 px-3 text-xs font-semibold gap-1.5 whitespace-nowrap border-border/80 hover:bg-muted/60 shrink-0"
+            className="h-8.5 px-3 text-xs font-semibold gap-1.5 whitespace-nowrap border-border/80 bg-background hover:bg-muted/60 hover:border-primary/40 hover:text-primary transition-all shrink-0 shadow-2xs"
           >
-            <Calendar className="h-3.5 w-3.5 shrink-0" /> Schedule Class
+            <Calendar className="h-3.5 w-3.5 text-primary shrink-0" /> Schedule Class
           </Button>
           <Button
             size="sm"
             variant="outline"
             onClick={() => setActiveModal("uploadContent")}
-            className="h-8.5 px-3 text-xs font-semibold gap-1.5 whitespace-nowrap border-border/80 hover:bg-muted/60 shrink-0"
+            className="h-8.5 px-3 text-xs font-semibold gap-1.5 whitespace-nowrap border-border/80 bg-background hover:bg-muted/60 hover:border-primary/40 hover:text-primary transition-all shrink-0 shadow-2xs"
           >
-            <UploadCloud className="h-3.5 w-3.5 shrink-0" /> Upload Content
+            <UploadCloud className="h-3.5 w-3.5 text-primary shrink-0" /> Upload Content
           </Button>
         </div>
       </div>
