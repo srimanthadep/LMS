@@ -15,10 +15,12 @@ import { UnauthorizedPage, NotFoundPage } from "@/pages/common/CommonPages";
 import { SuperAdminDashboard } from "@/pages/super-admin/SuperAdminDashboard";
 import { UserAdminPage } from "@/pages/super-admin/UserAdminPage";
 import { RolePermissionsPage } from "@/pages/super-admin/RolePermissionsPage";
+import { GlobalCoursesBatchesPage } from "@/pages/super-admin/GlobalCoursesBatchesPage";
 import { IntegrationsPage } from "@/pages/super-admin/IntegrationsPage";
 import { UsageCostsPage } from "@/pages/super-admin/UsageCostsPage";
 import { AuditLogsPage } from "@/pages/super-admin/AuditLogsPage";
 import { DataRetentionPage } from "@/pages/super-admin/DataRetentionPage";
+import { SystemSettingsPage } from "@/pages/super-admin/SystemSettingsPage";
 
 // Admin
 import { AdminDashboard } from "@/pages/admin/AdminDashboard";
@@ -33,6 +35,12 @@ import { TeachersListPage } from "@/pages/admin/TeachersListPage";
 import { PaymentsInvoicesPage } from "@/pages/admin/PaymentsInvoicesPage";
 import { CertificatesPage } from "@/pages/admin/CertificatesPage";
 import { AnnouncementsPage } from "@/pages/admin/AnnouncementsPage";
+import { EnrollmentAccessPage } from "@/pages/admin/EnrollmentAccessPage";
+import { ContentOperationsPage } from "@/pages/admin/ContentOperationsPage";
+import { AdminReportsPage } from "@/pages/admin/AdminReportsPage";
+import { AssessmentApprovalsPage } from "@/pages/admin/AssessmentApprovalsPage";
+import { AdminAuditLogPage } from "@/pages/admin/AdminAuditLogPage";
+import { AdminProfileSettingsPage } from "@/pages/admin/AdminProfileSettingsPage";
 
 // Teacher
 import { TeacherDashboard } from "@/pages/teacher/TeacherDashboard";
@@ -163,6 +171,14 @@ export function App() {
               }
             />
             <Route
+              path="/super-admin/roles"
+              element={
+                <ProtectedRoute allowedRoles={["super-admin"]}>
+                  <RolePermissionsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/super-admin/permissions"
               element={
                 <ProtectedRoute allowedRoles={["super-admin"]}>
@@ -171,10 +187,26 @@ export function App() {
               }
             />
             <Route
+              path="/super-admin/global-courses"
+              element={
+                <ProtectedRoute allowedRoles={["super-admin"]}>
+                  <GlobalCoursesBatchesPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/super-admin/integrations"
               element={
                 <ProtectedRoute allowedRoles={["super-admin"]}>
                   <IntegrationsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/super-admin/usage-costs"
+              element={
+                <ProtectedRoute allowedRoles={["super-admin"]}>
+                  <UsageCostsPage />
                 </ProtectedRoute>
               }
             />
@@ -195,10 +227,26 @@ export function App() {
               }
             />
             <Route
+              path="/super-admin/data-retention"
+              element={
+                <ProtectedRoute allowedRoles={["super-admin"]}>
+                  <DataRetentionPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/super-admin/retention"
               element={
                 <ProtectedRoute allowedRoles={["super-admin"]}>
                   <DataRetentionPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/super-admin/settings"
+              element={
+                <ProtectedRoute allowedRoles={["super-admin"]}>
+                  <SystemSettingsPage />
                 </ProtectedRoute>
               }
             />
@@ -209,6 +257,22 @@ export function App() {
               element={
                 <ProtectedRoute allowedRoles={["admin"]}>
                   <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/students"
+              element={
+                <ProtectedRoute allowedRoles={["admin"]}>
+                  <StudentsDirectoryPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/teachers"
+              element={
+                <ProtectedRoute allowedRoles={["admin"]}>
+                  <TeachersListPage />
                 </ProtectedRoute>
               }
             />
@@ -245,6 +309,14 @@ export function App() {
               }
             />
             <Route
+              path="/admin/enrollments"
+              element={
+                <ProtectedRoute allowedRoles={["admin"]}>
+                  <EnrollmentAccessPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/admin/schedule"
               element={
                 <ProtectedRoute allowedRoles={["admin"]}>
@@ -261,18 +333,10 @@ export function App() {
               }
             />
             <Route
-              path="/admin/students"
+              path="/admin/content-ops"
               element={
                 <ProtectedRoute allowedRoles={["admin"]}>
-                  <StudentsDirectoryPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/teachers"
-              element={
-                <ProtectedRoute allowedRoles={["admin"]}>
-                  <TeachersListPage />
+                  <ContentOperationsPage />
                 </ProtectedRoute>
               }
             />
@@ -285,6 +349,22 @@ export function App() {
               }
             />
             <Route
+              path="/admin/announcements"
+              element={
+                <ProtectedRoute allowedRoles={["admin"]}>
+                  <AnnouncementsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/reports"
+              element={
+                <ProtectedRoute allowedRoles={["admin"]}>
+                  <AdminReportsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/admin/certificates"
               element={
                 <ProtectedRoute allowedRoles={["admin"]}>
@@ -293,10 +373,26 @@ export function App() {
               }
             />
             <Route
-              path="/admin/announcements"
+              path="/admin/approvals"
               element={
                 <ProtectedRoute allowedRoles={["admin"]}>
-                  <AnnouncementsPage />
+                  <AssessmentApprovalsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/audit-logs"
+              element={
+                <ProtectedRoute allowedRoles={["admin"]}>
+                  <AdminAuditLogPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/settings"
+              element={
+                <ProtectedRoute allowedRoles={["admin"]}>
+                  <AdminProfileSettingsPage />
                 </ProtectedRoute>
               }
             />
