@@ -1,19 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DeviceCheckModal } from "@/components/shared/DeviceCheckModal";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  BookOpen,
-  Calendar,
-  HelpCircle,
-  FileCheck2,
-  Award,
-} from "lucide-react";
+import { Users } from "lucide-react";
 
 export const StudentDashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -58,40 +46,6 @@ export const StudentDashboard: React.FC = () => {
             </svg>
             Resume Last Lecture
           </button>
-
-          {/* More Options Button */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button
-                className="p-2.5 rounded-xl bg-white dark:bg-card border border-slate-200 dark:border-border text-slate-500 hover:bg-slate-50 dark:hover:bg-muted/50 hover:text-slate-700 dark:hover:text-slate-300 shadow-2xs cursor-pointer transition-colors"
-                type="button"
-                aria-label="More options"
-              >
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                  <circle cx="5" cy="12" r="2"></circle>
-                  <circle cx="12" cy="12" r="2"></circle>
-                  <circle cx="19" cy="12" r="2"></circle>
-                </svg>
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem onClick={() => navigate("/student/schedule")}>
-                <Calendar className="mr-2 h-4 w-4" /> Live Schedule
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => navigate("/student/courses")}>
-                <BookOpen className="mr-2 h-4 w-4" /> Course Catalog
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => navigate("/student/doubts")}>
-                <HelpCircle className="mr-2 h-4 w-4" /> My Doubts Desk
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => navigate("/student/assessments")}>
-                <FileCheck2 className="mr-2 h-4 w-4" /> Assessments
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => navigate("/student/certificates")}>
-                <Award className="mr-2 h-4 w-4" /> Certificates
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
         </div>
       </div>
 
@@ -576,6 +530,43 @@ export const StudentDashboard: React.FC = () => {
             >
               View Full Rubric & Feedback
             </button>
+          </div>
+
+          {/* 1:1 Faculty Mentoring & Advising Card */}
+          <div className="bg-white dark:bg-card rounded-2xl border border-slate-200/80 dark:border-border/80 p-5 shadow-2xs space-y-3.5" data-purpose="mentoring-quick-card">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="w-7 h-7 rounded-lg bg-rose-50 dark:bg-rose-950/40 text-[#e11d48] flex items-center justify-center">
+                  <Users className="w-4 h-4" />
+                </span>
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white">Assigned Faculty Mentor</h3>
+              </div>
+              <button
+                onClick={() => navigate("/student/mentors")}
+                className="text-xs font-semibold text-[#e11d48] hover:underline inline-flex items-center gap-1 cursor-pointer"
+              >
+                All Mentors  →
+              </button>
+            </div>
+
+            <div className="p-3.5 rounded-xl border border-slate-100 dark:border-border/60 bg-slate-50/60 dark:bg-muted/10 flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2.5">
+                <div className="h-9 w-9 rounded-lg bg-[#e11d48] text-white flex items-center justify-center font-bold text-xs ring-1 ring-[#e11d48]/30">
+                  RV
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-slate-900 dark:text-white">Prof. Rajesh Verma</h4>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400">Lead AI Chair • Next open slot: Friday 05:00 PM</p>
+                </div>
+              </div>
+
+              <button
+                onClick={() => navigate("/student/mentors")}
+                className="px-3 py-1.5 rounded-lg bg-[#e11d48] hover:bg-[#be123c] text-white text-[11px] font-semibold transition-colors cursor-pointer shrink-0"
+              >
+                Book 1:1 Slot
+              </button>
+            </div>
           </div>
         </div>
       </div>

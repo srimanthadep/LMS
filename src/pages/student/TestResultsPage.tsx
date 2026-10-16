@@ -23,7 +23,7 @@ import { Input } from "@/components/ui/input";
 export const TestResultsPage: React.FC = () => {
   const { submissionId } = useParams<{ submissionId?: string }>();
   const submissions = mockDataService.getSubmissions();
-  const sub = submissions.find((s) => s.id === submissionId) || submissions[0];
+  const sub = submissions.find((s) => s.id === submissionId || s.testId === submissionId) || submissions[0];
 
   const [isReEvalOpen, setIsReEvalOpen] = useState(false);
   const [reEvalReason, setReEvalReason] = useState("");

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useSearchParams } from "react-router-dom";
 import {
   ArrowLeft,
   Search,
@@ -26,10 +26,13 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 export const SmartPlayerPage: React.FC = () => {
   const { recordingId } = useParams<{ recordingId?: string }>();
+  const [searchParams] = useSearchParams();
+  const initialTime = Number(searchParams.get("t")) || 0;
+
   const recordings = mockDataService.getRecordings();
   const recording = recordings.find((r) => r.id === recordingId) || recordings[0];
 
-  const [currentPlayTime, setCurrentPlayTime] = useState<number>(0);
+  const [currentPlayTime, setCurrentPlayTime] = useState<number>(initialTime);
   const [activeTab, setActiveTab] = useState<string>("chapters");
   const [transcriptSearch, setTranscriptSearch] = useState("");
   const [isAiTutorOpen, setIsAiTutorOpen] = useState(false);
