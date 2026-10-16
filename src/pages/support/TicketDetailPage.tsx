@@ -143,11 +143,10 @@ export const TicketDetailPage: React.FC = () => {
                 {messages.map((msg) => (
                   <div
                     key={msg.id}
-                    className={`p-4 rounded-xl border space-y-1.5 ${
-                      msg.role === "agent"
+                    className={`p-4 rounded-xl border space-y-1.5 ${msg.role === "agent"
                         ? "bg-primary/5 border-primary/20 ml-6"
                         : "bg-muted/40 border-border mr-6"
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center justify-between text-xs">
                       <span className="font-semibold text-foreground flex items-center gap-1.5">

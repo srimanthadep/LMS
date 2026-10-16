@@ -43,11 +43,26 @@ export const TicketsInboxPage: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground">
-            Support & Doubt Ticket Inbox
+            All Tickets & Support Inbox
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
             Manage incoming student inquiries, escalation workflows, and approval proposals.
           </p>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Link to="/support/sla-escalations">
+            <Button variant="outline" size="sm" className="text-xs gap-1.5 font-semibold">
+              <Clock className="h-3.5 w-3.5 text-amber-500" />
+              SLA Command Desk
+            </Button>
+          </Link>
+          <Link to="/support/live-chat">
+            <Button size="sm" className="text-xs gap-1.5 bg-primary text-primary-foreground font-semibold">
+              <MessageSquare className="h-3.5 w-3.5" />
+              Live Chat Desk
+            </Button>
+          </Link>
         </div>
       </div>
 
