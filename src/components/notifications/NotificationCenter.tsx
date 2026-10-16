@@ -35,7 +35,10 @@ export const NotificationCenter: React.FC = () => {
         <button
           type="button"
           aria-label="Notifications"
-          className="relative inline-flex items-center justify-center h-9 w-9 rounded-xl border border-border/70 hover:bg-muted/70 text-foreground transition-colors group focus:outline-none focus:ring-2 focus:ring-ring"
+          className={cn(
+            "relative inline-flex items-center justify-center h-9 w-9 rounded-xl border border-border/70 hover:bg-muted/70 text-foreground transition-all duration-200 group focus:outline-none focus:ring-2 focus:ring-ring hover-bell-shake",
+            unreadCount > 0 && "animate-bell-shake"
+          )}
         >
           <AnimatedNotificationIcon className="w-4 h-4 text-muted-foreground group-hover:text-foreground" />
           {unreadCount > 0 && (

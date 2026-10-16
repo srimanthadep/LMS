@@ -9,13 +9,27 @@ import {
   Sparkles,
   GraduationCap,
   ChevronRight,
+  ChevronLeft,
   User,
   Shield,
   Activity,
   CheckCircle2,
   Clock,
   LifeBuoy,
+  Bot,
+  ChevronDown,
+  CreditCard,
+  Compass,
+  Settings,
+  Share2,
 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import {
   Sheet,
@@ -25,7 +39,7 @@ import {
   SheetDescription,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { CommandPalette } from "@/components/ui/CommandPalette";
 import { NotificationCenter } from "@/components/notifications/NotificationCenter";
 import { KeyboardShortcutsDialog } from "@/components/ui/KeyboardShortcutsDialog";
@@ -34,6 +48,7 @@ import { ThemeAccentPicker } from "@/components/ui/ThemeAccentPicker";
 import { DevRoleSwitcher } from "@/components/layout/DevRoleSwitcher";
 import { ROLE_NAV_ITEMS } from "@/components/layout/navConfig";
 import { useAuth } from "@/context/AuthContext";
+import { StudentAiChatbotDrawer } from "@/components/shared/StudentAiChatbotDrawer";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -46,6 +61,25 @@ export const DashboardLayout = ({ children, headerAction }: DashboardLayoutProps
   const { user, role, logout } = useAuth();
   const [searchOpen, setSearchOpen] = useState(false);
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [chatbotOpen, setChatbotOpen] = useState(false);
+
+  const isStudentPortal = role === "student" || location.pathname.startsWith("/student");
+
+  // Dynamically activate Student Portal typography (Inter font stack) exclusively for students
+  useEffect(() => {
+    if (isStudentPortal) {
+      document.documentElement.classList.add("student-portal-theme");
+      document.body.setAttribute("data-portal", "student");
+    } else {
+      document.documentElement.classList.remove("student-portal-theme");
+      document.body.removeAttribute("data-portal");
+    }
+    return () => {
+      document.documentElement.classList.remove("student-portal-theme");
+      document.body.removeAttribute("data-portal");
+    };
+  }, [isStudentPortal]);
 
   // Global Keyboard Shortcuts Hook
   useEffect(() => {
@@ -196,7 +230,13 @@ export const DashboardLayout = ({ children, headerAction }: DashboardLayoutProps
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col font-sans">
+    <div
+      className={cn(
+        "min-h-screen bg-background text-foreground flex flex-col font-sans",
+        isStudentPortal && "student-portal-scope"
+      )}
+      data-portal={isStudentPortal ? "student" : undefined}
+    >
       {/* 1. Mobile Top Header */}
       <header className="lg:hidden sticky top-0 z-30 bg-card/90 backdrop-blur-md border-b border-border/80 px-4 py-2.5 shadow-xs">
         <div className="flex items-center justify-between max-w-7xl mx-auto">
@@ -266,30 +306,47 @@ export const DashboardLayout = ({ children, headerAction }: DashboardLayoutProps
                 </div>
 
                 <div className="flex-1 overflow-y-auto px-3 py-4 space-y-1.5 sleek-scrollbar">
-                  <p className="text-[11px] font-bold text-muted-foreground px-3 uppercase tracking-wider mb-2">
-                    {role.replace("-", " ")} Navigation
-                  </p>
-                  {navItems.map((item) => {
+                  {navItems.map((item, idx) => {
                     const Icon = item.icon;
                     const isActive = location.pathname === item.href;
+                    const isNewSection = item.section && (idx === 0 || navItems[idx - 1]?.section !== item.section);
+
                     return (
-                      <Button
-                        key={item.name}
-                        variant={isActive ? "secondary" : "ghost"}
-                        className={cn(
-                          "w-full justify-start h-10 px-3 font-medium rounded-xl text-xs transition-all",
-                          isActive && "bg-primary/10 text-primary font-bold border border-primary/20 shadow-xs"
+                      <div key={item.name}>
+                        {isNewSection && (
+                          <p className={cn("text-[10px] font-bold text-muted-foreground px-3 uppercase tracking-wider mb-2", idx > 0 && "mt-4 pt-3 border-t border-border/60")}>
+                            {item.section}
+                          </p>
                         )}
-                        onClick={() => navigate(item.href)}
-                      >
-                        <Icon className={cn("mr-3 h-4 w-4", isActive ? "text-primary" : "text-muted-foreground")} />
-                        <span className="flex-1 text-left">{item.name}</span>
-                        {item.badge && (
-                          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-primary text-primary-foreground">
-                            {item.badge}
-                          </span>
+                        {!item.section && idx === 0 && (
+                          <p className="text-[11px] font-bold text-muted-foreground px-3 uppercase tracking-wider mb-2">
+                            {role.replace("-", " ")} Navigation
+                          </p>
                         )}
-                      </Button>
+                        <Button
+                          variant={isActive ? "secondary" : "ghost"}
+                          className={cn(
+                            "w-full justify-start h-10 px-3 font-medium rounded-xl text-xs transition-all",
+                            isActive && "bg-primary/10 text-primary font-bold border border-primary/20 shadow-xs"
+                          )}
+                          onClick={() => {
+                            if (item.href === "#logout") {
+                              logout();
+                              navigate("/auth/login");
+                            } else {
+                              navigate(item.href);
+                            }
+                          }}
+                        >
+                          <Icon className={cn("mr-3 h-4 w-4", isActive ? "text-primary" : "text-muted-foreground")} />
+                          <span className="flex-1 text-left">{item.name}</span>
+                          {item.badge && (
+                            <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-primary text-primary-foreground">
+                              {item.badge}
+                            </span>
+                          )}
+                        </Button>
+                      </div>
                     );
                   })}
                 </div>
@@ -319,115 +376,285 @@ export const DashboardLayout = ({ children, headerAction }: DashboardLayoutProps
       {/* 2. Main Desktop Structure */}
       <div className="flex-1 flex">
         {/* Desktop Fixed Sidebar */}
-        <aside className="hidden lg:flex lg:flex-col lg:w-72 lg:fixed lg:inset-y-0 border-r border-border/80 bg-card/70 backdrop-blur-xl z-20 shadow-xs">
-          {/* Brand Logo Header */}
-          <div className="flex items-center gap-3 px-5 py-5 border-b border-slate-200/80 dark:border-border/80">
+        <aside className={cn("hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 border-r border-border/80 bg-card/70 backdrop-blur-xl z-20 shadow-xs transition-all duration-300 ease-in-out", sidebarCollapsed ? "lg:w-20" : "lg:w-72")}>
+          {/* Brand Logo Header with Collapse Toggle */}
+          <div className={cn("flex items-center justify-between py-5 border-b border-slate-200/80 dark:border-border/80 transition-all", sidebarCollapsed ? "px-3 justify-center flex-col gap-2" : "px-5")}>
             <div
-              className="flex items-center gap-3 cursor-pointer group min-w-0 flex-1"
+              className="flex items-center gap-3 cursor-pointer group min-w-0"
               onClick={() => navigate(`/${role}/dashboard`)}
+              title="Apex LMS"
             >
-              <div className="w-8 h-8 rounded-lg bg-[#e11d48] flex items-center justify-center text-white shadow-sm shadow-rose-950/20 group-hover:scale-105 transition-all shrink-0">
+              <div className="w-8 h-8 rounded-lg bg-[#e11d48] flex items-center justify-center text-white shadow-sm shadow-rose-950/20 group-hover:scale-110 transition-transform shrink-0">
                 <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24">
                   <path d="m21.12 6.4-8.8-4.9a2.3 2.3 0 0 0-2.24 0l-8.8 4.9A2.3 2.3 0 0 0 .16 8.4v9.2a2.3 2.3 0 0 0 1.12 2l8.8 4.9a2.3 2.3 0 0 0 2.24 0l8.8-4.9a2.3 2.3 0 0 0 1.12-2V8.4a2.3 2.3 0 0 0-1.12-2z"></path>
                   <path d="M12 22V12"></path>
                   <path d="m21 7-9 5-9-5"></path>
                 </svg>
               </div>
-              <div className="min-w-0 flex-1">
-                <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white block leading-tight truncate">Apex LMS</span>
-                <span className="text-[10px] text-[#e11d48] dark:text-rose-400 font-semibold uppercase tracking-wider block truncate capitalize">{role.replace("-", " ")} Workspace</span>
-              </div>
+              {!sidebarCollapsed && (
+                <div className="min-w-0 flex-1 overflow-hidden transition-all duration-200">
+                  <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white block leading-tight truncate">Apex LMS</span>
+                  <span className="text-[10px] text-[#e11d48] dark:text-rose-400 font-semibold uppercase tracking-wider block truncate capitalize">{role.replace("-", " ")} Workspace</span>
+                </div>
+              )}
             </div>
+
+            {/* Collapse Toggle Button */}
+            <button
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              className="h-7 w-7 rounded-lg border border-border/70 hover:bg-muted/80 text-muted-foreground hover:text-foreground flex items-center justify-center transition-all cursor-pointer shrink-0"
+              title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+              aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            >
+              {sidebarCollapsed ? <ChevronRight className="h-3.5 w-3.5 transition-transform" /> : <ChevronLeft className="h-3.5 w-3.5 transition-transform" />}
+            </button>
           </div>
 
           {/* Navigation Items */}
-          <div className="flex-1 flex flex-col justify-between py-5 px-4 overflow-y-auto sleek-scrollbar">
+          <div className="flex-1 flex flex-col justify-between py-5 px-3 overflow-y-auto sleek-scrollbar">
             <div className="space-y-5">
               <div>
-                <p className="px-3 text-[11px] font-semibold text-slate-400 tracking-wider uppercase mb-2">
-                  Menu
-                </p>
                 <nav className="space-y-1">
-                  {navItems.map((item) => {
+                  {navItems.map((item, idx) => {
                     const Icon = item.icon;
                     const isActive = location.pathname === item.href;
+                    const isNewSection = item.section && (idx === 0 || navItems[idx - 1]?.section !== item.section);
 
                     return (
-                      <button
-                        key={item.name}
-                        type="button"
-                        onClick={() => navigate(item.href)}
-                        className={cn(
-                          "group relative flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm transition-all text-left outline-none w-full",
-                          isActive
-                            ? "bg-[#fff1f2] dark:bg-[#e11d48]/25 text-[#e11d48] dark:text-rose-300 font-semibold"
-                            : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-muted/40"
+                      <div key={item.name}>
+                        {isNewSection && (
+                          <div className={cn(idx > 0 && "mt-4 pt-3 border-t border-slate-200/60 dark:border-border/60", "mb-1.5")}>
+                            {!sidebarCollapsed ? (
+                              <p className="px-3 text-[10px] font-bold text-slate-400 dark:text-slate-500 tracking-wider uppercase">
+                                {item.section}
+                              </p>
+                            ) : (
+                              <div className="h-px bg-slate-200/60 dark:border-border/60 mx-2 my-2" />
+                            )}
+                          </div>
                         )}
-                      >
-                        {isActive && (
-                          <span className="absolute -left-4 top-1.5 bottom-1.5 w-1.5 bg-[#e11d48] dark:bg-rose-400 rounded-r-md"></span>
+                        {!item.section && idx === 0 && !sidebarCollapsed && (
+                          <p className="px-3 text-[11px] font-semibold text-slate-400 tracking-wider uppercase mb-2">
+                            Menu
+                          </p>
                         )}
-                        <Icon className={cn("w-[18px] h-[18px] shrink-0 transition-colors", isActive ? "text-[#e11d48] dark:text-rose-300" : "text-slate-400 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-300")} />
-                        <span className="flex-1 truncate">{item.name}</span>
-                        {item.badge && (
-                          <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-[#e11d48] text-white">
-                            {item.badge}
-                          </span>
-                        )}
-                      </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (item.href === "#logout") {
+                              logout();
+                              navigate("/auth/login");
+                            } else {
+                              navigate(item.href);
+                            }
+                          }}
+                          title={sidebarCollapsed ? item.name : undefined}
+                          className={cn(
+                            "group relative flex items-center rounded-xl font-medium text-sm transition-all text-left outline-none cursor-pointer",
+                            sidebarCollapsed ? "justify-center p-2.5 w-full" : "gap-3 px-3.5 py-2.5 w-full",
+                            isActive
+                              ? "bg-[#fff1f2] dark:bg-[#e11d48]/25 text-[#e11d48] dark:text-rose-300 font-semibold shadow-2xs"
+                              : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-muted/40"
+                          )}
+                        >
+                          {isActive && (
+                            <motion.span
+                              layoutId="sidebar-active-indicator"
+                              className={cn(
+                                "absolute bg-[#e11d48] dark:bg-rose-400 rounded-r-md shadow-xs shadow-rose-500/40",
+                                sidebarCollapsed ? "-left-3 top-1.5 bottom-1.5 w-1" : "-left-3 top-1.5 bottom-1.5 w-1.5"
+                              )}
+                              transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                            />
+                          )}
+                          <Icon className={cn("w-[18px] h-[18px] shrink-0 transition-transform duration-200 group-hover:scale-115", isActive ? "text-[#e11d48] dark:text-rose-300" : "text-slate-400 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-300")} />
+                          {!sidebarCollapsed && (
+                            <span className="flex-1 truncate group-hover:translate-x-0.5 transition-transform duration-150">{item.name}</span>
+                          )}
+                          {!sidebarCollapsed && item.badge && (
+                            <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-[#e11d48] text-white shrink-0">
+                              {item.badge}
+                            </span>
+                          )}
+                        </button>
+                      </div>
                     );
                   })}
                 </nav>
               </div>
 
               {/* Dynamic Role-Adaptive Contextual Card */}
-              {renderSidebarWidget()}
+              {!sidebarCollapsed ? (
+                renderSidebarWidget()
+              ) : (
+                <div className="flex justify-center" title="Workspace Status">
+                  <div
+                    onClick={() => navigate(role === "student" ? "/student/courses" : `/${role}/dashboard`)}
+                    className="w-9 h-9 rounded-xl bg-gradient-to-br from-rose-500/10 to-rose-500/5 border border-rose-500/20 flex items-center justify-center text-[#e11d48] cursor-pointer hover:scale-110 transition-transform"
+                  >
+                    <Sparkles className="w-4 h-4" />
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Bottom Actions */}
             <div className="pt-3 border-t border-slate-200/80 dark:border-border/70 space-y-2">
-              {/* User profile capsule */}
-              <div className="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 dark:bg-muted/40 border border-slate-200/80 dark:border-border/50">
-                <div className="h-8 w-8 rounded-lg bg-[#e11d48] text-white flex items-center justify-center font-bold text-xs shrink-0 ring-1 ring-[#e11d48]/30">
-                  {user.name.charAt(0)}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs font-bold truncate text-slate-900 dark:text-white">{user.name}</p>
-                  <p className="text-[10px] text-slate-400 truncate">{user.email}</p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-1.5">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="flex-1 justify-start h-8 px-2.5 text-xs text-slate-500 hover:text-slate-900 dark:hover:text-white gap-2 rounded-xl"
-                  onClick={() => setShortcutsOpen(true)}
+              {/* User profile capsule with dropdown for student */}
+              {role === "student" ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <div
+                      className={cn(
+                        "flex items-center rounded-xl bg-slate-50 dark:bg-muted/40 border border-slate-200/80 dark:border-border/50 transition-all cursor-pointer hover:bg-slate-100 dark:hover:bg-muted/70 group outline-none",
+                        sidebarCollapsed ? "p-2 justify-center" : "gap-2.5 p-2.5"
+                      )}
+                      title={sidebarCollapsed ? `${user.name} (Student Profile Menu)` : undefined}
+                    >
+                      <div className="h-8 w-8 rounded-lg bg-[#e11d48] text-white flex items-center justify-center font-bold text-xs shrink-0 ring-1 ring-[#e11d48]/30 group-hover:scale-105 transition-transform">
+                        {user.name.charAt(0)}
+                      </div>
+                      {!sidebarCollapsed && (
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center justify-between">
+                            <p className="text-xs font-bold truncate text-slate-900 dark:text-white">{user.name}</p>
+                            <ChevronDown className="h-3 w-3 text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-200 transition-colors" />
+                          </div>
+                          <p className="text-[10px] text-slate-400 truncate">{user.email}</p>
+                        </div>
+                      )}
+                    </div>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    side={sidebarCollapsed ? "right" : "top"}
+                    align={sidebarCollapsed ? "end" : "start"}
+                    className="w-64 p-1.5 shadow-2xl border-border/80 bg-card/95 backdrop-blur-xl z-50 mb-1"
+                  >
+                    <div className="px-2.5 py-2 mb-1 rounded-lg bg-slate-50 dark:bg-muted/40 border border-slate-200/60 dark:border-border/50">
+                      <p className="text-xs font-bold text-slate-900 dark:text-white truncate">{user.name}</p>
+                      <p className="text-[10px] text-muted-foreground truncate">{user.email}</p>
+                      <div className="mt-1 flex items-center gap-1.5">
+                        <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-semibold bg-[#e11d48]/10 text-[#e11d48] dark:text-rose-300">
+                          Cohort 7 Student
+                        </span>
+                      </div>
+                    </div>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      onClick={() => navigate("/student/profile")}
+                      className="gap-2.5 py-2 px-2.5 cursor-pointer rounded-lg hover:bg-slate-100 dark:hover:bg-muted/60"
+                    >
+                      <User className="h-4 w-4 text-slate-500" />
+                      <div className="flex-1">
+                        <span className="text-xs font-semibold">Student Profile</span>
+                        <p className="text-[10px] text-muted-foreground">Personal, academic & skills</p>
+                      </div>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => navigate("/student/payments")}
+                      className="gap-2.5 py-2 px-2.5 cursor-pointer rounded-lg hover:bg-slate-100 dark:hover:bg-muted/60"
+                    >
+                      <CreditCard className="h-4 w-4 text-slate-500" />
+                      <div className="flex-1">
+                        <span className="text-xs font-semibold">Payments / Billing</span>
+                        <p className="text-[10px] text-muted-foreground">Tuition, dues & receipts</p>
+                      </div>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => navigate("/student/course-management")}
+                      className="gap-2.5 py-2 px-2.5 cursor-pointer rounded-lg hover:bg-slate-100 dark:hover:bg-muted/60"
+                    >
+                      <Compass className="h-4 w-4 text-slate-500" />
+                      <div className="flex-1">
+                        <span className="text-xs font-semibold">Course Management</span>
+                        <p className="text-[10px] text-muted-foreground">Catalog & curriculum structure</p>
+                      </div>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => navigate("/student/settings")}
+                      className="gap-2.5 py-2 px-2.5 cursor-pointer rounded-lg hover:bg-slate-100 dark:hover:bg-muted/60"
+                    >
+                      <Settings className="h-4 w-4 text-slate-500" />
+                      <div className="flex-1">
+                        <span className="text-xs font-semibold">Settings</span>
+                        <p className="text-[10px] text-muted-foreground">Preferences & privacy</p>
+                      </div>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      onClick={() => {
+                        logout();
+                        navigate("/auth/login");
+                      }}
+                      className="gap-2.5 py-2 px-2.5 cursor-pointer rounded-lg text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 focus:text-rose-600 focus:bg-rose-50 font-semibold"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      <span className="text-xs">Logout</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <div
+                  className={cn("flex items-center rounded-xl bg-slate-50 dark:bg-muted/40 border border-slate-200/80 dark:border-border/50 transition-all", sidebarCollapsed ? "p-2 justify-center" : "gap-2.5 p-2.5")}
+                  title={sidebarCollapsed ? `${user.name} (${user.email})` : undefined}
                 >
-                  <Keyboard className="h-3.5 w-3.5 text-slate-400" />
-                  <span>Shortcuts</span>
-                  <kbd className="ml-auto text-[10px] font-mono border border-slate-200 dark:border-border rounded px-1.5 py-0.2 bg-white dark:bg-card">?</kbd>
-                </Button>
+                  <div className="h-8 w-8 rounded-lg bg-[#e11d48] text-white flex items-center justify-center font-bold text-xs shrink-0 ring-1 ring-[#e11d48]/30">
+                    {user.name.charAt(0)}
+                  </div>
+                  {!sidebarCollapsed && (
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs font-bold truncate text-slate-900 dark:text-white">{user.name}</p>
+                      <p className="text-[10px] text-slate-400 truncate">{user.email}</p>
+                    </div>
+                  )}
+                </div>
+              )}
 
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 rounded-xl text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/30 shrink-0"
-                  title="Sign Out"
-                  onClick={() => {
-                    logout();
-                    navigate("/auth/login");
-                  }}
-                >
-                  <LogOut className="h-3.5 w-3.5" />
-                </Button>
-              </div>
+              {!isStudentPortal && (
+                <div className={cn("flex items-center gap-1.5", sidebarCollapsed && "flex-col")}>
+                  {!sidebarCollapsed ? (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="flex-1 justify-start h-8 px-2.5 text-xs text-slate-500 hover:text-slate-900 dark:hover:text-white gap-2 rounded-xl"
+                      onClick={() => setShortcutsOpen(true)}
+                    >
+                      <Keyboard className="h-3.5 w-3.5 text-slate-400" />
+                      <span>Shortcuts</span>
+                      <kbd className="ml-auto text-[10px] font-mono border border-slate-200 dark:border-border rounded px-1.5 py-0.2 bg-white dark:bg-card">?</kbd>
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 rounded-xl text-slate-500 hover:text-foreground"
+                      title="Keyboard Shortcuts"
+                      onClick={() => setShortcutsOpen(true)}
+                    >
+                      <Keyboard className="h-3.5 w-3.5" />
+                    </Button>
+                  )}
+
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 rounded-xl text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/30 shrink-0"
+                    title="Sign Out"
+                    onClick={() => {
+                      logout();
+                      navigate("/auth/login");
+                    }}
+                  >
+                    <LogOut className="h-3.5 w-3.5" />
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         </aside>
 
         {/* 3. Main Content Canvas */}
-        <div className="lg:pl-72 flex-1 flex flex-col min-w-0">
+        <div className={cn("flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out", sidebarCollapsed ? "lg:pl-20" : "lg:pl-72")}>
           {/* Desktop Top Utility Bar */}
           <header className="hidden lg:flex h-20 items-center justify-between px-8 border-b border-slate-200/80 dark:border-border/80 bg-white/90 dark:bg-card/90 backdrop-blur-md sticky top-0 z-30" data-purpose="top-navigation-bar">
             {/* Search Input */}
@@ -461,21 +688,110 @@ export const DashboardLayout = ({ children, headerAction }: DashboardLayoutProps
               <ThemeAccentPicker />
               <NotificationCenter />
 
-              {/* User Profile Pill */}
-              <div className="flex items-center gap-3 pl-3 border-l border-slate-200 dark:border-border/80">
-                <div className="w-10 h-10 rounded-full bg-[#e11d48] text-white flex items-center justify-center font-bold text-sm ring-2 ring-[#e11d48]/25 shadow-xs">
-                  {user.name.charAt(0)}
+              {/* User Profile Pill with Dropdown */}
+              {role === "student" ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      className="flex items-center gap-3 pl-3 border-l border-slate-200 dark:border-border/80 outline-none cursor-pointer group text-left hover:opacity-90 transition-opacity"
+                      aria-label="Student Profile Menu"
+                    >
+                      <div className="w-10 h-10 rounded-full bg-[#e11d48] text-white flex items-center justify-center font-bold text-sm ring-2 ring-[#e11d48]/25 shadow-xs group-hover:scale-105 transition-transform">
+                        {user.name.charAt(0)}
+                      </div>
+                      <div className="text-left hidden sm:block">
+                        <div className="flex items-center gap-1.5">
+                          <p className="text-sm font-semibold text-slate-900 dark:text-white leading-tight">{user.name}</p>
+                          <ChevronDown className="h-3.5 w-3.5 text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-200 transition-colors" />
+                        </div>
+                        <p className="text-[11px] text-slate-400 capitalize">Cohort 7 Student</p>
+                      </div>
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    align="end"
+                    sideOffset={8}
+                    className="w-64 p-1.5 shadow-2xl border-border/80 bg-card/95 backdrop-blur-xl z-50 mt-1"
+                  >
+                    <div className="px-2.5 py-2 mb-1 rounded-lg bg-slate-50 dark:bg-muted/40 border border-slate-200/60 dark:border-border/50">
+                      <p className="text-xs font-bold text-slate-900 dark:text-white truncate">{user.name}</p>
+                      <p className="text-[10px] text-muted-foreground truncate">{user.email}</p>
+                      <div className="mt-1 flex items-center gap-1.5">
+                        <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-semibold bg-[#e11d48]/10 text-[#e11d48] dark:text-rose-300">
+                          Cohort 7 Student
+                        </span>
+                      </div>
+                    </div>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      onClick={() => navigate("/student/profile")}
+                      className="gap-2.5 py-2 px-2.5 cursor-pointer rounded-lg hover:bg-slate-100 dark:hover:bg-muted/60"
+                    >
+                      <User className="h-4 w-4 text-slate-500" />
+                      <div className="flex-1">
+                        <span className="text-xs font-semibold">Student Profile</span>
+                        <p className="text-[10px] text-muted-foreground">Personal, academic & skills</p>
+                      </div>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => navigate("/student/payments")}
+                      className="gap-2.5 py-2 px-2.5 cursor-pointer rounded-lg hover:bg-slate-100 dark:hover:bg-muted/60"
+                    >
+                      <CreditCard className="h-4 w-4 text-slate-500" />
+                      <div className="flex-1">
+                        <span className="text-xs font-semibold">Payments / Billing</span>
+                        <p className="text-[10px] text-muted-foreground">Tuition, dues & receipts</p>
+                      </div>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => navigate("/student/course-management")}
+                      className="gap-2.5 py-2 px-2.5 cursor-pointer rounded-lg hover:bg-slate-100 dark:hover:bg-muted/60"
+                    >
+                      <Compass className="h-4 w-4 text-slate-500" />
+                      <div className="flex-1">
+                        <span className="text-xs font-semibold">Course Management</span>
+                        <p className="text-[10px] text-muted-foreground">Catalog & curriculum structure</p>
+                      </div>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => navigate("/student/settings")}
+                      className="gap-2.5 py-2 px-2.5 cursor-pointer rounded-lg hover:bg-slate-100 dark:hover:bg-muted/60"
+                    >
+                      <Settings className="h-4 w-4 text-slate-500" />
+                      <div className="flex-1">
+                        <span className="text-xs font-semibold">Settings</span>
+                        <p className="text-[10px] text-muted-foreground">Preferences & privacy</p>
+                      </div>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      onClick={() => {
+                        logout();
+                        navigate("/auth/login");
+                      }}
+                      className="gap-2.5 py-2 px-2.5 cursor-pointer rounded-lg text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 focus:text-rose-600 focus:bg-rose-50 font-semibold"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      <span className="text-xs">Logout</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <div className="flex items-center gap-3 pl-3 border-l border-slate-200 dark:border-border/80">
+                  <div className="w-10 h-10 rounded-full bg-[#e11d48] text-white flex items-center justify-center font-bold text-sm ring-2 ring-[#e11d48]/25 shadow-xs">
+                    {user.name.charAt(0)}
+                  </div>
+                  <div className="text-left hidden sm:block">
+                    <p className="text-sm font-semibold text-slate-900 dark:text-white leading-tight">{user.name}</p>
+                    <p className="text-[11px] text-slate-400 capitalize">{`${role.replace("-", " ")} Role`}</p>
+                  </div>
                 </div>
-                <div className="text-left hidden sm:block">
-                  <p className="text-sm font-semibold text-slate-900 dark:text-white leading-tight">{user.name}</p>
-                  <p className="text-[11px] text-slate-400 capitalize">{role === "student" ? "Cohort 7 Student" : `${role.replace("-", " ")} Role`}</p>
-                </div>
-              </div>
+              )}
             </div>
           </header>
 
           {/* Main Route Content */}
-          <main className="flex-1 p-4 sm:p-6 lg:p-8 pb-28 sm:pb-32 lg:pb-10 max-w-7xl w-full mx-auto">
+          <main className="flex-1 p-4 sm:p-6 lg:p-8 pb-28 sm:pb-32 lg:pb-12 max-w-7xl w-full mx-auto">
             {children}
           </main>
         </div>
@@ -530,9 +846,29 @@ export const DashboardLayout = ({ children, headerAction }: DashboardLayoutProps
         </nav>
       </div>
 
-      {/* 5. Global Modals */}
+      {/* 5. Floating AI Copilot for Students */}
+      {role === "student" && (
+        <button
+          onClick={() => setChatbotOpen(true)}
+          data-component="ai-chatbot"
+          className="fixed bottom-20 lg:bottom-6 right-6 z-40 h-13 w-13 rounded-full bg-[#e11d48] hover:bg-[#be123c] text-white flex items-center justify-center shadow-xl hover:scale-110 active:scale-95 transition-all cursor-pointer group ring-4 ring-[#e11d48]/20"
+          title="Chatbot — AI Study Assistant"
+          aria-label="Chatbot — AI Study Assistant"
+        >
+          <Bot className="h-6 w-6 group-hover:rotate-12 transition-transform" />
+          <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500 border-2 border-white dark:border-card"></span>
+          </span>
+        </button>
+      )}
+
+      {/* 6. Global Modals & Drawers */}
       <CommandPalette open={searchOpen} onOpenChange={setSearchOpen} />
       <KeyboardShortcutsDialog open={shortcutsOpen} onOpenChange={setShortcutsOpen} />
+      {role === "student" && (
+        <StudentAiChatbotDrawer open={chatbotOpen} onOpenChange={setChatbotOpen} />
+      )}
     </div>
   );
 };

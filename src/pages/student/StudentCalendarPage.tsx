@@ -438,19 +438,11 @@ export const StudentCalendarPage: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-foreground flex items-center gap-2.5">
-            <CalendarIcon className="h-6 w-6 text-primary" /> Academic Calendar & Deadlines
+            <CalendarIcon className="h-6 w-6 text-primary" /> Calendar
           </h1>
-          <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-            Google Calendar-style schedule tracker for live lectures, assignment deadlines, exams, and study milestones.
-          </p>
         </div>
 
         <div className="flex items-center gap-2 self-start sm:self-auto">
-          <Link to="/student/schedule">
-            <Button variant="outline" size="sm" className="gap-1.5 rounded-xl text-xs h-9">
-              <Clock className="h-3.5 w-3.5 text-primary" /> Daily Timetable
-            </Button>
-          </Link>
           <Button
             onClick={() => {
               setNewDate(formatDateIso(currentDate));

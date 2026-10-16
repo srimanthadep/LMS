@@ -15,6 +15,7 @@ import {
   Award,
   Bell,
   HelpCircle,
+  CircleHelp,
   FileCheck2,
   BarChart3,
   LifeBuoy,
@@ -26,6 +27,14 @@ import {
   Sliders,
   KeyRound,
   FolderSync,
+  MessageSquare,
+  User,
+  Clock,
+  Mic,
+  Sparkles,
+  Share2,
+  Compass,
+  LogOut,
 } from "lucide-react";
 
 export interface NavItem {
@@ -33,6 +42,8 @@ export interface NavItem {
   href: string;
   icon: React.ElementType;
   badge?: string;
+  isAction?: boolean;
+  section?: string;
 }
 
 export const ROLE_NAV_ITEMS: Record<UserRole, { sidebar: NavItem[]; mobileBottom: NavItem[] }> = {
@@ -109,21 +120,30 @@ export const ROLE_NAV_ITEMS: Record<UserRole, { sidebar: NavItem[]; mobileBottom
   },
   student: {
     sidebar: [
-      { name: "Learning Home", href: "/student/dashboard", icon: LayoutDashboard },
-      { name: "My Courses", href: "/student/courses", icon: BookOpen },
-      { name: "Live Schedule", href: "/student/schedule", icon: Calendar },
-      { name: "Replay Library", href: "/student/replays", icon: PlaySquare },
-      { name: "My Doubts", href: "/student/doubts", icon: HelpCircle },
-      { name: "Assessments", href: "/student/assessments", icon: FileCheck2 },
-      { name: "Certificates", href: "/student/certificates", icon: Award },
-      { name: "Receipts & Fees", href: "/student/payments", icon: CreditCard },
+      // 1. Daily academic activities and learning
+      { name: "Student Dashboard", href: "/student/dashboard", icon: LayoutDashboard, section: "Daily academic activities and learning" },
+      { name: "My Courses", href: "/student/courses", icon: BookOpen, section: "Daily academic activities and learning" },
+      { name: "Results", href: "/student/results", icon: BarChart3, section: "Daily academic activities and learning" },
+      { name: "Timetable", href: "/student/schedule", icon: Clock, section: "Daily academic activities and learning" },
+      { name: "Calendar", href: "/student/calendar", icon: Calendar, section: "Daily academic activities and learning" },
+      { name: "Announcements", href: "/student/announcements", icon: Bell, badge: "3", section: "Daily academic activities and learning" },
+      { name: "Events & Notice Board", href: "/student/notice-board", icon: Layers, section: "Daily academic activities and learning" },
+      { name: "Discussion Forums", href: "/student/discussions", icon: MessageSquare, badge: "5", section: "Daily academic activities and learning" },
+
+      // 2. Mentorship & Career Tools
+      { name: "Mentor Details", href: "/student/mentors", icon: Users, section: "Mentorship & Career Tools" },
+      { name: "1:1 Mentor Session", href: "/student/mentor-session", icon: Video, section: "Mentorship & Career Tools" },
+      { name: "Certificates & Achievements", href: "/student/certificates", icon: Award, section: "Mentorship & Career Tools" },
+      { name: "Resume Building", href: "/student/resume", icon: FileText, section: "Mentorship & Career Tools" },
+      { name: "Communication Support", href: "/student/communication", icon: Mic, section: "Mentorship & Career Tools" },
+      { name: "Support & Help", href: "/student/support", icon: CircleHelp, section: "Mentorship & Career Tools" },
     ],
     mobileBottom: [
-      { name: "Home", href: "/student/dashboard", icon: LayoutDashboard },
-      { name: "Courses", href: "/student/courses", icon: BookOpen },
-      { name: "Schedule", href: "/student/schedule", icon: Calendar },
-      { name: "Replays", href: "/student/replays", icon: PlaySquare },
-      { name: "Doubts", href: "/student/doubts", icon: HelpCircle },
+      { name: "Dashboard", href: "/student/dashboard", icon: LayoutDashboard },
+      { name: "My Courses", href: "/student/courses", icon: BookOpen },
+      { name: "Timetable", href: "/student/schedule", icon: Clock },
+      { name: "Calendar", href: "/student/calendar", icon: Calendar },
+      { name: "Mentors", href: "/student/mentors", icon: Users },
     ],
   },
   evaluator: {

@@ -63,15 +63,32 @@ import { TeacherSettingsPage } from "@/pages/teacher/TeacherSettingsPage";
 // Student
 import { StudentDashboard } from "@/pages/student/StudentDashboard";
 import { StudentCoursesPage } from "@/pages/student/StudentCoursesPage";
+import { StudentCourseDetailPage } from "@/pages/student/StudentCourseDetailPage";
 import { StudentSchedulePage } from "@/pages/student/StudentSchedulePage";
 import { StudentClassroomPage } from "@/pages/student/StudentClassroomPage";
 import { ReplayLibraryPage } from "@/pages/student/ReplayLibraryPage";
 import { SmartPlayerPage } from "@/pages/student/SmartPlayerPage";
 import { StudentDoubtsPage } from "@/pages/student/StudentDoubtsPage";
+import { StudentAssessmentsPage } from "@/pages/student/StudentAssessmentsPage";
 import { TimedTestPage } from "@/pages/student/TimedTestPage";
 import { TestResultsPage } from "@/pages/student/TestResultsPage";
 import { StudentCertificatesPage } from "@/pages/student/StudentCertificatesPage";
 import { StudentPaymentsPage } from "@/pages/student/StudentPaymentsPage";
+import { StudentProfilePage } from "@/pages/student/StudentProfilePage";
+import { StudentResumePage } from "@/pages/student/StudentResumePage";
+import { StudentMentorsPage } from "@/pages/student/StudentMentorsPage";
+import { StudentMentorSessionPage } from "@/pages/student/StudentMentorSessionPage";
+import { StudentSupportPage } from "@/pages/student/StudentSupportPage";
+import { StudentCommunicationPage } from "@/pages/student/StudentCommunicationPage";
+import { StudentSettingsPage } from "@/pages/student/StudentSettingsPage";
+import { StudentCalendarPage } from "@/pages/student/StudentCalendarPage";
+import { StudentAnnouncementsPage } from "@/pages/student/StudentAnnouncementsPage";
+import { StudentNoticeBoardPage } from "@/pages/student/StudentNoticeBoardPage";
+import { StudentDiscussionsPage } from "@/pages/student/StudentDiscussionsPage";
+import { StudentResultsPage } from "@/pages/student/StudentResultsPage";
+import { StudentCourseManagementPage } from "@/pages/student/StudentCourseManagementPage";
+import { StudentChatbotPage } from "@/pages/student/StudentChatbotPage";
+import { StudentLinksPage } from "@/pages/student/StudentLinksPage";
 
 // Evaluator
 import { EvaluatorDashboard } from "@/pages/evaluator/EvaluatorDashboard";
@@ -561,6 +578,14 @@ export function App() {
               }
             />
             <Route
+              path="/student/courses/:courseId"
+              element={
+                <ProtectedRoute allowedRoles={["student"]}>
+                  <StudentCourseDetailPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/student/schedule"
               element={
                 <ProtectedRoute allowedRoles={["student"]}>
@@ -601,6 +626,14 @@ export function App() {
               }
             />
             <Route
+              path="/student/assessments"
+              element={
+                <ProtectedRoute allowedRoles={["student"]}>
+                  <StudentAssessmentsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/student/assessments/take"
               element={
                 <ProtectedRoute allowedRoles={["student"]}>
@@ -610,6 +643,14 @@ export function App() {
             />
             <Route
               path="/student/test-results/:submissionId"
+              element={
+                <ProtectedRoute allowedRoles={["student"]}>
+                  <TestResultsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/student/results/:submissionId"
               element={
                 <ProtectedRoute allowedRoles={["student"]}>
                   <TestResultsPage />
@@ -629,6 +670,126 @@ export function App() {
               element={
                 <ProtectedRoute allowedRoles={["student"]}>
                   <StudentPaymentsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/student/profile"
+              element={
+                <ProtectedRoute allowedRoles={["student"]}>
+                  <StudentProfilePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/student/resume"
+              element={
+                <ProtectedRoute allowedRoles={["student"]}>
+                  <StudentResumePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/student/mentors"
+              element={
+                <ProtectedRoute allowedRoles={["student"]}>
+                  <StudentMentorsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/student/mentor-session"
+              element={
+                <ProtectedRoute allowedRoles={["student"]}>
+                  <StudentMentorSessionPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/student/support"
+              element={
+                <ProtectedRoute allowedRoles={["student"]}>
+                  <StudentSupportPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/student/communication"
+              element={
+                <ProtectedRoute allowedRoles={["student"]}>
+                  <StudentCommunicationPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/student/calendar"
+              element={
+                <ProtectedRoute allowedRoles={["student"]}>
+                  <StudentCalendarPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/student/announcements"
+              element={
+                <ProtectedRoute allowedRoles={["student"]}>
+                  <StudentAnnouncementsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/student/notice-board"
+              element={
+                <ProtectedRoute allowedRoles={["student"]}>
+                  <StudentNoticeBoardPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/student/discussions"
+              element={
+                <ProtectedRoute allowedRoles={["student"]}>
+                  <StudentDiscussionsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/student/results"
+              element={
+                <ProtectedRoute allowedRoles={["student"]}>
+                  <StudentResultsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/student/course-management"
+              element={
+                <ProtectedRoute allowedRoles={["student"]}>
+                  <StudentCourseManagementPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/student/chatbot"
+              element={
+                <ProtectedRoute allowedRoles={["student"]}>
+                  <StudentChatbotPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/student/links"
+              element={
+                <ProtectedRoute allowedRoles={["student"]}>
+                  <StudentLinksPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/student/settings"
+              element={
+                <ProtectedRoute allowedRoles={["student"]}>
+                  <StudentSettingsPage />
                 </ProtectedRoute>
               }
             />

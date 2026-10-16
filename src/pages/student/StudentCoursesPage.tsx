@@ -139,11 +139,8 @@ export const StudentCoursesPage: React.FC = () => {
         <div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 flex items-center gap-3">
             <BookOpen className="h-7 w-7 text-[#e11d48]" strokeWidth={2.2} />
-            My Enrolled Courses
+            My Courses
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1 font-normal">
-            Manage your ongoing programs, active lectures, lab milestones, self-notes, and faculty feedback.
-          </p>
         </div>
       </div>
 
