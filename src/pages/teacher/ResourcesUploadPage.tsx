@@ -1,158 +1,360 @@
 import React, { useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, Upload, FileText, Code, CheckCircle2, Download, Trash2 } from "lucide-react";
+import {
+  BookOpen,
+  FileText,
+  Code,
+  Download,
+  Eye,
+  Search,
+  Filter,
+  Layers,
+  Sparkles,
+  AlertCircle,
+  FileSpreadsheet,
+  CheckCircle2,
+  ShieldCheck,
+} from "lucide-react";
 import { useNotifications } from "@/context/NotificationContext";
-
-interface ResourceItem {
-  id: string;
-  title: string;
-  type: "Slide Deck (PDF)" | "Source Code (ZIP)" | "Daily Practice Problem (DPP)";
-  batchName: string;
-  fileSize: string;
-  uploadedAt: string;
-}
-
-const INITIAL_RESOURCES: ResourceItem[] = [
-  { id: "r1", title: "Lecture 8: Vector Databases & Chunking Slides", type: "Slide Deck (PDF)", batchName: "Cohort 7 (Live + Replay)", fileSize: "14.2 MB", uploadedAt: "Yesterday" },
-  { id: "r2", title: "Milestone 2 Starter Repo: LangChain Hybrid RAG", type: "Source Code (ZIP)", batchName: "Cohort 7 (Live + Replay)", fileSize: "2.8 MB", uploadedAt: "3 days ago" },
-  { id: "r3", title: "DPP 4: HNSW efSearch Optimization Exercises", type: "Daily Practice Problem (DPP)", batchName: "All Cohorts", fileSize: "1.1 MB", uploadedAt: "5 days ago" },
-];
+import { teacherDataService, TeacherResourceItem } from "./teacherDataService";
 
 export const ResourcesUploadPage: React.FC = () => {
-  const [resources, setResources] = useState<ResourceItem[]>(INITIAL_RESOURCES);
-  const [title, setTitle] = useState("");
-  const [type, setType] = useState<ResourceItem["type"]>("Slide Deck (PDF)");
-  const [batchName, setBatchName] = useState("Cohort 7 (Live + Replay)");
   const { addNotification } = useNotifications();
 
-  const handleUpload = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!title.trim()) return;
+  const [resources] = useState<TeacherResourceItem[]>(() =>
+    teacherDataService.getResources()
+  );
+  const [courses] = useState(() => teacherDataService.getCourses());
 
-    const newRes: ResourceItem = {
-      id: `res-${Date.now()}`,
-      title,
-      type,
-      batchName,
-      fileSize: "4.8 MB",
-      uploadedAt: "Just now",
-    };
+  // Search & Filter
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterType, setFilterType] = useState("all");
+  const [filterBatch, setFilterBatch] = useState("all");
+  const [filterCourse, setFilterCourse] = useState("all");
 
-    setResources([newRes, ...resources]);
-    setTitle("");
+  // Preview Modal
+  const [previewResource, setPreviewResource] = useState<TeacherResourceItem | null>(null);
+
+  const filteredResources = resources.filter((res) => {
+    const matchesSearch =
+      res.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      res.courseTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      res.tags.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()));
+    const matchesType = filterType === "all" || res.type === filterType;
+    const matchesBatch = filterBatch === "all" || res.batchName === filterBatch;
+    const matchesCourse = filterCourse === "all" || res.courseId === filterCourse;
+    return matchesSearch && matchesType && matchesBatch && matchesCourse;
+  });
+
+  const handleDownloadCopy = (res: TeacherResourceItem) => {
     addNotification({
-      title: "Resource Published",
-      message: `"${title}" has been attached to ${batchName} study materials.`,
-      type: "class",
+      title: "Reference Copy Downloaded",
+      message: `Downloaded local instructor reference copy of "${res.title}".`,
+      type: "system",
     });
   };
 
   return (
     <div className="space-y-6">
+      {/* Top Banner */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-foreground flex items-center gap-2">
-            <BookOpen className="h-6 w-6 text-primary" /> Faculty Resource & Slide Library
+            <BookOpen className="h-6 w-6 text-primary" /> Learning Materials & Resource Library
           </h1>
           <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-            Upload slide decks, GitHub reference templates, and Daily Practice Problems (DPPs).
+            Review lecture slide decks, starter repositories, Jupyter notebooks, and practice problem sets.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Upload Form (1 col) */}
-          <Card className="border-border/80 shadow-xs rounded-2xl bg-card p-5 space-y-4">
-            <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-              <Upload className="h-4 w-4 text-primary" /> Publish Material
-            </h3>
+        <div className="flex items-center gap-2">
+          <Badge className="bg-emerald-50 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-300 text-xs px-3 py-1 font-semibold">
+            {resources.length} Assets in Library
+          </Badge>
+        </div>
+      </div>
 
-            <form onSubmit={handleUpload} className="space-y-3.5">
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-foreground">Material Title</label>
-                <Input
-                  required
-                  placeholder="e.g. Session 9 Annotated Notes"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  className="h-9 text-xs"
-                />
-              </div>
+      {/* Metrics Row */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <Card className="p-4 border-slate-200 dark:border-white/10 bg-white dark:bg-[#151f1a]">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-slate-500">Curriculum Materials</span>
+            <BookOpen className="h-4 w-4 text-emerald-600" />
+          </div>
+          <p className="text-2xl font-bold text-slate-900 dark:text-white mt-2">{resources.length}</p>
+          <p className="text-[11px] text-emerald-600 font-medium mt-0.5">Verified assets</p>
+        </Card>
 
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-foreground">Material Type</label>
-                <select
-                  value={type}
-                  onChange={(e) => setType(e.target.value as any)}
-                  className="w-full h-9 rounded-xl border border-input bg-background/80 px-3 text-xs"
-                >
-                  <option value="Slide Deck (PDF)">Slide Deck (PDF)</option>
-                  <option value="Source Code (ZIP)">Source Code (ZIP)</option>
-                  <option value="Daily Practice Problem (DPP)">Daily Practice Problem (DPP)</option>
-                </select>
-              </div>
+        <Card className="p-4 border-slate-200 dark:border-white/10 bg-white dark:bg-[#151f1a]">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-slate-500">Student Downloads</span>
+            <Download className="h-4 w-4 text-blue-600" />
+          </div>
+          <p className="text-2xl font-bold text-slate-900 dark:text-white mt-2">
+            {resources.reduce((sum, r) => sum + (r.downloads || 0), 0)}
+          </p>
+          <p className="text-[11px] text-blue-600 font-medium mt-0.5">Cohort engagements</p>
+        </Card>
 
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-foreground">Cohort Access</label>
-                <select
-                  value={batchName}
-                  onChange={(e) => setBatchName(e.target.value)}
-                  className="w-full h-9 rounded-xl border border-input bg-background/80 px-3 text-xs"
-                >
-                  <option value="Cohort 7 (Live + Replay)">Cohort 7 (Live + Replay)</option>
-                  <option value="Cohort 8 (Replay Only)">Cohort 8 (Replay Only)</option>
-                  <option value="All Cohorts">All Cohorts</option>
-                </select>
-              </div>
+        <Card className="p-4 border-slate-200 dark:border-white/10 bg-white dark:bg-[#151f1a]">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-slate-500">Lab Notebooks</span>
+            <Code className="h-4 w-4 text-purple-600" />
+          </div>
+          <p className="text-2xl font-bold text-slate-900 dark:text-white mt-2">
+            {resources.filter((r) => r.type.includes("Code") || r.type.includes("IPYNB")).length}
+          </p>
+          <p className="text-[11px] text-purple-600 font-medium mt-0.5">Interactive code labs</p>
+        </Card>
 
-              {/* Drag drop dropzone simulator */}
-              <div className="border border-dashed border-border/80 rounded-xl p-4 text-center space-y-1 bg-muted/10 cursor-pointer hover:bg-muted/20 transition-colors">
-                <Upload className="h-6 w-6 text-primary mx-auto opacity-70" />
-                <p className="text-xs font-semibold text-foreground">Click to upload file</p>
-                <p className="text-[10px] text-muted-foreground">PDF, ZIP, or Notebook up to 50MB</p>
-              </div>
+        <Card className="p-4 border-slate-200 dark:border-white/10 bg-white dark:bg-[#151f1a]">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-slate-500">Associated Courses</span>
+            <Layers className="h-4 w-4 text-amber-600" />
+          </div>
+          <p className="text-2xl font-bold text-slate-900 dark:text-white mt-2">{courses.length}</p>
+          <p className="text-[11px] text-amber-600 font-medium mt-0.5">Across active syllabi</p>
+        </Card>
+      </div>
 
-              <Button type="submit" className="w-full h-9 text-xs font-bold shadow-sm">
-                Publish Resource
-              </Button>
-            </form>
+      {/* Filter and Search Bar */}
+      <Card className="border-border/80 shadow-xs rounded-2xl bg-card p-4">
+        <div className="flex flex-col md:flex-row items-center gap-3">
+          <div className="relative flex-1 w-full">
+            <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search learning materials by title, course, or tags..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9 h-9 text-xs"
+            />
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
+            <select
+              value={filterCourse}
+              onChange={(e) => setFilterCourse(e.target.value)}
+              className="h-9 rounded-xl border border-input bg-background/80 px-3 text-xs"
+            >
+              <option value="all">All Courses</option>
+              {courses.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.title}
+                </option>
+              ))}
+            </select>
+
+            <select
+              value={filterType}
+              onChange={(e) => setFilterType(e.target.value)}
+              className="h-9 rounded-xl border border-input bg-background/80 px-3 text-xs"
+            >
+              <option value="all">All File Types</option>
+              <option value="Slide Deck (PDF)">Slide Deck (PDF)</option>
+              <option value="Source Code (ZIP)">Source Code (ZIP)</option>
+              <option value="Lab Notebook (IPYNB)">Lab Notebook (IPYNB)</option>
+              <option value="Daily Practice Problem (DPP)">Daily Practice Problem (DPP)</option>
+              <option value="Dataset (JSON/CSV)">Dataset (JSON/CSV)</option>
+            </select>
+
+            <select
+              value={filterBatch}
+              onChange={(e) => setFilterBatch(e.target.value)}
+              className="h-9 rounded-xl border border-input bg-background/80 px-3 text-xs"
+            >
+              <option value="all">All Cohorts</option>
+              <option value="Cohort 7 (Live + Replay)">Cohort 7</option>
+              <option value="Cohort 4 (Live Sync)">Cohort 4</option>
+            </select>
+          </div>
+        </div>
+      </Card>
+
+      {/* Resources Grid */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between text-xs text-muted-foreground px-1">
+          <span>Showing {filteredResources.length} curriculum assets</span>
+          <span className="flex items-center gap-1 font-mono">
+            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" /> Verified Materials
+          </span>
+        </div>
+
+        {filteredResources.length === 0 ? (
+          <Card className="p-12 text-center border-dashed border-border/80">
+            <BookOpen className="h-8 w-8 text-muted-foreground mx-auto mb-2 opacity-50" />
+            <p className="text-xs text-muted-foreground">No resources match your active search or filter filters.</p>
           </Card>
-
-          {/* Resources List (2 cols) */}
-          <div className="lg:col-span-2 space-y-3">
-            <Card className="border-border/80 shadow-xs rounded-2xl overflow-hidden bg-card">
-              <CardHeader className="p-4 sm:p-5 border-b border-border/70 flex flex-row items-center justify-between">
-                <CardTitle className="text-sm font-bold">Published Cohort Files</CardTitle>
-                <Badge variant="outline" className="text-[10px]">{resources.length} Files Active</Badge>
-              </CardHeader>
-              <CardContent className="p-4 space-y-3">
-                {resources.map((res) => (
-                  <div
-                    key={res.id}
-                    className="p-3.5 rounded-xl border border-border/70 bg-card hover:bg-muted/20 transition-colors flex items-center justify-between gap-3 text-xs"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-xl bg-primary/10 text-primary shrink-0">
-                        {res.type.includes("Code") ? <Code className="h-4 w-4" /> : <FileText className="h-4 w-4" />}
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredResources.map((res) => (
+              <Card
+                key={res.id}
+                className="p-5 border-border/80 shadow-xs rounded-2xl bg-card flex flex-col justify-between space-y-4 hover:border-primary/40 transition"
+              >
+                <div className="space-y-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                        {res.type.includes("PDF") && <FileText className="h-5 w-5" />}
+                        {res.type.includes("Code") && <Code className="h-5 w-5" />}
+                        {res.type.includes("IPYNB") && <Sparkles className="h-5 w-5" />}
+                        {res.type.includes("Dataset") && <FileSpreadsheet className="h-5 w-5" />}
+                        {res.type.includes("DPP") && <BookOpen className="h-5 w-5" />}
                       </div>
                       <div>
-                        <p className="font-bold text-foreground text-xs sm:text-sm">{res.title}</p>
-                        <p className="text-[11px] text-muted-foreground">
-                          {res.type} • {res.batchName} • {res.fileSize}
+                        <Badge variant="outline" className="text-[10px] uppercase font-bold py-0.5">
+                          {res.type}
+                        </Badge>
+                        <p className="text-[11px] text-muted-foreground font-mono mt-0.5">
+                          {res.fileSize} • {res.uploadedAt}
                         </p>
                       </div>
                     </div>
 
-                    <Button size="sm" variant="ghost" className="h-8 text-xs text-primary gap-1">
-                      <Download className="h-3.5 w-3.5" /> Download
-                    </Button>
+                    <Badge variant="secondary" className="text-[10px] font-mono shrink-0">
+                      {res.downloads} downloads
+                    </Badge>
                   </div>
-                ))}
-              </CardContent>
-            </Card>
+
+                  <div>
+                    <h3 className="font-bold text-foreground text-sm leading-snug line-clamp-2">
+                      {res.title}
+                    </h3>
+                    <p className="text-xs text-muted-foreground mt-1 truncate">
+                      {res.courseTitle}
+                    </p>
+                    <p className="text-[11px] text-primary/80 font-medium truncate mt-0.5">
+                      {res.moduleTitle}
+                    </p>
+                  </div>
+
+                  {res.tags && res.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-1 pt-1">
+                      {res.tags.map((tag, tIdx) => (
+                        <span
+                          key={tIdx}
+                          className="px-2 py-0.5 rounded-md text-[10px] bg-muted text-muted-foreground font-mono"
+                        >
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-2 pt-3 border-t border-border/60">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setPreviewResource(res)}
+                    className="h-8 text-xs font-semibold gap-1.5 flex-1 cursor-pointer"
+                  >
+                    <Eye className="h-3.5 w-3.5 text-blue-600" /> Preview
+                  </Button>
+
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleDownloadCopy(res)}
+                    className="h-8 text-xs font-semibold gap-1.5 flex-1 cursor-pointer"
+                  >
+                    <Download className="h-3.5 w-3.5 text-emerald-600" /> Reference
+                  </Button>
+                </div>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Preview Modal */}
+      {previewResource && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-[#141e19] border border-slate-200 dark:border-white/10 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-xl">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/10 pb-3">
+              <div>
+                <span className="text-[10px] font-bold text-emerald-600 uppercase font-mono">
+                  Curriculum Asset Preview
+                </span>
+                <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                  {previewResource.title}
+                </h3>
+              </div>
+              <button
+                onClick={() => setPreviewResource(null)}
+                className="text-slate-400 hover:text-slate-600 cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="space-y-3 text-xs">
+              <div className="grid grid-cols-2 gap-3 p-3 rounded-xl bg-slate-50 dark:bg-[#101713] border border-slate-200 dark:border-white/10">
+                <div>
+                  <span className="text-slate-400 text-[10px] uppercase font-bold">Material Format</span>
+                  <p className="font-semibold text-slate-800 dark:text-slate-200">{previewResource.type}</p>
+                </div>
+                <div>
+                  <span className="text-slate-400 text-[10px] uppercase font-bold">File Size</span>
+                  <p className="font-semibold text-slate-800 dark:text-slate-200">{previewResource.fileSize}</p>
+                </div>
+                <div>
+                  <span className="text-slate-400 text-[10px] uppercase font-bold">Target Cohort</span>
+                  <p className="font-semibold text-slate-800 dark:text-slate-200">{previewResource.batchName}</p>
+                </div>
+                <div>
+                  <span className="text-slate-400 text-[10px] uppercase font-bold">Student Downloads</span>
+                  <p className="font-semibold text-slate-800 dark:text-slate-200 font-mono">
+                    {previewResource.downloads} hits
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <span className="text-slate-400 text-[10px] uppercase font-bold">Course & Module Context</span>
+                <p className="font-semibold text-slate-800 dark:text-slate-200">{previewResource.courseTitle}</p>
+                <p className="text-slate-500 text-[11px]">{previewResource.moduleTitle}</p>
+              </div>
+
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#101713] border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300">
+                <p className="font-semibold flex items-center gap-1.5 mb-0.5 text-xs">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+                  Syllabus Verified
+                </p>
+                <p className="text-[11px] leading-relaxed text-slate-500">
+                  This document is aligned with current course milestones and available for student reference.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100 dark:border-white/10">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPreviewResource(null)}
+                className="text-xs cursor-pointer"
+              >
+                Close
+              </Button>
+              <Button
+                size="sm"
+                onClick={() => {
+                  handleDownloadCopy(previewResource);
+                  setPreviewResource(null);
+                }}
+                className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer gap-1.5"
+              >
+                <Download className="h-3.5 w-3.5" /> Download Copy
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
+    </div>
   );
 };
+
+export default ResourcesUploadPage;
